@@ -2,8 +2,9 @@ from __future__ import annotations
 from lxml import etree
 from typing import Callable
 from bs4 import BeautifulSoup
+from typings import DataClass, Extract
 from dataclasses import dataclass, field
-from utils import is_valid_xpath, DataClass, update_params_with_defaults
+from utils import is_valid_xpath, update_params_with_defaults
 
 
 @dataclass
@@ -11,6 +12,7 @@ class Recipe:
     path: str = field(default="/")
     context: str | None = field(default=None)
     target: DataClass | None = field(default=None)
+    extract: Extract | str = field(default=Extract.TEXT)
     children: list[Recipe] = field(default_factory=list)
     transform: Callable[[str], any] | None = field(default=lambda x: x)
 
