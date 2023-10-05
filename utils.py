@@ -1,10 +1,11 @@
+from __future__ import annotations
 from lxml import etree
-from _types import DataClass
+from bs4 import BeautifulSoup
 from datetime import date, datetime
-from dataclasses import fields, MISSING
+from dataclasses import fields, MISSING, Field
 
 
-def is_valid_xpath(xpath_query):
+def is_valid_xpath(xpath_query: str):
     root = etree.Element("root")
     doc = etree.ElementTree(root)
     try:
@@ -12,34 +13,6 @@ def is_valid_xpath(xpath_query):
         return True
     except etree.XPathEvalError:
         return False
-
-
-def update_params_with_defaults(target: DataClass, params: dict[str, any]) -> dict[str, any]:
-    """
-    Update missing extracted fields with default values from the target dataclass.
-
-    :param target: Target information dataclass for the scraping process
-    :param params: Extracted parameters from the scraped HTML
-    :return: Extracted paramaters updated with default values
-    """
-
-    def get_default_value(field) -> any:
-        """
-        Retrieve the default value for a given dataclass field if exists.
-
-        :param field: Dataclass field for which we want to find a default value.
-        :return: default value if exists else None
-        """
-        if field.default != MISSING:
-            return field.default
-        if field.default_factory != MISSING:
-            return field.default_factory()
-
-    return {
-        field.name: params.get(field.name) or get_default_value(field)
-        for field in fields(target)
-        if field.name in params
-    }
 
 
 def datetime_to_sql_timestamp(dt: datetime) -> str:
@@ -50,3 +23,27 @@ def datetime_to_sql_timestamp(dt: datetime) -> str:
 def date_to_sql_date(d: date) -> str:
     """ Transform a datetime object to a SQL timestamp. """
     return d.strftime("%Y-%m-%d")
+
+
+def update_params_with_defaults(dataclass_type, params: dict[str, any]) -> dict[str, any]:
+    return {
+        _field.name: params.get(_field.name) or _get_default_value(_field)
+        for _field in fields(dataclass_type)
+        if _field.name in params
+    }
+
+
+def etree_to_bs4(node: etree.Element) -> BeautifulSoup:
+    return BeautifulSoup(_etree_to_string(node), "html.parser")
+
+
+def _get_default_value(f: Field):
+    if f.default != MISSING:
+        return f.default
+    if f.default_factory != MISSING:
+        return f.default_factory()
+    raise ValueError(f"The field '{f.name}' does not have a default value nor a default_factory.")
+
+
+def _etree_to_string(node: etree.Element) -> str:
+    return etree.tostring(node, method="html").decode("utf-8")

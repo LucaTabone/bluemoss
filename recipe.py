@@ -1,38 +1,57 @@
 from __future__ import annotations
 from lxml import etree
 from typing import Callable
+from typings import Extract
 from bs4 import BeautifulSoup
-from typings import DataClass, Extract
-from dataclasses import dataclass, field
-from utils import is_valid_xpath, update_params_with_defaults
+from dataclasses import dataclass, field, is_dataclass, fields
+from utils import is_valid_xpath, update_params_with_defaults, etree_to_bs4
 
 
 @dataclass
 class Recipe:
     path: str = field(default="/")
+    index: int | None = field(default=0)
     context: str | None = field(default=None)
-    target: DataClass | None = field(default=None)
-    extract: Extract | str = field(default=Extract.TEXT)
+    target: object | None = field(default=None)
+    extract: Extract | str | None = field(default=None)
     children: list[Recipe] = field(default_factory=list)
     transform: Callable[[str], any] | None = field(default=lambda x: x)
 
     @property
     def find_all(self) -> bool:
-        return not self.path.endswith("]")
+        return self.index is None
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """
 
-        """ Make sure @param self.path is a valid XPath query. """
+        """ Assert that @param self.path is a valid XPath query. """
         assert is_valid_xpath(self.path)
 
-        """ Make sure that at most one of the value @param target or @param context is specified. """
+        """ Assert @param self.target is either None or a dataclass. """
+        assert self.target is None or is_dataclass(self.target)
+
+        """ Assert that @param self.transform is either None or a callable. """
+        assert self.transform is None or callable(self.transform)
+
+        """ Assert that @param self.extract is either None or a valid Extract. """
+        assert self.extract is None or isinstance(self.extract, Extract)
+
+        """ Assert that no index was applied to @param self.path."""
+        assert not self.path.endswith("]"), "Use @param self.index for indexing. "
+
+        """ 
+        Assert that at lest one but not both parameters 
+        @param self.extract and @param self.children are set.
+        """
+        assert not (self.extract is None and len(self.children) == 0)
+
+        """ Assert that at most one of the value @param target or @param context is specified. """
         assert self.target is None or self.context is None
 
         if not self.target:
             """
             If no @param target is specified, we expect to have 0 or 1 recipe-children.
-            In case we have no recipe children, we will directly extract data from the tag(s) specified by @param path.
+            In case we have no recipe children, we'll directly extract data from the tag(s) specified by @param path.
             In case we have one recipe child, we will not continue our search with that recipe-child.                 
             """
             assert len(self.children) <= 1
@@ -58,7 +77,7 @@ class Recipe:
         Make sure that the @param context of all children are actual parameters 
         of the dataclass @param target.
         """
-        target_class_params: set[str] = set(self.target.__dataclass_fields__.keys())
+        target_class_params: set[str] = set(f.name for f in fields(self.target))
         for recipe in self.children:
             assert recipe.context in target_class_params, \
                 f"{recipe.context} is no valid parameter of the target-class"
@@ -71,8 +90,17 @@ def extract(recipe: Recipe, html: str) -> any:
 def _extract(recipe: Recipe, root) -> any:
     if not (nodes := root.xpath(recipe.path)):
         return
+    if not recipe.find_all:
+        try:
+            nodes = [nodes[recipe.index]]
+        except IndexError:
+            return None
     if not recipe.children:
-        return [recipe.transform(node) for node in nodes]
+        res = [
+            recipe.transform(_extract_leaf_node(recipe, node))
+            for node in nodes
+        ]
+        return res if recipe.find_all else res[0]
     if recipe.target:
         res: list = []
         for node in nodes:
@@ -88,4 +116,16 @@ def _extract(recipe: Recipe, root) -> any:
             for _recipe in recipe.children
             for node in nodes
         ]
-    return recipe.transform(res) if recipe.find_all else recipe.transform(res[0])
+    return recipe.transform(res) if recipe.find_all else recipe.transform(res[recipe.index])
+
+
+def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
+    match recipe.extract:
+        case None | Extract.ETREE:
+            return node
+        case Extract.TEXT:
+            return node.text.strip()
+        case Extract.TAG:
+            return etree_to_bs4(node)
+        case Extract.TAG_AS_STRING:
+            return etree_to_bs4(node).prettify()

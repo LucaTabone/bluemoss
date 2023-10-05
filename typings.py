@@ -6,23 +6,19 @@ from collections import OrderedDict
 from functools import cached_property
 from dataclasses import dataclass, field
 from utils import datetime_to_sql_timestamp
-from typing import Protocol, Callable, TypeVar
-
-
-class _DataClassProtocol(Protocol):
-    """ A generic type to use as a type-hint for dataclasses. """
-    __dict__: dict
-    __call__: Callable
-    __annotations__: dict
-
-
-DataClass = TypeVar("DataClass", bound=_DataClassProtocol)
 
 
 @unique
-class Extract:
-    TAG = "tag"
+class Extract(Enum):
+    # text
     TEXT = "text"
+
+    # tag
+    TAG = "tag"
+    ETREE = "etree"
+    TAG_AS_STRING = "tag_as_string"
+
+    # href
     HREF = "href"
     HREF_TLD = "href_tld"
     HREF_DOMAIN = "href_domain"
@@ -95,9 +91,9 @@ class Dictable(abc.ABC):
         res = OrderedDict()
         for k, v in d.items():
             if not (
-                    (ignore_protected and type(k) == str and k.startswith("_")) or
-                    (remove_empty_values and v != 0 and not v) or
-                    (ignore_keys and k in ignore_keys)
+                (ignore_protected and type(k) == str and k.startswith("_")) or
+                (remove_empty_values and v != 0 and not v) or
+                (ignore_keys and k in ignore_keys)
             ):
                 res[k] = v
         return res
