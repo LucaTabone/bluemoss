@@ -121,7 +121,6 @@ def _extract(recipe: Recipe, root) -> any:
 
 def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
     if isinstance(recipe.extract, str):
-        # extract tag-property directly
         return node.get(recipe.extract)
     if not isinstance(recipe.extract, Extract):
         raise ValueError(f"The @param recipe.extract must be a string or Extract value.")

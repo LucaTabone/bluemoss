@@ -30,11 +30,3 @@ def get_endpoint_with_query(url: str | None) -> str | None:
     if not (query := get_query(url)):
         return endpoint
     return f"{endpoint}?{query}"
-
-
-def get_linkedin_endpoint(url_or_endpoint: str | None) -> str | None:
-    if not (endpoint := get_endpoint(url_or_endpoint)):
-        return
-    if not endpoint.count("/") >= 2:
-        return
-    return "/".join(endpoint.split("/")[:3]).lower()
