@@ -2,9 +2,11 @@ from __future__ import annotations
 from lxml import etree
 from typing import Callable
 from typings import Extract
+import utils.url as url_utils
 from bs4 import BeautifulSoup
+from utils.html import is_valid_xpath, etree_to_bs4
+from utils.general import update_params_with_defaults
 from dataclasses import dataclass, field, is_dataclass, fields
-from utils import is_valid_xpath, update_params_with_defaults, etree_to_bs4
 
 
 @dataclass
@@ -119,7 +121,7 @@ def _extract(recipe: Recipe, root) -> any:
 
 def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
     if isinstance(recipe.extract, str):
-        # extract tag property directly
+        # extract tag-property directly
         return node.get(recipe.extract)
     if not isinstance(recipe.extract, Extract):
         raise ValueError(f"The @param recipe.extract must be a string or Extract value.")
@@ -132,3 +134,15 @@ def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
             return etree_to_bs4(node)
         case Extract.TAG_AS_STRING:
             return etree_to_bs4(node).prettify()
+        case Extract.HREF:
+            return node.get("href")
+        case Extract.HREF_QUERY:
+            return url_utils.get_query(node.get("href"))
+        case Extract.HREF_ENDPOINT:
+            return url_utils.get_endpoint(node.get("href"))
+        case Extract.HREF_DOMAIN:
+            return url_utils.get_domain(node.get("href"))
+        case Extract.HREF_BASE_DOMAIN:
+            return url_utils.get_base_domain(node.get("href"))
+        case Extract.HREF_ENDPOINT_WITH_QUERY:
+            return url_utils.get_endpoint_with_query(node.get("href"))

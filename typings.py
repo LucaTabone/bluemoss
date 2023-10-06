@@ -18,10 +18,11 @@ class Extract(Enum):
 
     # href
     HREF = "href"
-    HREF_TLD = "href_tld"
+    HREF_QUERY = "href_query"
     HREF_DOMAIN = "href_domain"
     HREF_ENDPOINT = "href_endpoint"
-    HREF_ENDPOINT_NO_QUERY = "href_endpoint_no_query"
+    HREF_BASE_DOMAIN = "href_base_domain"
+    HREF_ENDPOINT_WITH_QUERY = "href_endpoint_with_query"
 
 
 @dataclass
