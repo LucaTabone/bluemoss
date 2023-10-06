@@ -1,11 +1,9 @@
 import abc
 from json import dumps
 from enum import Enum, unique
-from datetime import datetime
+from datetime import datetime, date
 from collections import OrderedDict
-from functools import cached_property
 from dataclasses import dataclass, field
-from utils import datetime_to_sql_timestamp
 
 
 @unique
@@ -44,13 +42,13 @@ class Dictable(abc.ABC):
     def __str__(self) -> str:
         return self.json
 
-    @cached_property
+    @property
     def json(self) -> str:
         return dumps(self.dict, indent=4)
 
     @property
     def dict(self) -> OrderedDict:
-        d: dict = self.clean_dict(self.__dict__)
+        d: dict = {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
         return OrderedDict([
             (key, self.dictify(d[key]))
             for key in self.__dataclass_fields__ if key in d
@@ -60,40 +58,15 @@ class Dictable(abc.ABC):
         if isinstance(val, Enum):
             return val.value
         if isinstance(val, datetime):
-            return datetime_to_sql_timestamp(val)
+            return val.strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(val, date):
+            return val.strftime("%Y-%m-%d")
         if type(val) == list:
             return [_val.dict if hasattr(_val, "dict") else self.dictify(_val) for _val in val]
-        if hasattr(val, "dict"):
+        if isinstance(val, Dictable):
             return val.dict
         if isinstance(val, dict):
-            return self.clean_dict(val)
+            return val
         if hasattr(val, "__dict__"):
-            return self.clean_dict(dict(val))
+            return val.__dict__
         return val
-
-    @classmethod
-    def clean_dict(
-            cls,
-            d: dict,
-            ignore_protected: bool = True,
-            remove_empty_values: bool = False,
-            ignore_keys: set[str] | None = None
-    ) -> OrderedDict:
-        """
-        @param d: The dictionary to be cleaned.
-        @param remove_empty_values: Whether to remove emojis from the values in @param d.
-        @param remove_empty_values: Whether to remove empty values from @param d, e.g. None, '' or [].
-        @param ignore_keys: A set of keys which shall definitely be removed from the given dict @param d.
-        @param ignore_protected: Whether to remove keys which start with a '_' character.
-        @return: A clean version of the given dict @param d, where all keys within @param ignore_keys and all keys
-                 which reference empty or None-values are removed.
-        """
-        res = OrderedDict()
-        for k, v in d.items():
-            if not (
-                (ignore_protected and type(k) == str and k.startswith("_")) or
-                (remove_empty_values and v != 0 and not v) or
-                (ignore_keys and k in ignore_keys)
-            ):
-                res[k] = v
-        return res
