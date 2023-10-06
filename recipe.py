@@ -10,8 +10,8 @@ from utils import is_valid_xpath, update_params_with_defaults, etree_to_bs4
 @dataclass
 class Recipe:
     path: str = field(default="/")
-    end_index: int = field(default=1)
     start_index: int = field(default=0)
+    end_index: int | None = field(default=1)
     context: str | None = field(default=None)
     target: object | None = field(default=None)
     extract: Extract | str | None = field(default=None)
@@ -88,8 +88,9 @@ def extract(recipe: Recipe, html: str) -> any:
 def _extract(recipe: Recipe, root) -> any:
     if not (nodes := root.xpath(recipe.path)):
         return
+    end_index: int = len(nodes) if recipe.end_index is None else recipe.end_index
     try:
-        nodes = nodes[recipe.start_index:recipe.end_index]
+        nodes = nodes[recipe.start_index:end_index]
     except IndexError:
         return None
     if not recipe.children:
