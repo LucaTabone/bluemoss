@@ -10,7 +10,8 @@ from utils import is_valid_xpath, update_params_with_defaults, etree_to_bs4
 @dataclass
 class Recipe:
     path: str = field(default="/")
-    index: int | None = field(default=0)
+    end_index: int = field(default=1)
+    start_index: int = field(default=0)
     context: str | None = field(default=None)
     target: object | None = field(default=None)
     extract: Extract | str | None = field(default=None)
@@ -18,8 +19,8 @@ class Recipe:
     transform: Callable[[str], any] | None = field(default=lambda x: x)
 
     @property
-    def find_all(self) -> bool:
-        return self.index is None
+    def find_single_node(self) -> bool:
+        return self.end_index is not None and abs(self.end_index - self.start_index) == 1
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """
@@ -35,9 +36,6 @@ class Recipe:
 
         """ Assert that @param self.extract is either None or a valid Extract. """
         assert self.extract is None or isinstance(self.extract, Extract)
-
-        """ Assert that no index was applied to @param self.path."""
-        assert not self.path.endswith("]"), "Use @param self.index for indexing. "
 
         """ 
         Assert that at lest one but not both parameters 
@@ -90,17 +88,16 @@ def extract(recipe: Recipe, html: str) -> any:
 def _extract(recipe: Recipe, root) -> any:
     if not (nodes := root.xpath(recipe.path)):
         return
-    if not recipe.find_all:
-        try:
-            nodes = [nodes[recipe.index]]
-        except IndexError:
-            return None
+    try:
+        nodes = nodes[recipe.start_index:recipe.end_index]
+    except IndexError:
+        return None
     if not recipe.children:
         res = [
             recipe.transform(_extract_leaf_node(recipe, node))
             for node in nodes
         ]
-        return res if recipe.find_all else res[0]
+        return res[0] if recipe.find_single_node else res
     if recipe.target:
         res: list = []
         for node in nodes:
@@ -116,10 +113,15 @@ def _extract(recipe: Recipe, root) -> any:
             for _recipe in recipe.children
             for node in nodes
         ]
-    return recipe.transform(res) if recipe.find_all else recipe.transform(res[recipe.index])
+    return recipe.transform(res[0]) if recipe.find_single_node else recipe.transform(res)
 
 
 def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
+    if isinstance(recipe.extract, str):
+        # extract tag property directly
+        return node.get(recipe.extract)
+    if not isinstance(recipe.extract, Extract):
+        raise ValueError(f"The @param recipe.extract must be a string or Extract value.")
     match recipe.extract:
         case None | Extract.ETREE:
             return node
