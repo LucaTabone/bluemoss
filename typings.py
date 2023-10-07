@@ -71,3 +71,24 @@ class Dictable(abc.ABC):
         if hasattr(val, "__dict__"):
             return val.__dict__
         return val
+
+
+@dataclass
+class DictableWithTag(Dictable):
+    """
+    Some dataclass instances may need access to their source-html-tag.
+    Those dataclasses can inherit from DictableWithTag and thus also get the benefits of the Dictable class.
+    """
+    _tag: BeautifulSoup | Tag
+
+    def __post_init__(self):
+        super().__post_init__()
+
+    @property
+    def tag(self) -> BeautifulSoup | Tag:
+        return self._tag
+
+    @property
+    def source_line(self) -> int:
+        """ The line within the source-html-doc in which @param self._tag was found. """
+        return self._tag.sourceline
