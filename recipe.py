@@ -1,34 +1,54 @@
 from __future__ import annotations
-from lxml import etree
+from copy import deepcopy
 from typing import Callable
-from typings import Extract
 import utils.url as url_utils
-from bs4 import BeautifulSoup
+from lxml import html as lxml_html, etree
+from typings import Extract, DictableWithTag
 from utils.html import is_valid_xpath, etree_to_bs4
 from utils.general import update_params_with_defaults
 from dataclasses import dataclass, field, is_dataclass, fields
 
 
-@dataclass
+@dataclass(frozen=True)
 class Recipe:
-    path: str = field(default="/")
-    start_index: int = field(default=0)
-    end_index: int | None = field(default=1)
+    # xpath
+    path: str = field(default="")
+    path_prefix: str = field(default=".//")
+    
+    # indices
+    start_idx: int = field(default=0)
+    end_idx: int | None = field(default=1)
+    
+    # extraction
     context: str | None = field(default=None)
     target: object | None = field(default=None)
-    extract: Extract | str | None = field(default=None)
-    children: list[Recipe] = field(default_factory=list)
+    extract: Extract | str | None = field(default=Extract.TEXT)
     transform: Callable[[str], any] | None = field(default=lambda x: x)
+    
+    # child recipes
+    children: list[Recipe] = field(default_factory=list)
 
     @property
     def find_single_node(self) -> bool:
-        return self.end_index is not None and abs(self.end_index - self.start_index) == 1
+        return self.end_idx is not None and abs(self.end_idx - self.start_idx) == 1
+
+    @property
+    def find_all_nodes(self) -> bool:
+        return self.start_idx == 0 and self.end_idx is None
+    
+    @property
+    def full_path(self):
+        return f"{self.path_prefix}{self.path}"
+    
+    def clone(self) -> Recipe:
+        return deepcopy(self)
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """
 
-        """ Assert that @param self.path is a valid XPath query. """
-        assert is_valid_xpath(self.path)
+        """ Assert that @param self.full_path is a valid XPath query. """
+        assert self.full_path is None or is_valid_xpath(self.full_path),\
+            f"{self.full_path} is not a valid XPath query."
 
         """ Assert @param self.target is either None or a dataclass. """
         assert self.target is None or is_dataclass(self.target)
@@ -36,17 +56,11 @@ class Recipe:
         """ Assert that @param self.transform is either None or a callable. """
         assert self.transform is None or callable(self.transform)
 
-        """ Assert that @param self.extract is either None or a valid Extract. """
-        assert self.extract is None or isinstance(self.extract, Extract)
-
         """ 
         Assert that at lest one but not both parameters 
         @param self.extract and @param self.children are set.
         """
         assert not (self.extract is None and len(self.children) == 0)
-
-        """ Assert that at most one of the value @param target or @param context is specified. """
-        assert self.target is None or self.context is None
 
         if not self.target:
             """
