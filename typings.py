@@ -40,7 +40,12 @@ class Dictable(abc.ABC):
     If you now execute .dict on p, the method will not only dictify @param p.header,
     but also all Page instances within the nested list of lists of @param p.pages.
     """
-    __dataclass_fields__: dict | None = field(default=None)
+
+    def __init__(self):
+        self.__dataclass_fields__ = None
+
+    def __post_init__(self):
+        pass
 
     def __str__(self) -> str:
         return self.json
