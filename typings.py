@@ -1,9 +1,10 @@
 import abc
 from json import dumps
 from enum import Enum, unique
+from dataclasses import dataclass
+from bs4 import BeautifulSoup, Tag
 from datetime import datetime, date
 from collections import OrderedDict
-from dataclasses import dataclass, field
 
 
 @unique
@@ -22,6 +23,7 @@ class Extract(Enum):
     HREF_DOMAIN = "href_domain"
     HREF_ENDPOINT = "href_endpoint"
     HREF_BASE_DOMAIN = "href_base_domain"
+    HREF_QUERY_PARAMS = "href_query_params"
     HREF_ENDPOINT_WITH_QUERY = "href_endpoint_with_query"
 
 
