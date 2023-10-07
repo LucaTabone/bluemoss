@@ -84,15 +84,20 @@ class Recipe:
 
 
 def extract(recipe: Recipe, html: str) -> any:
-    return _extract(recipe, etree.fromstring(str(BeautifulSoup(html, 'lxml'))))
+    return _extract(
+        recipe=recipe,
+        root=lxml_html.fromstring(html)
+    )
 
 
 def _extract(recipe: Recipe, root) -> any:
-    if not (nodes := root.xpath(recipe.path)):
+    if recipe.full_path is None:
+        nodes = [root]
+    elif not (nodes := root.xpath(recipe.full_path)):
         return
-    end_index: int = len(nodes) if recipe.end_index is None else recipe.end_index
+    end_index: int = len(nodes) if recipe.end_idx is None else recipe.end_idx
     try:
-        nodes = nodes[recipe.start_index:end_index]
+        nodes = nodes[recipe.start_idx:end_index]
     except IndexError:
         return None
     if not recipe.children:
