@@ -137,11 +137,13 @@ def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
             return node.get("href")
         case Extract.HREF_QUERY:
             return url_utils.get_query(node.get("href"))
-        case Extract.HREF_ENDPOINT:
-            return url_utils.get_endpoint(node.get("href"))
         case Extract.HREF_DOMAIN:
             return url_utils.get_domain(node.get("href"))
+        case Extract.HREF_ENDPOINT:
+            return url_utils.get_endpoint(node.get("href"))
         case Extract.HREF_BASE_DOMAIN:
             return url_utils.get_base_domain(node.get("href"))
+        case Extract.HREF_QUERY_PARAMS:
+            return url_utils.get_query_params(node.get("href"))
         case Extract.HREF_ENDPOINT_WITH_QUERY:
             return url_utils.get_endpoint_with_query(node.get("href"))
