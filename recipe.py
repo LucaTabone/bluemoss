@@ -104,10 +104,14 @@ def _extract(recipe: Recipe, root) -> any:
     if recipe.target:
         res: list = []
         for node in nodes:
-            extracted_fields: dict[str, any] = {
-                _recipe.context: _extract(recipe=_recipe, root=node)
-                for _recipe in recipe.children
-            }
+            extracted_fields: dict[str, any] = (
+                {
+                    _recipe.context: _extract(recipe=_recipe, root=node)
+                    for _recipe in recipe.children
+                }
+                |
+                ({"_tag": etree_to_bs4(node)} if issubclass(recipe.target, DictableWithTag) else {})
+            )
             updated_fields: dict[str, any] = update_params_with_defaults(recipe.target, extracted_fields)
             res.append(recipe.target(**updated_fields))
     else:
