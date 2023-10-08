@@ -11,7 +11,7 @@ from collections import OrderedDict
 class Extract(Enum):
     # text
     TEXT = "text"
-    FULL_TEXT = "full_text"
+    TEXT_CONTENT = "text_content"
 
     # tag
     TAG = "tag"
