@@ -39,9 +39,6 @@ class Recipe:
     @property
     def full_path(self):
         return f"{self.path_prefix}{self.path}"
-    
-    def clone(self) -> Recipe:
-        return deepcopy(self)
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """
