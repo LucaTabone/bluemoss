@@ -19,7 +19,10 @@ def get_domain(url: str | None) -> str | None:
 
 def get_endpoint(url: str | None) -> str | None:
     """ @return: the endpoint of the given @param url ."""
-    return urlparse(url).path if url else None
+    endpoint: str | None = urlparse(url).path if url else None
+    if endpoint and endpoint.endswith("/"):
+        return endpoint[:-1]
+    return endpoint
 
 
 def get_query(url: str | None) -> str | None:
