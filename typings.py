@@ -1,8 +1,8 @@
 import abc
 from json import dumps
+from lxml import etree
 from enum import Enum, unique
 from dataclasses import dataclass
-from bs4 import BeautifulSoup, Tag
 from datetime import datetime, date
 from collections import OrderedDict
 
@@ -87,13 +87,13 @@ class DictableWithTag(Dictable):
     Some dataclass instances may need access to their source-html-tag.
     Those dataclasses can inherit from DictableWithTag and thus also get the benefits of the Dictable class.
     """
-    _tag: BeautifulSoup | Tag
+    _tag: etree.Element
 
     def __post_init__(self):
         super().__post_init__()
 
     @property
-    def tag(self) -> BeautifulSoup | Tag:
+    def tag(self) -> etree.Element:
         return self._tag
 
     @property
