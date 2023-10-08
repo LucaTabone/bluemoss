@@ -10,10 +10,10 @@ from examples.linkedin.public_profiles.person.person_classes \
 
 def date_duration_description_recipes() -> list[Recipe]:
     return [
-        Recipe("span[contains(@class, 'date-range')]/span", context="duration"),
-        Recipe("span[contains(@class, 'date-range')]", context="_date_and_duration_text"),
-        Recipe("p[contains(@class, 'show-more-less-text__text--more')]", context="_description_less_text"),
-        Recipe("p[contains(@class, 'show-more-less-text__text--less')]", context="_description_more_text")
+        Recipe(context="duration", path="span[contains(@class, 'date-range')]/span"),
+        Recipe(context="_date_and_duration_text", path="span[contains(@class, 'date-range')]"),
+        Recipe(context="_description_more_text", path="p[contains(@class, 'show-more-less-text__text--less')]"),
+        Recipe(context="_description_less_text", path="p[contains(@class, 'show-more-less-text__text--more')]")
     ]
 
 
@@ -269,9 +269,6 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
 )
 
 
-with open("./static/jeff_weiner.html", "r") as f:
-    from time import time
-    start = time()
+with open("./static/adam_grant.html", "r") as f:
     profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE, f.read())
-    print(time()-start)
     print(profile)

@@ -258,22 +258,22 @@ class PersonProfile(Dictable):
     profile_endpoint: str
     about: str | None
     header: ProfileHeader
-    experience: Experience = None
-    languages: list[Language] = None
-    education: list[EducationItem] = None
-    volunteering: list[VolunteerItem] = None
-    certifications: list[Certification] = None
-    awards: list[Award] = None
-    publications: list[PublicationItem] = None
-    recommendations: list[RecommendationItem] = None
-    people_also_viewed: list[PeopleAlsoViewedItem] = None
+    experience: Experience 
+    languages: list[Language] 
+    education: list[EducationItem] 
+    volunteering: list[VolunteerItem] 
+    certifications: list[Certification] 
+    awards: list[Award] 
+    publications: list[PublicationItem] 
+    recommendations: list[RecommendationItem] 
+    people_also_viewed: list[PeopleAlsoViewedItem] 
     company_name: str | None = field(default=None, init=False)
     company_profile_endpoint: str | None = field(default=None, init=False)
     current_employer_linkedin_endpoints: list[str] = field(default_factory=list, init=False)
 
     def __post_init__(self):
-        # self._headline = self.header.headline
-        # self._set_current_employer_data()
+        self._headline = self.header.headline
+        self._set_current_employer_data()
         super().__post_init__()
 
     def _set_current_employer_data(self):
