@@ -1,5 +1,4 @@
 from __future__ import annotations
-from copy import deepcopy
 from typing import Callable
 import utils.url as url_utils
 from lxml import html as lxml_html, etree
@@ -126,7 +125,7 @@ def _extract(recipe: Recipe, root) -> any:
                     for _recipe in recipe.children
                 }
                 |
-                ({"_tag": etree_to_bs4(node)} if issubclass(recipe.target, DictableWithTag) else {})
+                ({"_tag": node} if issubclass(recipe.target, DictableWithTag) else {})
             )
             updated_fields: dict[str, any] = update_params_with_defaults(recipe.target, extracted_fields)
             res.append(recipe.target(**updated_fields))
