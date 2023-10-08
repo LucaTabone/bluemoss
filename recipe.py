@@ -22,7 +22,7 @@ class Recipe:
     # extraction
     context: str | None = field(default=None)
     target: object | None = field(default=None)
-    extract: Extract | str | None = field(default=Extract.FULL_TEXT)
+    extract: Extract | str | None = field(default=Extract.TEXT_CONTENT)
     transform: Callable[[str], any] | None = field(default=lambda x: x)
     
     # child recipes
@@ -152,7 +152,7 @@ def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
             return node
         case Extract.TEXT:
             return node.text.strip()
-        case Extract.FULL_TEXT:
+        case Extract.TEXT_CONTENT:
             return node.text_content().strip()
         case Extract.TAG:
             return etree_to_bs4(node)
