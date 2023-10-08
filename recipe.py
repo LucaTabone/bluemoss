@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Callable
 import utils.url as url_utils
-from lxml import html as lxml_html, etree
+from lxml import html as lxml_html
 from typings import Extract, DictableWithTag
 from utils.html import is_valid_xpath, etree_to_bs4
 from utils.general import update_params_with_defaults
@@ -138,7 +138,9 @@ def _extract(recipe: Recipe, root) -> any:
     return recipe.transform(res[0]) if recipe.find_single_node else recipe.transform(res)
 
 
-def _extract_leaf_node(recipe: Recipe, node: etree.Element) -> any:
+def _extract_leaf_node(recipe: Recipe, node) -> any:
+    if type(node).__name__ == '_ElementUnicodeResult':
+        return str(node)
     if isinstance(recipe.extract, str):
         return node.get(recipe.extract)
     if not isinstance(recipe.extract, Extract):
