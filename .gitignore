@@ -2,3 +2,7 @@
 .idea/
 
 __pycache__/
+
+examples/.DS_Store
+
+.DS_Store
