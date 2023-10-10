@@ -104,6 +104,8 @@ def _extract(recipe: Recipe, root) -> any:
     if recipe.full_path is None:
         nodes = [root]
     elif not (nodes := root.xpath(recipe.full_path)):
+        if recipe.extract == Extract.FOUND:
+            return False
         return
     end_index: int = len(nodes) if recipe.end_idx is None else recipe.end_idx
     try:
@@ -148,6 +150,8 @@ def _extract_leaf_node(recipe: Recipe, node) -> any:
     match recipe.extract:
         case None | Extract.ETREE:
             return node
+        case Extract.FOUND:
+            return node is not None
         case Extract.TEXT:
             return node.text.strip()
         case Extract.TEXT_CONTENT:
