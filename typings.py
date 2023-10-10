@@ -9,6 +9,9 @@ from collections import OrderedDict
 
 @unique
 class Extract(Enum):
+    # found
+    FOUND = "found"
+
     # text
     TEXT = "text"
     TEXT_CONTENT = "text_content"
