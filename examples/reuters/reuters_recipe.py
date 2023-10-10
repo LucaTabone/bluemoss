@@ -23,6 +23,6 @@ REUTERS_WORLD_NEWS_ARTICLES_RECIPE: Recipe = Recipe(
 )
 
 
-with open("./static/world_news.html", "r") as f:
+with open("./static/news.html", "r") as f:
     for article in extract(REUTERS_WORLD_NEWS_ARTICLES_RECIPE, f.read()):
         print(article)
