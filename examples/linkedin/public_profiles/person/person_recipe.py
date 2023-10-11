@@ -1,7 +1,7 @@
 from typings import Extract
 from utils.text import get_infix
-from recipe import Recipe, extract
 from utils.url import get_endpoint
+from recipe import Recipe, extract, Range
 from examples.linkedin.public_profiles.person.person_classes \
     import (Language, Certification, Award, EducationItem, VolunteerItem, PersonProfile, ProfileHeader,
             Experience, PublicationItem, ExperienceGroup, ExperienceItem, ExperienceGroupItem,
@@ -39,7 +39,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
                 Recipe(
                     path="li[contains(@class, 'personal-project')]",
                     target=PublicationItem,
-                    end_idx=None,
+                    range=Range(0, None),
                     children=[
                         Recipe(context="date", path="time"),
                         Recipe(context="headline", path="h3/a"),
@@ -63,8 +63,8 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             children=[
                 Recipe(
                     path="div[contains(@class, 'endorsement-card')]",
-                    end_idx=None,
                     target=RecommendationItem,
+                    range=Range(0, None),
                     children=[
                         Recipe(context="text", path="p"),
                         Recipe(context="name", path="h3"),
@@ -108,8 +108,8 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             children=[
                 Recipe(
                     path="li",
-                    end_idx=None,
                     target=EducationItem,
+                    range=Range(0, None),
                     children=[
                          Recipe(context="institution", path="h3"),
                          Recipe(context="degree_info", path="h4"),
@@ -132,8 +132,8 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             children=[
                 Recipe(
                     path="li",
-                    end_idx=None,
                     target=VolunteerItem,
+                    range=Range(0, None),
                     children=[
                         Recipe(context="position", path="h3"),
                         Recipe(context="institution", path="h4")
@@ -148,7 +148,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
                 Recipe(
                     path="li",
                     target=Award,
-                    end_idx=None,
+                    range=Range(0, None),
                     children=[
                         Recipe(context="title", path="h3"),
                         Recipe(context="institution", path="h4")
@@ -162,7 +162,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             children=[
                 Recipe(
                     path="li",
-                    end_idx=None,
+                    range=Range(0, None),
                     target=Certification,
                     children=[
                         Recipe(context="name", path="h3"),
@@ -178,8 +178,8 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             children=[
                 Recipe(
                     path="li",
-                    end_idx=None,
                     target=Language,
+                    range=Range(0, None),
                     children=[
                         Recipe(context="lang", path="h3"),
                         Recipe(context="level", path="h4")
@@ -193,7 +193,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             context="experience",
             children=[
                 Recipe(
-                    end_idx=None,
+                    range=Range(0, None),
                     target=ExperienceGroup,
                     context="_experience_groups",
                     path="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
@@ -213,9 +213,9 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
                         ),
                         Recipe(
                             path="li",
-                            end_idx=None,
                             context="entries",
                             target=ExperienceGroupItem,
+                            range=Range(0, None),
                             children=[
                                 Recipe(context="position", path="h3"),
                                 Recipe(
@@ -227,7 +227,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
                     ]
                 ),
                 Recipe(
-                    end_idx=None,
+                    range=Range(0, None),
                     target=ExperienceItem,
                     context="_experience_items",
                     path="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
@@ -250,7 +250,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
             children=[
                 Recipe(
                     path="li",
-                    end_idx=None,
+                    range=Range(0, None),
                     target=PeopleAlsoViewedItem,
                     children=[
                         Recipe(context="name", path="h3"),
@@ -269,6 +269,6 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
 )
 
 
-with open("./static/adam_grant.html", "r") as f:
+with open("./static/adam.html", "r") as f:
     profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE, f.read())
     print(profile)

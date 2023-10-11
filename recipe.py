@@ -9,14 +9,40 @@ from dataclasses import dataclass, field, is_dataclass, fields
 
 
 @dataclass(frozen=True)
+class Range:
+    start_idx: int
+    end_idx: int | None = field(default=None)
+    return_first: bool = field(default=False)
+    reverse: bool = field(default=False)
+
+    @property
+    def find_all(self) -> bool:
+        return self.start_idx == 0 and self.end_idx is None
+
+    @property
+    def find_single(self) -> bool:
+        return (
+                self.return_first or
+                self.start_idx == -1 and self.end_idx is None or
+                self.end_idx is not None and abs(self.end_idx - self.start_idx) == 1
+        )
+
+    @property
+    def find_range(self) -> bool:
+        return not self.find_single
+
+    def __eq__(self, other):
+        return self.start_idx == other.start_idx and self.end_idx == other.end_idx
+
+
+@dataclass(frozen=True)
 class Recipe:
     # xpath
     path: str = field(default="")
     path_prefix: str = field(default=".//")
     
-    # indices
-    start_idx: int = field(default=0)
-    end_idx: int | None = field(default=1)
+    # search range
+    range: Range = Range(0, 1)
     
     # extraction
     context: str | None = field(default=None)
@@ -26,14 +52,6 @@ class Recipe:
     
     # child recipes
     children: list[Recipe] = field(default_factory=list)
-
-    @property
-    def find_single_node(self) -> bool:
-        return self.end_idx is not None and abs(self.end_idx - self.start_idx) == 1
-
-    @property
-    def find_all_nodes(self) -> bool:
-        return self.start_idx == 0 and self.end_idx is None
     
     @property
     def full_path(self):
@@ -107,17 +125,19 @@ def _extract(recipe: Recipe, root) -> any:
         if recipe.extract == Extract.FOUND:
             return False
         return
-    end_index: int = len(nodes) if recipe.end_idx is None else recipe.end_idx
+    end_index: int = len(nodes) if recipe.range.end_idx is None else recipe.range.end_idx
     try:
-        nodes = nodes[recipe.start_idx:end_index]
+        nodes = nodes[recipe.range.start_idx:end_index]
+        if recipe.range.reverse:
+            nodes = nodes[::-1]
     except IndexError:
-        return None
+        return None  # TODO print error message
     if not recipe.children:
         res = [
             recipe.transform(_extract_leaf_node(recipe, node))
             for node in nodes
         ]
-        return res[0] if recipe.find_single_node else res
+        return res[0] if recipe.range.find_single else res
     if recipe.target:
         res: list = []
         for node in nodes:
@@ -137,7 +157,7 @@ def _extract(recipe: Recipe, root) -> any:
             for _recipe in recipe.children
             for node in nodes
         ]
-    return recipe.transform(res[0]) if recipe.find_single_node else recipe.transform(res)
+    return recipe.transform(res[0]) if recipe.range.find_single else recipe.transform(res)
 
 
 def _extract_leaf_node(recipe: Recipe, node) -> any:

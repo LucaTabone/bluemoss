@@ -1,19 +1,19 @@
 from typings import Extract
-from recipe import Recipe, extract
+from recipe import Recipe, Range, extract
 from examples.zalando.zalando_classes import Article
 
 
 ZALANDO_ARTICLES_RECIPE: Recipe = Recipe(
-    end_idx=None,
     target=Article,
     path_prefix="/html",
     path="//article[contains(@class, 'z5x6ht')]",
+    range=Range(0, None),
     children=[
         Recipe(context="brand", path="h3"),
         Recipe(context="img_url", path="img/@src"),
-        Recipe(context="_price_text", path="p/span[last()]"),
         Recipe(context="url", path="a", extract=Extract.HREF),
-        Recipe(context="short_description", path="h3[last()]"),
+        Recipe(context="_price_text", path="p/span", range=Range(-1, None)),
+        Recipe(context="short_description", path="h3", range=Range(-1, None)),
         Recipe(context="discount", path="span[contains(@class, 'Km7l2y r9BRio')]"),
         Recipe(
             context="is_deal",

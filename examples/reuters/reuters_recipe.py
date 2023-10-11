@@ -1,12 +1,12 @@
 from typings import Extract
-from recipe import Recipe, extract
+from recipe import Recipe, Range, extract
 from examples.reuters.reuters_classes import Article
 
 
 REUTERS_WORLD_NEWS_ARTICLES_RECIPE: Recipe = Recipe(
-    end_idx=None,
     path_prefix="//",
     path="li[contains(@class, 'story-collection')]/div[contains(@class, 'media-story-card')]",
+    range=Range(0, None),
     target=Article,
     children=[
         Recipe(
