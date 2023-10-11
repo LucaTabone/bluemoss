@@ -268,8 +268,7 @@ class PersonProfile(Dictable):
     recommendations: list[RecommendationItem] 
     people_also_viewed: list[PeopleAlsoViewedItem] 
     company_name: str | None = field(default=None, init=False)
-    company_profile_endpoint: str | None = field(default=None, init=False)
-    current_employer_linkedin_endpoints: list[str] = field(default_factory=list, init=False)
+    current_employers: list[tuple[str, str]] = field(default_factory=list, init=False)
 
     def __post_init__(self):
         self._headline = self.header.headline
@@ -285,9 +284,10 @@ class PersonProfile(Dictable):
             return
         for item in self.experience.entries:
             if item.company_profile_endpoint and item.is_current_position:
-                self.current_employer_linkedin_endpoints.append(item.company_profile_endpoint)
-                self.company_profile_endpoint = item.company_profile_endpoint
-                self.company_name = item.company_name
+                self.current_employers.append((
+                    item.company_profile_endpoint,
+                    item.company_name
+                ))
 
     @property
     def dict(self) -> OrderedDict:
