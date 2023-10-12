@@ -3,7 +3,11 @@ from bs4 import BeautifulSoup
 from utils.html import remove_tags
 
 
-def beautify_all_html_files():
+def setup():
+    _prettify_html_files()
+
+
+def _prettify_html_files():
     for res in walk(getcwd()):
         for file_name in res[2]:
             if not file_name.endswith(".html"):
@@ -18,4 +22,4 @@ def beautify_all_html_files():
 
 
 if __name__ == '__main__':
-    beautify_all_html_files()
+    setup()
