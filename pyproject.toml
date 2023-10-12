@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "recipe-scraping"
+version = "0.1.0"
+description = "An easy way to scrape any website and capture the extracted data in Python dataclasses."
+authors = ["lunchquader <luca.tabone93@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+BeautifulSoup4 = "lxml"
+bs4 = "^0.0.1"
+lxml = "^4.9.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
