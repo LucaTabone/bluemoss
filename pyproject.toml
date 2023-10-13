@@ -1,15 +1,15 @@
 [tool.poetry]
-name = "recipe-scraping"
+name = "bluemoss"
 version = "0.1.0"
-description = "An easy way to scrape any website and capture the extracted data in Python dataclasses."
-authors = ["lunchquader <luca.tabone93@gmail.com>"]
+description = "An easy way to scrape a website and capture the extracted data in Python dataclasses."
+authors = ["lunchquader <luca@tabone.io>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-BeautifulSoup4 = "lxml"
-bs4 = "^0.0.1"
+nox = "^2023.4.22"
+beautifulsoup4 = "^4.12.2"
 lxml = "^4.9.3"
 
 
