@@ -139,7 +139,7 @@ def _extract(recipe: Recipe, root) -> any:
         ]
         return res[0] if recipe.range.find_single else res
     if recipe.target:
-        res: list = [_compute_target_values(recipe, node) for node in nodes]
+        res: list = [_build_target_instance(recipe, node) for node in nodes]
     else:
         res: list = [
             _extract(recipe=_recipe, root=node)
@@ -185,13 +185,13 @@ def _extract_leaf_node(recipe: Recipe, node) -> any:
             return url_utils.get_endpoint_with_query(node.get("href"))
 
 
-def _compute_target_values(recipe: Recipe, node) -> dict[str, any]:
-    res: dict[str, any] = {}
+def _build_target_instance(recipe: Recipe, node):
+    values: dict[str, any] = {}
     params_with_defaults: set[str] = get_params_with_default_value(recipe.target)
     for _recipe in recipe.children:
         val: any = _extract(recipe=_recipe, root=node)
         if not (val is None and _recipe.context in params_with_defaults):
-            res[_recipe.context] = val
+            values[_recipe.context] = val
     if issubclass(recipe.target, DictableWithTag):
-        res |= {"_tag": node}
-    return res
+        values |= {"_tag": node}
+    return recipe.target(**values)
