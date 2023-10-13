@@ -1,12 +1,13 @@
+from functools import cache
 from dataclasses import fields, Field, MISSING
 
 
-def update_params_with_defaults(dataclass_type, params: dict[str, any]) -> dict[str, any]:
-    defaults = {}
-    for _field in fields(dataclass_type):
-        if _field.name in params and params.get(_field.name, None) is None:
-            defaults[_field.name] = _get_default_value(_field)
-    return params | defaults
+@cache
+def get_params_with_default_value(dataclass_type) -> set[str]:
+    return {
+        f.name for f in fields(dataclass_type)
+        if f.default != MISSING or f.default_factory != MISSING
+    }
 
 
 def _get_default_value(field: Field) -> any:
