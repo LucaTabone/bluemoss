@@ -164,7 +164,10 @@ def _extract_leaf_node(recipe: Recipe, node) -> any:
         case Extract.TEXT:
             return node.text.strip()
         case Extract.TEXT_CONTENT:
-            return node.text_content().strip()
+            text: str = node.text_content().strip().replace("\n", "")
+            while "  " in text:
+                text = text.replace("  ", " ")
+            return text
         case Extract.TAG:
             return etree_to_bs4(node)
         case Extract.TAG_AS_STRING:
