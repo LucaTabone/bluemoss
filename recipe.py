@@ -4,7 +4,7 @@ import utils.url as url_utils
 from lxml import html as lxml_html
 from typings import Extract, DictableWithTag
 from utils.html import is_valid_xpath, etree_to_bs4
-from utils.general import update_params_with_defaults
+from utils.general import get_params_with_default_value
 from dataclasses import dataclass, field, is_dataclass, fields
 
 
@@ -131,7 +131,7 @@ def _extract(recipe: Recipe, root) -> any:
         if recipe.range.reverse:
             nodes = nodes[::-1]
     except IndexError:
-        return None  # TODO print error message
+        return None
     if not recipe.children:
         res = [
             recipe.transform(_extract_leaf_node(recipe, node))
@@ -139,18 +139,7 @@ def _extract(recipe: Recipe, root) -> any:
         ]
         return res[0] if recipe.range.find_single else res
     if recipe.target:
-        res: list = []
-        for node in nodes:
-            extracted_fields: dict[str, any] = (
-                {
-                    _recipe.context: _extract(recipe=_recipe, root=node)
-                    for _recipe in recipe.children
-                }
-                |
-                ({"_tag": node} if issubclass(recipe.target, DictableWithTag) else {})
-            )
-            updated_fields: dict[str, any] = update_params_with_defaults(recipe.target, extracted_fields)
-            res.append(recipe.target(**updated_fields))
+        res: list = [_compute_target_values(recipe, node) for node in nodes]
     else:
         res: list = [
             _extract(recipe=_recipe, root=node)
@@ -194,3 +183,15 @@ def _extract_leaf_node(recipe: Recipe, node) -> any:
             return url_utils.get_query_params(node.get("href"))
         case Extract.HREF_ENDPOINT_WITH_QUERY:
             return url_utils.get_endpoint_with_query(node.get("href"))
+
+
+def _compute_target_values(recipe: Recipe, node) -> dict[str, any]:
+    res: dict[str, any] = {}
+    params_with_defaults: set[str] = get_params_with_default_value(recipe.target)
+    for _recipe in recipe.children:
+        val: any = _extract(recipe=_recipe, root=node)
+        if not (val is None and _recipe.context in params_with_defaults):
+            res[_recipe.context] = val
+    if issubclass(recipe.target, DictableWithTag):
+        res |= {"_tag": node}
+    return res
