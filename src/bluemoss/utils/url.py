@@ -24,20 +24,20 @@ def get_endpoint(url: str | None) -> str | None:
     return endpoint
 
 
-def get_query(url: str | None) -> str | None:
+def get_url_query(url: str | None) -> str | None:
     return urlparse(url).query if url else None
 
 
 def get_endpoint_with_query(url: str | None) -> str | None:
     if not (endpoint := get_endpoint(url)):
         return
-    if not (query := get_query(url)):
+    if not (query := get_url_query(url)):
         return endpoint
     return f"{endpoint}?{query}"
 
 
 @cache
-def get_query_params(url: str | None, only_initial_values: bool = True) -> dict:
+def get_url_query_params(url: str | None, only_initial_values: bool = True) -> dict:
     params: dict = parse_qs(urlparse(url).query) if url else None
     if not params:
         return {}
