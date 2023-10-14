@@ -1,4 +1,4 @@
-from typings import Dictable
+from src.classes.types_ import Dictable
 from dataclasses import dataclass
 
 

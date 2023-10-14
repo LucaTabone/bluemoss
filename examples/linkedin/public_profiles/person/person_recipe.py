@@ -1,7 +1,9 @@
-from typings import Extract
-from utils.text import get_infix
-from utils.url import get_endpoint
-from recipe import Recipe, extract, Range
+from src.typings import Extract
+from src.utils.text import get_infix
+from src.utils.url import get_endpoint
+from src.classes.recipe import Recipe
+from src.extract import extract
+from src.classes.range import Range
 from examples.linkedin.public_profiles.person.person_classes \
     import (Language, Certification, Award, EducationItem, VolunteerItem, PersonProfile, ProfileHeader,
             Experience, PublicationItem, ExperienceGroup, ExperienceItem, ExperienceGroupItem,
@@ -269,6 +271,6 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE: Recipe = Recipe(
 )
 
 
-with open("./static/adam.html", "r") as f:
+with open("./static/jeff.html", "r") as f:
     profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_RECIPE, f.read())
     print(profile)

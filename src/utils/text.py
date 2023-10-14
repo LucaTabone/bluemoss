@@ -12,3 +12,10 @@ def get_infix(text: str, prefix: str, suffix: str) -> str | None:
     if idx == -1:
         return
     return res[:idx]
+
+
+def clean_text(text: str) -> str:
+    text = text.strip().replace("\n", "")
+    while "  " in text:
+        text = text.replace("  ", " ")
+    return text

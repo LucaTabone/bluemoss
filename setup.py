@@ -1,6 +1,6 @@
 from os import walk, getcwd
 from bs4 import BeautifulSoup
-from utils.html import remove_tags
+from src.utils.html import remove_tags
 
 
 def setup():

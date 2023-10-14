@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from typings import Dictable, DictableWithTag
+from src.typings import Dictable, DictableWithTag
 
 
 @dataclass

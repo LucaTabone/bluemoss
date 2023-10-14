@@ -1,4 +1,6 @@
-from recipe import Recipe, Range, extract
+from src.classes.recipe import Recipe
+from src.extract import extract
+from src.classes.range import Range
 from examples.blog.blog_classes import BlogPost
 
 

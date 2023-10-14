@@ -1,5 +1,7 @@
-from typings import Extract
-from recipe import Recipe, Range, extract
+from src.typings import Extract
+from src.classes.recipe import Recipe
+from src.extract import extract
+from src.classes.range import Range
 from examples.reuters.reuters_classes import Article
 
 

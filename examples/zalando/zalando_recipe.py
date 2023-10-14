@@ -1,5 +1,7 @@
-from typings import Extract
-from recipe import Recipe, Range, extract
+from src.classes.types_ import Extract
+from src.classes.recipe import Recipe
+from src.extract import extract
+from src.classes.range import Range
 from examples.zalando.zalando_classes import Article
 
 

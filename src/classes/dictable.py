@@ -1,34 +1,10 @@
 import abc
+from enum import Enum
 from json import dumps
 from lxml import etree
-from enum import Enum, unique
 from dataclasses import dataclass
 from datetime import datetime, date
 from collections import OrderedDict
-
-
-@unique
-class Extract(Enum):
-    # found
-    FOUND = "found"
-
-    # text
-    TEXT = "text"
-    TEXT_CONTENT = "text_content"
-
-    # tag
-    TAG = "tag"
-    ETREE = "etree"
-    TAG_AS_STRING = "tag_as_string"
-
-    # href
-    HREF = "href"
-    HREF_QUERY = "href_query"
-    HREF_DOMAIN = "href_domain"
-    HREF_ENDPOINT = "href_endpoint"
-    HREF_BASE_DOMAIN = "href_base_domain"
-    HREF_QUERY_PARAMS = "href_query_params"
-    HREF_ENDPOINT_WITH_QUERY = "href_endpoint_with_query"
 
 
 @dataclass
