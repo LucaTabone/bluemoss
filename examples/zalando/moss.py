@@ -28,6 +28,7 @@ ZALANDO_ARTICLES_MOSS: Moss = Moss(
 )
 
 
-with open("./static/shoes.html", "r") as f:
-    for article in extract(ZALANDO_ARTICLES_MOSS, f.read()):
-        print(article)
+if __name__ == '__main__':
+    with open("./static/shoes.html", "r") as f:
+        for article in extract(ZALANDO_ARTICLES_MOSS, f.read()):
+            print(article)

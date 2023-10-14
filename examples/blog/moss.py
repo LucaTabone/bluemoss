@@ -21,6 +21,7 @@ BLOG_POSTS_MOSS: Moss = Moss(
 )
 
 
-with open("./static/blog.html", "r") as f:
-    for article in extract(BLOG_POSTS_MOSS, f.read()):
-        print(article)
+if __name__ == '__main__':
+    with open("./static/blog.html", "r") as f:
+        for article in extract(BLOG_POSTS_MOSS, f.read()):
+            print(article)

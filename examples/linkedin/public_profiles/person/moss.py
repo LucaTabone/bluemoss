@@ -264,6 +264,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
 )
 
 
-with open("./static/jeff.html", "r") as f:
-    profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS, f.read())
-    print(profile)
+if __name__ == '__main__':
+    with open("./static/jeff.html", "r") as f:
+        profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS, f.read())
+        print(profile)
