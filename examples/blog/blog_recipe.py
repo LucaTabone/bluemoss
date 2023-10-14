@@ -1,6 +1,4 @@
-from src.classes.recipe import Recipe
-from src.extract import extract
-from src.classes.range import Range
+from bluemoss import Recipe, Range, extract
 from examples.blog.blog_classes import BlogPost
 
 

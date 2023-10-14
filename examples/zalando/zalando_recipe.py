@@ -1,8 +1,5 @@
-from src.classes.types_ import Extract
-from src.classes.recipe import Recipe
-from src.extract import extract
-from src.classes.range import Range
 from examples.zalando.zalando_classes import Article
+from bluemoss import extract, Extract, Recipe, Range
 
 
 ZALANDO_ARTICLES_RECIPE: Recipe = Recipe(

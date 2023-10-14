@@ -1,8 +1,5 @@
-from src.typings import Extract
-from src.classes.recipe import Recipe
-from src.extract import extract
-from src.classes.range import Range
 from examples.reuters.reuters_classes import Article
+from bluemoss import Extract, Recipe, Range, extract
 
 
 REUTERS_WORLD_NEWS_ARTICLES_RECIPE: Recipe = Recipe(

@@ -1,13 +1,16 @@
-from __future__ import annotations
-
 from lxml import html as lxml_html
-
-from src.classes.recipe import Recipe
-from src.classes.types_ import Extract, DictableWithTag
-from src.utils import url as url_utils
-from src.utils.general import get_params_with_default_value
-from src.utils.html import etree_to_bs4
-from src.utils.text import clean_text
+from .classes import Extract, Recipe, DictableWithTag
+from .utils import (
+    clean_text,
+    get_domain,
+    etree_to_bs4,
+    get_endpoint,
+    get_url_query,
+    get_base_domain,
+    get_url_query_params,
+    get_endpoint_with_query,
+    get_params_with_default_value,
+)
 
 
 def extract(recipe: Recipe, html: str) -> any:
@@ -73,17 +76,17 @@ def _extract_leaf_node(recipe: Recipe, node) -> any:
         case Extract.HREF:
             return node.get("href")
         case Extract.HREF_QUERY:
-            return url_utils.get_query(node.get("href"))
+            return get_url_query(node.get("href"))
         case Extract.HREF_DOMAIN:
-            return url_utils.get_domain(node.get("href"))
+            return get_domain(node.get("href"))
         case Extract.HREF_ENDPOINT:
-            return url_utils.get_endpoint(node.get("href"))
+            return get_endpoint(node.get("href"))
         case Extract.HREF_BASE_DOMAIN:
-            return url_utils.get_base_domain(node.get("href"))
+            return get_base_domain(node.get("href"))
         case Extract.HREF_QUERY_PARAMS:
-            return url_utils.get_query_params(node.get("href"))
+            return get_url_query_params(node.get("href"))
         case Extract.HREF_ENDPOINT_WITH_QUERY:
-            return url_utils.get_endpoint_with_query(node.get("href"))
+            return get_endpoint_with_query(node.get("href"))
 
 
 def _build_target_instance(recipe: Recipe, node):

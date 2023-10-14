@@ -1,4 +1,4 @@
-from src.classes.types_ import Dictable
+from bluemoss import Dictable
 from dataclasses import dataclass
 
 

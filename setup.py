@@ -1,6 +1,6 @@
 from os import walk, getcwd
 from bs4 import BeautifulSoup
-from src.utils.html import remove_tags
+from bluemoss.utils import remove_tags
 
 
 def setup():

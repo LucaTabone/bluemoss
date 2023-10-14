@@ -1,13 +1,6 @@
-from src.typings import Extract
-from src.utils.text import get_infix
-from src.utils.url import get_endpoint
-from src.classes.recipe import Recipe
-from src.extract import extract
-from src.classes.range import Range
-from examples.linkedin.public_profiles.person.person_classes \
-    import (Language, Certification, Award, EducationItem, VolunteerItem, PersonProfile, ProfileHeader,
-            Experience, PublicationItem, ExperienceGroup, ExperienceItem, ExperienceGroupItem,
-            PeopleAlsoViewedItem, RecommendationItem)
+from bluemoss.utils import get_infix, get_endpoint
+from bluemoss import extract, Extract, Recipe, Range
+from examples.linkedin.public_profiles.person.person_classes import *
 
 
 def date_duration_description_recipes() -> list[Recipe]:

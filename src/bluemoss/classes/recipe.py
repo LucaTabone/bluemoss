@@ -1,8 +1,8 @@
 from __future__ import annotations
+from . import Extract
+from .range import Range
 from typing import Callable
-from src.classes.range import Range
-from src.classes.extract import Extract
-from src.utils.html import is_valid_xpath
+from ..utils import is_valid_xpath
 from dataclasses import dataclass, field, is_dataclass, fields
 
 
