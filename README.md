@@ -4,6 +4,6 @@
   <p align="center">
     ✨ <a href="https://github.com/LucaTabone/bluemoss">GitHub</a> ✨
     <br/>
-    The easiest way to scrape the web.
+    A simple way to scrape the web.
   </p>
 </p>
