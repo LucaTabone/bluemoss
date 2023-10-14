@@ -1,5 +1,5 @@
 from lxml import html as lxml_html
-from .classes import Extract, Recipe, DictableWithTag
+from .classes import Extract, Moss, DictableWithTag
 from .utils import (
     clean_text,
     get_domain,
@@ -13,52 +13,52 @@ from .utils import (
 )
 
 
-def extract(recipe: Recipe, html: str) -> any:
+def extract(moss: Moss, html: str) -> any:
     return _extract(
-        recipe=recipe,
+        moss=moss,
         root=lxml_html.fromstring(html)
     )
 
 
-def _extract(recipe: Recipe, root) -> any:
-    if recipe.full_path is None:
+def _extract(moss: Moss, root) -> any:
+    if moss.full_path is None:
         nodes = [root]
-    elif not (nodes := root.xpath(recipe.full_path)):
-        if recipe.extract == Extract.FOUND:
+    elif not (nodes := root.xpath(moss.full_path)):
+        if moss.extract == Extract.FOUND:
             return False
         return
-    end_index: int = len(nodes) if recipe.range.end_idx is None else recipe.range.end_idx
+    end_index: int = len(nodes) if moss.range.end_idx is None else moss.range.end_idx
     try:
-        nodes = nodes[recipe.range.start_idx:end_index]
-        if recipe.range.reverse:
+        nodes = nodes[moss.range.start_idx:end_index]
+        if moss.range.reverse:
             nodes = nodes[::-1]
     except IndexError:
         return None
-    if not recipe.children:
+    if not moss.children:
         res = [
-            recipe.transform(_extract_leaf_node(recipe, node))
+            moss.transform(_extract_leaf_node(moss, node))
             for node in nodes
         ]
-        return res[0] if recipe.range.find_single else res
-    if recipe.target:
-        res: list = [_build_target_instance(recipe, node) for node in nodes]
+        return res[0] if moss.range.find_single else res
+    if moss.target:
+        res: list = [_build_target_instance(moss, node) for node in nodes]
     else:
         res: list = [
-            _extract(recipe=_recipe, root=node)
-            for _recipe in recipe.children
+            _extract(moss=_moss, root=node)
+            for _moss in moss.children
             for node in nodes
         ]
-    return recipe.transform(res[0]) if recipe.range.find_single else recipe.transform(res)
+    return moss.transform(res[0]) if moss.range.find_single else moss.transform(res)
 
 
-def _extract_leaf_node(recipe: Recipe, node) -> any:
+def _extract_leaf_node(moss: Moss, node) -> any:
     if type(node).__name__ == '_ElementUnicodeResult':
         return str(node)
-    if isinstance(recipe.extract, str):
-        return node.get(recipe.extract)
-    if not isinstance(recipe.extract, Extract):
-        raise ValueError(f"The @param recipe.extract must be a string or Extract value.")
-    match recipe.extract:
+    if isinstance(moss.extract, str):
+        return node.get(moss.extract)
+    if not isinstance(moss.extract, Extract):
+        raise ValueError(f"The @param moss.extract must be a string or Extract value.")
+    match moss.extract:
         case None | Extract.ETREE:
             return node
         case Extract.FOUND:
@@ -89,13 +89,13 @@ def _extract_leaf_node(recipe: Recipe, node) -> any:
             return get_endpoint_with_query(node.get("href"))
 
 
-def _build_target_instance(recipe: Recipe, node):
+def _build_target_instance(moss: Moss, node):
     values: dict[str, any] = {}
-    params_with_defaults: set[str] = get_params_with_default_value(recipe.target)
-    for _recipe in recipe.children:
-        val: any = _extract(recipe=_recipe, root=node)
-        if not (val is None and _recipe.context in params_with_defaults):
-            values[_recipe.context] = val
-    if issubclass(recipe.target, DictableWithTag):
+    params_with_defaults: set[str] = get_params_with_default_value(moss.target)
+    for _moss in moss.children:
+        val: any = _extract(moss=_moss, root=node)
+        if not (val is None and _moss.context in params_with_defaults):
+            values[_moss.context] = val
+    if issubclass(moss.target, DictableWithTag):
         values |= {"_tag": node}
-    return recipe.target(**values)
+    return moss.target(**values)

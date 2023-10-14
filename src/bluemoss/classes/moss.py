@@ -7,7 +7,7 @@ from dataclasses import dataclass, field, is_dataclass, fields
 
 
 @dataclass(frozen=True)
-class Recipe:
+class Moss:
     # xpath
     path: str = field(default="")
     path_prefix: str = field(default=".//")
@@ -21,8 +21,8 @@ class Recipe:
     transform: Callable[[str], any] | None = field(default=lambda x: x)
     extract: Extract | str | None = field(default=Extract.TEXT_CONTENT_CLEAN)
     
-    # child recipes
-    children: list[Recipe] = field(default_factory=list)
+    # child moss
+    children: list[Moss] = field(default_factory=list)
     
     @property
     def full_path(self):
@@ -49,9 +49,9 @@ class Recipe:
 
         if not self.target:
             """
-            If no @param target is specified, we expect to have 0 or 1 recipe-children.
-            In case we have no recipe children, we'll directly extract data from the tag(s) specified by @param path.
-            In case we have one recipe child, we will not continue our search with that recipe-child.                 
+            If no @param target is specified, we expect to have 0 or 1 moss-children.
+            In case we have no moss children, we'll directly extract data from the tag(s) specified by @param path.
+            In case we have one moss child, we will not continue our search with that moss-child.                 
             """
             assert len(self.children) <= 1
             return
@@ -65,9 +65,9 @@ class Recipe:
         assert len(self.children) > 0
 
         """
-        Make sure that all child-recipes have specified their @param context, 
+        Make sure that all children have specified their @param context, 
         which translates to the parameter/key of the dataclass @param target,
-        i.e. the data extracted from one child-recipe is assigned to exactly 
+        i.e. the data extracted from one child-moss is assigned to exactly 
         one parameter of an instance of @param target.
         """
         assert all([c.context for c in self.children])
@@ -77,6 +77,6 @@ class Recipe:
         of the dataclass @param target.
         """
         target_class_params: set[str] = set(f.name for f in fields(self.target))
-        for recipe in self.children:
-            assert recipe.context in target_class_params, \
-                f"{recipe.context} is no valid parameter of the target-class"
+        for moss in self.children:
+            assert moss.context in target_class_params, \
+                f"{moss.context} is no valid parameter of the target-class"

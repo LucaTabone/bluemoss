@@ -1,4 +1,4 @@
 from .dictable import Dictable, DictableWithTag
 from .extract import Extract
-from .recipe import Recipe
+from .moss import Moss
 from .range import Range

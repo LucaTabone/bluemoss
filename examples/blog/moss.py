@@ -1,17 +1,17 @@
-from bluemoss import Recipe, Range, extract
-from examples.blog.blog_classes import BlogPost
+from bluemoss import Moss, Range, extract
+from examples.blog.classes import BlogPost
 
 
-BLOG_POSTS_RECIPE: Recipe = Recipe(
+BLOG_POSTS_MOSS: Moss = Moss(
     path_prefix="/html",
     path="//div[@class='post']",
     range=Range(0, None),
     target=BlogPost,
     children=[
-        Recipe(context="title", path="a"),
-        Recipe(context="url", path="a[@href]"),
-        Recipe(context="date", path="span[@class='date']"),
-        Recipe(
+        Moss(context="title", path="a"),
+        Moss(context="url", path="a[@href]"),
+        Moss(context="date", path="span[@class='date']"),
+        Moss(
             path_prefix="",
             range=Range(0, None),
             context="_text_lines",
@@ -22,5 +22,5 @@ BLOG_POSTS_RECIPE: Recipe = Recipe(
 
 
 with open("./static/blog.html", "r") as f:
-    for article in extract(BLOG_POSTS_RECIPE, f.read()):
+    for article in extract(BLOG_POSTS_MOSS, f.read()):
         print(article)
