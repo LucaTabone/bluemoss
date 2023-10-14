@@ -9,10 +9,6 @@ class Range:
     reverse: bool = field(default=False)
 
     @property
-    def find_all(self) -> bool:
-        return self.start_idx == 0 and self.end_idx is None
-
-    @property
     def find_single(self) -> bool:
         return (
                 self.return_first or
@@ -24,5 +20,6 @@ class Range:
     def find_range(self) -> bool:
         return not self.find_single
 
-    def __eq__(self, other):
-        return self.start_idx == other.start_idx and self.end_idx == other.end_idx
+    @property
+    def find_all(self) -> bool:
+        return self.find_range and self.start_idx == 0 and self.end_idx is None
