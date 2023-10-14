@@ -4,6 +4,6 @@
   <p align="center">
     ✨ <a href="https://github.com/LucaTabone/bluemoss">GitHub</a> ✨
     <br/>
-    Scrape any website and capture the data in Python dataclasses.
+    The easiest way to scrape the web.
   </p>
 </p>
