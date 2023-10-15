@@ -40,7 +40,7 @@ def _extract(moss: Moss, root) -> any:
             for node in nodes
         ]
         return res[0] if moss.range.find_single else res
-    if moss.target or moss.target_is_dict:
+    if moss.target or moss.target_is_dict or moss.target_is_list:
         res: list = [_build_target_instance(moss, node) for node in nodes]
     else:
         res: list = [
@@ -90,9 +90,10 @@ def _extract_leaf_node(moss: Moss, node) -> any:
 
 
 def _build_target_instance(moss: Moss, node):
-    assert moss.target or moss.target_is_dict
     if moss.target_is_dict:
         return PrettyDict({c.key: _extract(moss=c, root=node) for c in moss.children})
+    elif moss.target_is_list:
+        return [_extract(moss=c, root=node) for c in moss.children]
     values: dict[str, any] = {}
     params_with_defaults: set[str] = get_params_with_default_value(moss.target)
     for _moss in moss.children:
