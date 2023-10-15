@@ -1,5 +1,5 @@
 from lxml import html as lxml_html
-from .classes import Extract, Moss, DictableWithTag
+from .classes import Extract, Moss, DictableWithTag, PrettyDict
 from .utils import (
     clean_text,
     get_domain,
@@ -40,7 +40,7 @@ def _extract(moss: Moss, root) -> any:
             for node in nodes
         ]
         return res[0] if moss.range.find_single else res
-    if moss.target:
+    if moss.target or moss.target_is_dict:
         res: list = [_build_target_instance(moss, node) for node in nodes]
     else:
         res: list = [
@@ -90,12 +90,15 @@ def _extract_leaf_node(moss: Moss, node) -> any:
 
 
 def _build_target_instance(moss: Moss, node):
+    assert moss.target or moss.target_is_dict
+    if moss.target_is_dict:
+        return PrettyDict({c.key: _extract(moss=c, root=node) for c in moss.children})
     values: dict[str, any] = {}
     params_with_defaults: set[str] = get_params_with_default_value(moss.target)
     for _moss in moss.children:
         val: any = _extract(moss=_moss, root=node)
-        if not (val is None and _moss.context in params_with_defaults):
-            values[_moss.context] = val
+        if not (val is None and _moss.key in params_with_defaults):
+            values[_moss.key] = val
     if issubclass(moss.target, DictableWithTag):
         values |= {"_tag": node}
     return moss.target(**values)

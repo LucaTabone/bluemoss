@@ -7,6 +7,11 @@ from datetime import datetime, date
 from collections import OrderedDict
 
 
+class PrettyDict(dict):
+    def __str__(self) -> str:
+        return '{\n' + ',\n'.join(f'    {repr(k)}: {repr(v)}' for k, v in self.items()) + '\n}'
+
+
 @dataclass
 class Dictable(abc.ABC):
     """
