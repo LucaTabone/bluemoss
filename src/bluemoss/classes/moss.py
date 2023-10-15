@@ -1,9 +1,10 @@
 from __future__ import annotations
 from . import Extract
 from .range import Range
-from typing import Callable
-from ..utils import is_valid_xpath
-from dataclasses import dataclass, field, is_dataclass, fields
+from inspect import isclass
+from typing import Callable, Type
+from dataclasses import dataclass, field
+from ..utils import is_valid_xpath, get_init_params
 
 
 @dataclass(frozen=True)
@@ -16,17 +17,21 @@ class Moss:
     range: Range = Range(0, 1)
     
     # extraction
-    context: str | None = field(default=None)
-    target: object | None = field(default=None)
+    key: str | None = field(default=None)
+    target: Type[any] | None = field(default=None)
     transform: Callable[[str], any] | None = field(default=lambda x: x)
     extract: Extract | str | None = field(default=Extract.TEXT_CONTENT_CLEAN)
     
-    # child moss
+    # child nodes
     children: list[Moss] = field(default_factory=list)
     
     @property
     def full_path(self):
         return f"{self.path_prefix}{self.path}"
+
+    @property
+    def target_is_dict(self) -> bool:
+        return self.target is None and all([c.key for c in self.children])
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """
@@ -35,48 +40,32 @@ class Moss:
         assert self.full_path is None or is_valid_xpath(self.full_path),\
             f"{self.full_path} is not a valid XPath query."
 
-        """ Assert @param self.target is either None or a dataclass. """
-        assert self.target is None or is_dataclass(self.target)
-
-        """ Assert that @param self.transform is either None or a callable. """
-        assert self.transform is None or callable(self.transform)
-
         """ 
         Assert that at lest one but not both parameters 
         @param self.extract and @param self.children are set.
         """
         assert not (self.extract is None and len(self.children) == 0)
 
-        if not self.target:
-            """
-            If no @param target is specified, we expect to have 0 or 1 moss-children.
-            In case we have no moss children, we'll directly extract data from the tag(s) specified by @param path.
-            In case we have one moss child, we will not continue our search with that moss-child.                 
-            """
-            assert len(self.children) <= 1
-            return
-
-        """ @param target is specified. """
-
         """
-        Make sure that we have at least one or more children specified 
-        from which we inject the extracted data into @param target.
-        """
-        assert len(self.children) > 0
-
-        """
-        Make sure that all children have specified their @param context, 
+        Make sure that all children have specified their @param key, 
         which translates to the parameter/key of the dataclass @param target,
         i.e. the data extracted from one child-moss is assigned to exactly 
         one parameter of an instance of @param target.
         """
-        assert all([c.context for c in self.children])
+        if len(self.children) > 1:
+            keys: set[str] = {c.key for c in self.children if c.key}
+            assert len(self.children) == len(keys)
+            
+        if self.target is None:
+            return
+
+        assert isclass(self.target)
 
         """
-        Make sure that the @param context of all children are actual parameters 
+        Make sure that the @param key of all children are actual parameters 
         of the dataclass @param target.
         """
-        target_class_params: set[str] = set(f.name for f in fields(self.target))
-        for moss in self.children:
-            assert moss.context in target_class_params, \
-                f"{moss.context} is no valid parameter of the target-class"
+        class_params: set[str] = get_init_params(self.target)
+        for c in self.children:
+            assert c.key in class_params, \
+                f"'{c.key}' is no initialization-parameter of class '{self.target.__name__}'"
