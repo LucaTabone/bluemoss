@@ -5,13 +5,11 @@ from dataclasses import dataclass, field
 class Range:
     start_idx: int
     end_idx: int | None = field(default=None)
-    return_first: bool = field(default=False)
     reverse: bool = field(default=False)
 
     @property
     def find_single(self) -> bool:
         return (
-                self.return_first or
                 self.start_idx == -1 and self.end_idx is None or
                 self.end_idx is not None and abs(self.end_idx - self.start_idx) == 1
         )
