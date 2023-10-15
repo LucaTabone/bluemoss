@@ -5,10 +5,10 @@ from examples.linkedin.public_profiles.person.classes import *
 
 def date_duration_description_moss_list() -> list[Moss]:
     return [
-        Moss(context="duration", path="span[contains(@class, 'date-range')]/span"),
-        Moss(context="_date_and_duration_text", path="span[contains(@class, 'date-range')]"),
-        Moss(context="_description_more_text", path="p[contains(@class, 'show-more-less-text__text--less')]"),
-        Moss(context="_description_less_text", path="p[contains(@class, 'show-more-less-text__text--more')]")
+        Moss(key="duration", path="span[contains(@class, 'date-range')]/span"),
+        Moss(key="_date_and_duration_text", path="span[contains(@class, 'date-range')]"),
+        Moss(key="_description_more_text", path="p[contains(@class, 'show-more-less-text__text--less')]"),
+        Moss(key="_description_less_text", path="p[contains(@class, 'show-more-less-text__text--more')]")
     ]
 
 
@@ -19,32 +19,32 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
     children=[
         Moss(
             path="meta[@property='og:url']",
-            context="profile_endpoint",
+            key="profile_endpoint",
             transform=get_endpoint,
             extract="content"
         ),
         Moss(
-            context="about",
+            key="about",
             path="h2[contains(@class, 'section-title')]/..//p"
         ),
         Moss(
             path_prefix=".",
-            context="publications",
+            key="publications",
             children=[
                 Moss(
                     path="li[contains(@class, 'personal-project')]",
                     target=PublicationItem,
                     range=Range(0, None),
                     children=[
-                        Moss(context="date", path="time"),
-                        Moss(context="headline", path="h3/a"),
+                        Moss(key="date", path="time"),
+                        Moss(key="headline", path="h3/a"),
                         Moss(
-                            context="journal",
+                            key="journal",
                             path="span[contains(@class, 'text-color-text-low-emphasis')]"
                         ),
                         Moss(
                             path="a",
-                            context="url",
+                            key="url",
                             extract=Extract.HREF_QUERY_PARAMS,
                             transform=lambda params: params.get("url", None)
                         ),
@@ -53,7 +53,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
             ]
         ),
         Moss(
-            context="recommendations",
+            key="recommendations",
             path="section[contains(@class, 'recommendations')]",
             children=[
                 Moss(
@@ -61,11 +61,11 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     target=RecommendationItem,
                     range=Range(0, None),
                     children=[
-                        Moss(context="text", path="p"),
-                        Moss(context="name", path="h3"),
+                        Moss(key="text", path="p"),
+                        Moss(key="name", path="h3"),
                         Moss(
                             path="a",
-                            context="profile_endpoint",
+                            key="profile_endpoint",
                             extract=Extract.HREF_ENDPOINT
                         )
                     ]
@@ -74,31 +74,31 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
         ),
         Moss(
             path_prefix=".",
-            context="header",
+            key="header",
             target=ProfileHeader,
             children=[
                 Moss(
-                    context="name",
+                    key="name",
                     path="div[contains(@class, 'top-card-layout__entity-info')]//h1"
                 ),
                 Moss(
-                    context="headline",
+                    key="headline",
                     path="h2[contains(@class, 'top-card-layout__headline')]"
                 ),
                 Moss(
-                    context="followers",
+                    key="followers",
                     path="span[contains(text(), 'followers')]"
                 ),
                 Moss(
                     path="head",
                     extract=Extract.TAG,
-                    context="_location_text",
+                    key="_location_text",
                     transform=lambda tag: get_infix(str(tag), 'addressLocality":"', '"')
                 ),
             ]
         ),
         Moss(
-            context="education",
+            key="education",
             path="section[contains(@class, 'education')]",
             children=[
                 Moss(
@@ -106,23 +106,23 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     target=EducationItem,
                     range=Range(0, None),
                     children=[
-                         Moss(context="institution", path="h3"),
-                         Moss(context="degree_info", path="h4"),
+                         Moss(key="institution", path="h3"),
+                         Moss(key="degree_info", path="h4"),
                          Moss(
-                             context="_description_text",
+                             key="_description_text",
                              path="div[contains(@class, 'education__item--details')]/p"
                          ),
                          Moss(
                              path="a",
                              extract=Extract.HREF_ENDPOINT,
-                             context="school_profile_endpoint"
+                             key="school_profile_endpoint"
                          )
                     ] + date_duration_description_moss_list()
                 )
             ]
         ),
         Moss(
-            context="volunteering",
+            key="volunteering",
             path="section[contains(@class, 'volunteering')]",
             children=[
                 Moss(
@@ -130,14 +130,14 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     target=VolunteerItem,
                     range=Range(0, None),
                     children=[
-                        Moss(context="position", path="h3"),
-                        Moss(context="institution", path="h4")
+                        Moss(key="position", path="h3"),
+                        Moss(key="institution", path="h4")
                     ] + date_duration_description_moss_list()
                 )
             ]
         ),
         Moss(
-            context="awards",
+            key="awards",
             path="section[contains(@class, 'awards')]",
             children=[
                 Moss(
@@ -145,14 +145,14 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     target=Award,
                     range=Range(0, None),
                     children=[
-                        Moss(context="title", path="h3"),
-                        Moss(context="institution", path="h4")
+                        Moss(key="title", path="h3"),
+                        Moss(key="institution", path="h4")
                     ] + date_duration_description_moss_list()
                 )
             ]
         ),
         Moss(
-            context="certifications",
+            key="certifications",
             path="section[contains(@class, 'certifications')]",
             children=[
                 Moss(
@@ -160,15 +160,15 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     range=Range(0, None),
                     target=Certification,
                     children=[
-                        Moss(context="name", path="h3"),
-                        Moss(context="institution", path="h4"),
-                        Moss(context="date_issued", path="time")
+                        Moss(key="name", path="h3"),
+                        Moss(key="institution", path="h4"),
+                        Moss(key="date_issued", path="time")
                     ]
                 )
             ]
         ),
         Moss(
-            context="languages",
+            key="languages",
             path="section[contains(@class, 'languages')]",
             children=[
                 Moss(
@@ -176,8 +176,8 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     target=Language,
                     range=Range(0, None),
                     children=[
-                        Moss(context="lang", path="h3"),
-                        Moss(context="level", path="h4")
+                        Moss(key="lang", path="h3"),
+                        Moss(key="level", path="h4")
                     ]
                 )
             ]
@@ -185,36 +185,36 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
         Moss(
             path="section[contains(@class, 'experience')]",
             target=Experience,
-            context="experience",
+            key="experience",
             children=[
                 Moss(
                     range=Range(0, None),
                     target=ExperienceGroup,
-                    context="_experience_groups",
+                    key="_experience_groups",
                     path="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
                     children=[
                         Moss(
-                            context="duration",
+                            key="duration",
                             path="p[contains(@class, 'experience-group-header__duration')]"
                         ),
                         Moss(
-                            context="company_name",
+                            key="company_name",
                             path="h4[contains(@class, 'experience-group-header__company')]"
                         ),
                         Moss(
-                            context="company_profile_endpoint",
+                            key="company_profile_endpoint",
                             extract=Extract.HREF_ENDPOINT,
                             path="a"
                         ),
                         Moss(
                             path="li",
-                            context="entries",
+                            key="entries",
                             target=ExperienceGroupItem,
                             range=Range(0, None),
                             children=[
-                                Moss(context="position", path="h3"),
+                                Moss(key="position", path="h3"),
                                 Moss(
-                                    context="location",
+                                    key="location",
                                     path="p[contains(@class, 'experience-group-position__location')]"
                                 )
                             ] + date_duration_description_moss_list()
@@ -224,14 +224,14 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                 Moss(
                     range=Range(0, None),
                     target=ExperienceItem,
-                    context="_experience_items",
+                    key="_experience_items",
                     path="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
                     children=[
-                        Moss(context="position", path="h3"),
-                        Moss(context="company_name", path="h4"),
-                        Moss(context="location", path="p[contains(@class, 'location')]"),
+                        Moss(key="position", path="h3"),
+                        Moss(key="company_name", path="h4"),
+                        Moss(key="location", path="p[contains(@class, 'location')]"),
                         Moss(
-                            context="company_profile_endpoint",
+                            key="company_profile_endpoint",
                             extract=Extract.HREF_ENDPOINT,
                             path="a"
                         ),
@@ -240,7 +240,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
             ]
         ),
         Moss(
-            context="people_also_viewed",
+            key="people_also_viewed",
             path="section/h2[contains(text(), 'People also viewed')]/..",
             children=[
                 Moss(
@@ -248,11 +248,11 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Moss = Moss(
                     range=Range(0, None),
                     target=PeopleAlsoViewedItem,
                     children=[
-                        Moss(context="name", path="h3"),
-                        Moss(context="headline", path="p"),
-                        Moss(context="location", path="div[contains(@class, 'text-sm')]"),
+                        Moss(key="name", path="h3"),
+                        Moss(key="headline", path="p"),
+                        Moss(key="location", path="div[contains(@class, 'text-sm')]"),
                         Moss(
-                            context="profile_endpoint",
+                            key="profile_endpoint",
                             extract=Extract.HREF_ENDPOINT,
                             path="a"
                         )

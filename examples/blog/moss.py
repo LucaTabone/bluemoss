@@ -8,13 +8,13 @@ BLOG_POSTS_MOSS: Moss = Moss(
     range=Range(0, None),
     target=BlogPost,
     children=[
-        Moss(context="title", path="a"),
-        Moss(context="url", path="a[@href]"),
-        Moss(context="date", path="span[@class='date']"),
+        Moss(key="title", path="a"),
+        Moss(key="url", path="a[@href]"),
+        Moss(key="date", path="span[@class='date']"),
         Moss(
             path_prefix="",
             range=Range(0, None),
-            context="_text_lines",
+            key="_text_lines",
             path=".//p[not(@*)] | .//li[not(@*)]"
         )
     ]

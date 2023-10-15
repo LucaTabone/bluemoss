@@ -8,19 +8,19 @@ ZALANDO_ARTICLES_MOSS: Moss = Moss(
     path="//article[contains(@class, 'z5x6ht')]",
     range=Range(0, None),
     children=[
-        Moss(context="brand", path="h3"),
-        Moss(context="img_url", path="img/@src"),
-        Moss(context="url", path="a", extract=Extract.HREF),
-        Moss(context="_price_text", path="p/span", range=Range(-1, None)),
-        Moss(context="short_description", path="h3", range=Range(-1, None)),
-        Moss(context="discount", path="span[contains(@class, 'Km7l2y r9BRio')]"),
+        Moss(key="brand", path="h3"),
+        Moss(key="img_url", path="img/@src"),
+        Moss(key="url", path="a", extract=Extract.HREF),
+        Moss(key="_price_text", path="p/span", range=Range(-1, None)),
+        Moss(key="short_description", path="h3", range=Range(-1, None)),
+        Moss(key="discount", path="span[contains(@class, 'Km7l2y r9BRio')]"),
         Moss(
-            context="is_deal",
+            key="is_deal",
             path="span[contains(@class, 'DJxzzA') and contains(text(), 'Deal')]",
             extract=Extract.FOUND
         ),
         Moss(
-            context="is_sponsored",
+            key="is_sponsored",
             path="span[contains(@class, '_65i7kZ') and contains(text(), 'Sponsored')]",
             extract=Extract.FOUND
         )
