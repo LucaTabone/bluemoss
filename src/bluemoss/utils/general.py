@@ -1,5 +1,13 @@
+import inspect
+from typing import Type
 from functools import cache
 from dataclasses import fields, Field, MISSING
+
+
+@cache
+def get_init_params(class_ref: Type[any]) -> set[str]:
+    assert inspect.isclass(class_ref)
+    return set(inspect.getfullargspec(class_ref.__init__).args[1:])
 
 
 @cache
@@ -10,8 +18,8 @@ def get_params_with_default_value(dataclass_type) -> set[str]:
     }
 
 
-def _get_default_value(field: Field) -> any:
-    if field.default != MISSING:
-        return field.default
-    if field.default_factory != MISSING:
-        return field.default_factory()
+def _get_default_value(f: Field) -> any:
+    if f.default != MISSING:
+        return f.default
+    if f.default_factory != MISSING:
+        return f.default_factory()
