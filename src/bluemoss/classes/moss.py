@@ -3,7 +3,6 @@ from . import Extract
 from typing import Type
 from .range import Range
 from inspect import isclass
-from .dict import DictableWithTag
 from functools import cached_property
 from dataclasses import dataclass, field
 from ..utils import is_valid_xpath, get_init_params

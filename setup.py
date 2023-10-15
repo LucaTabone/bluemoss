@@ -9,6 +9,8 @@ def setup():
 
 def _prettify_html_files():
     for res in walk(getcwd()):
+        if "/tests/" in res[0]:
+            continue
         for file_name in res[2]:
             if not file_name.endswith(".html"):
                 continue
