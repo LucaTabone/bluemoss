@@ -1,5 +1,5 @@
 from lxml import html as lxml_html
-from .classes import Ex, Root, DictableWithTag, PrettyDict
+from .classes import Ex, BlueMoss, DictableWithTag, PrettyDict
 from .utils import (
     clean_text,
     get_domain,
@@ -13,14 +13,11 @@ from .utils import (
 )
 
 
-def extract(moss: Root, html: str) -> any:
-    return _extract(
-        moss=moss,
-        root=lxml_html.fromstring(html)
-    )
+def extract(moss: BlueMoss, html: str) -> any:
+    return _extract(moss, lxml_html.fromstring(html))
 
 
-def _extract(moss: Root, root) -> any:
+def _extract(moss: BlueMoss, root) -> any:
     if not (nodes := root.xpath(moss.full_path)):
         if moss.extract == Ex.FOUND:
             return False
@@ -42,14 +39,14 @@ def _extract(moss: Root, root) -> any:
         res: list = [_build_target_instance(moss, node) for node in nodes]
     else:
         res: list = [
-            _extract(moss=_moss, root=node)
+            _extract(_moss, node)
             for _moss in moss.nodes
             for node in nodes
         ]
     return moss.transform(res[0] if res else None) if moss.range.find_single else moss.transform(res)
 
 
-def _extract_leaf_node(moss: Root, node) -> any:
+def _extract_leaf_node(moss: BlueMoss, node) -> any:
     if type(node).__name__ == '_ElementUnicodeResult':
         return str(node)
     if isinstance(moss.extract, str):
@@ -85,15 +82,15 @@ def _extract_leaf_node(moss: Root, node) -> any:
             return get_endpoint_with_query(node.get("href"))
 
 
-def _build_target_instance(moss: Root, node):
+def _build_target_instance(moss: BlueMoss, node):
     if moss.target_is_dict:
-        return PrettyDict({c.key: _extract(moss=c, root=node) for c in moss.nodes})
+        return PrettyDict({c.key: _extract(c, node) for c in moss.nodes})
     elif moss.target_is_list:
-        return [_extract(moss=c, root=node) for c in moss.nodes]
+        return [_extract(c, node) for c in moss.nodes]
     values: dict[str, any] = {}
     params_with_defaults: set[str] = get_params_with_default_value(moss.target)
     for _moss in moss.nodes:
-        val: any = _extract(moss=_moss, root=node)
+        val: any = _extract(_moss, node)
         if not (val is None and _moss.key in params_with_defaults):
             values[_moss.key] = val
     if issubclass(moss.target, DictableWithTag):
