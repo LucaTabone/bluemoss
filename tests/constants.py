@@ -5,3 +5,7 @@ STATIC_DIR: str = join(dirname(__file__), "static")
 
 with open(join(STATIC_DIR, "four_divs.html"), "r") as file:
     FOUR_DIVS_HTML = file.read()
+
+
+with open(join(STATIC_DIR, "with_links.html"), "r") as file:
+    WITH_LINKS_HTML = file.read()
