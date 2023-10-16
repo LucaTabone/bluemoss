@@ -8,8 +8,7 @@ class Ex(Enum):
 
     # text
     TEXT = "text"
-    TEXT_CONTENT = "text_content"
-    TEXT_CONTENT_CLEAN = "text_content_clean"
+    FULL_TEXT = "full_text"
 
     # tag
     TAG = "tag"

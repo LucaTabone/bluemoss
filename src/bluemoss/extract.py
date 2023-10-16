@@ -63,10 +63,8 @@ def _extract_leaf_node(moss: Root, node) -> any:
             return node is not None
         case Ex.TEXT:
             return node.text.strip()
-        case Ex.TEXT_CONTENT:
-            return node.text_content().strip()
-        case Ex.TEXT_CONTENT_CLEAN:
-            return clean_text(node.text_content())
+        case Ex.FULL_TEXT:
+            return clean_text(node.text_content.strip())
         case Ex.TAG:
             return etree_to_bs4(node)
         case Ex.TAG_AS_STRING:

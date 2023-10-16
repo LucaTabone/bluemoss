@@ -21,11 +21,7 @@ def test_text_extraction():
     pass
 
 
-def test_text_content_extraction():
-    pass
-
-
-def test_clean_text_content_extraction():
+def test_full_text_extraction():
     pass
 
 
