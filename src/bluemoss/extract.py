@@ -21,9 +21,7 @@ def extract(moss: Moss, html: str) -> any:
 
 
 def _extract(moss: Moss, root) -> any:
-    if moss.full_path is None:
-        nodes = [root]
-    elif not (nodes := root.xpath(moss.full_path)):
+    if not (nodes := root.xpath(moss.full_path)):
         if moss.extract == Extract.FOUND:
             return False
         return
@@ -39,7 +37,7 @@ def _extract(moss: Moss, root) -> any:
             moss.transform(_extract_leaf_node(moss, node))
             for node in nodes
         ]
-        return res[0] if moss.range.find_single else res
+        return (res[0] if res else None) if moss.range.find_single else res
     if moss.target or moss.target_is_dict or moss.target_is_list:
         res: list = [_build_target_instance(moss, node) for node in nodes]
     else:
@@ -48,7 +46,7 @@ def _extract(moss: Moss, root) -> any:
             for _moss in moss.children
             for node in nodes
         ]
-    return moss.transform(res[0]) if moss.range.find_single else moss.transform(res)
+    return moss.transform(res[0] if res else None) if moss.range.find_single else moss.transform(res)
 
 
 def _extract_leaf_node(moss: Moss, node) -> any:
