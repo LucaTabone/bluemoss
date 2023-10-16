@@ -7,6 +7,9 @@ class Range:
     end_idx: int | None = field(default=None)
     reverse: bool = field(default=False)
 
+    def __post_init__(self):
+        assert self.end_idx is None or abs(self.end_idx - self.start_idx) >= 1
+
     @property
     def find_single(self) -> bool:
         return (
