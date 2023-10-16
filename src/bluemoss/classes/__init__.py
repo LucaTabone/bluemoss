@@ -1,4 +1,4 @@
 from .dict import Dictable, DictableWithTag, PrettyDict
-from .extract import Extract
+from .extract import Ex
+from .moss import Root, Node
 from .range import Range
-from .moss import Moss

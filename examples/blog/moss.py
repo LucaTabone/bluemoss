@@ -1,17 +1,17 @@
-from bluemoss import Moss, Range, extract
+from bluemoss import Root, Range, extract
 from examples.blog.classes import BlogPost
 
 
-BLOG_POSTS_MOSS: Moss = Moss(
+BLOG_POSTS_MOSS: Root = Root(
     path_prefix="/html",
     path="//div[@class='post']",
     range=Range(0, None),
     target=BlogPost,
     children=[
-        Moss(key="title", path="a"),
-        Moss(key="url", path="a[@href]"),
-        Moss(key="date", path="span[@class='date']"),
-        Moss(
+        Root(key="title", path="a"),
+        Root(key="url", path="a[@href]"),
+        Root(key="date", path="span[@class='date']"),
+        Root(
             path_prefix="",
             range=Range(0, None),
             key="_text_lines",

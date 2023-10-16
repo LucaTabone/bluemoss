@@ -2,7 +2,7 @@ from enum import unique, Enum
 
 
 @unique
-class Extract(Enum):
+class Ex(Enum):
     # found
     FOUND = "found"
 

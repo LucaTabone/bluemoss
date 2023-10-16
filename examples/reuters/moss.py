@@ -1,23 +1,23 @@
 from examples.reuters.classes import Article
-from bluemoss import Extract, Moss, Range, extract
+from bluemoss import Ex, Root, Range, extract
 
 
-REUTERS_WORLD_NEWS_ARTICLES_MOSS: Moss = Moss(
+REUTERS_WORLD_NEWS_ARTICLES_MOSS: Root = Root(
     path_prefix="//",
     path="li[contains(@class, 'story-collection')]/div[contains(@class, 'media-story-card')]",
     range=Range(0, None),
     target=Article,
     children=[
-        Moss(
+        Root(
             path="a",
             key="url",
-            extract=Extract.HREF_ENDPOINT,
+            extract=Ex.HREF_ENDPOINT,
             transform=lambda endpoint: f"https://reuters.com{endpoint}"
         ),
-        Moss(key="date", path="time"),
-        Moss(key="title", path="h3/a"),
-        Moss(key="img_url", path="img", extract="src"),
-        Moss(key="topic", path="span/a", extract=Extract.TEXT)
+        Root(key="date", path="time"),
+        Root(key="title", path="h3/a"),
+        Root(key="img_url", path="img", extract="src"),
+        Root(key="topic", path="span/a", extract=Ex.TEXT)
     ]
 )
 

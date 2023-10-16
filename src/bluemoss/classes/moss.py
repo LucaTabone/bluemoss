@@ -1,5 +1,5 @@
 from __future__ import annotations
-from . import Extract
+from . import Ex
 from typing import Type
 from .range import Range
 from inspect import isclass
@@ -9,10 +9,10 @@ from ..utils import is_valid_xpath, get_init_params
 
 
 @dataclass(frozen=True)
-class Moss:
+class Root:
     # xpath
-    path: str = field(default="")
-    path_prefix: str = field(default=".//")
+    path: str
+    path_prefix: str = field(default="//")
     
     # search range
     range: Range = Range(0, 1)
@@ -21,10 +21,10 @@ class Moss:
     key: str | None = field(default=None)
     target: Type[any] | None = field(default=None)
     transform: callable = field(default=lambda x: x)
-    extract: Extract | str = field(default=Extract.TEXT_CONTENT_CLEAN)
+    extract: Ex | str = field(default=Ex.TEXT_CONTENT_CLEAN)
     
     # child nodes
-    children: list[Moss] = field(default_factory=list)
+    children: list[Root | Node] = field(default_factory=list)
     
     @cached_property
     def full_path(self):
@@ -57,3 +57,8 @@ class Moss:
         assert get_init_params(self.target)
 
         assert self.keys_in_children.issubset(get_init_params(self.target))
+
+
+@dataclass(frozen=True)
+class Node(Root):
+    path_prefix: str = field(default=".//")

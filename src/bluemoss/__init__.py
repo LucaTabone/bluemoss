@@ -1,2 +1,2 @@
 from .extract import extract
-from .classes import Moss, Range, Extract, Dictable, DictableWithTag
+from .classes import Root, Node, Range, Ex, Dictable, DictableWithTag
