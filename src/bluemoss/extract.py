@@ -31,7 +31,7 @@ def _extract(moss: BlueMoss, root) -> any:
         return None
     if not moss.nodes:
         res = [
-            moss.transform(_extract_leaf_node(moss, node))
+            moss.transform(_extract_from_leaf_node(moss, node))
             for node in nodes
         ]
         return (res[0] if res else None) if moss.range.find_single else res
@@ -46,7 +46,7 @@ def _extract(moss: BlueMoss, root) -> any:
     return moss.transform(res[0] if res else None) if moss.range.find_single else moss.transform(res)
 
 
-def _extract_leaf_node(moss: BlueMoss, node) -> any:
+def _extract_from_leaf_node(moss: BlueMoss, node) -> any:
     if type(node).__name__ == '_ElementUnicodeResult':
         return str(node)
     if isinstance(moss.extract, str):
@@ -61,7 +61,7 @@ def _extract_leaf_node(moss: BlueMoss, node) -> any:
         case Ex.TEXT:
             return node.text.strip()
         case Ex.FULL_TEXT:
-            return clean_text(node.text_content.strip())
+            return clean_text(node.text_content().strip())
         case Ex.TAG:
             return etree_to_bs4(node)
         case Ex.TAG_AS_STRING:

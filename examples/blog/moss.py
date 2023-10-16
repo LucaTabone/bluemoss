@@ -1,8 +1,8 @@
 from examples.blog.classes import BlogPost
-from bluemoss import Root, Node, Range, extract
+from bluemoss import BlueMoss, Root, Node, Range, extract
 
 
-BLOG_POSTS_MOSS: Root = Root(
+BLOG_POSTS_MOSS: BlueMoss = Root(
     "div[@class='post']",
     range=Range(0, None),
     target=BlogPost,
