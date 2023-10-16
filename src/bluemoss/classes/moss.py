@@ -19,7 +19,7 @@ class _BlueMoss:
     transform: callable = field(default=lambda x: x)
     
     # child nodes
-    nodes: list[Node] = field(default_factory=list)
+    nodes: list[_BlueMoss] = field(default_factory=list)
     
     @cached_property
     def full_path(self):
