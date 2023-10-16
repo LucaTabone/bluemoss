@@ -189,4 +189,35 @@ def test_find_range_with_class_result():
         assert extract(moss, FOUR_DIVS_HTML) == MyClass(a="Hello 2", b="Hello 3")
 
 
-# TODO test bad indices
+def test_bad_indexing():
+    # 1) find many
+    moss = Moss(
+        path="//div",
+        path_prefix="",
+        range=Range(5, None)
+    )
+    assert extract(moss, FOUR_DIVS_HTML) == []
+
+    # 2) find single & valid indexing for Range object
+    moss = Moss(
+        path="//div",
+        path_prefix="",
+        range=Range(5, 6)
+    )
+    assert extract(moss, FOUR_DIVS_HTML) is None
+
+    # 3) find single & valid indexing for Range object
+    Moss(
+        path="//div",
+        path_prefix="",
+        range=Range(3, -1)
+    )
+    assert extract(moss, FOUR_DIVS_HTML) is None
+
+    # 4) invalid indexing for Range object
+    with pytest.raises(AssertionError):
+        Moss(
+            path="//div",
+            path_prefix="",
+            range=Range(5, 5)
+        )
