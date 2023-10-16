@@ -9,7 +9,7 @@ from ..utils import is_valid_xpath, get_init_params
 
 
 @dataclass(frozen=True)
-class _BlueMoss:
+class BlueMoss:
     path: str
     path_prefix: str
     range: Range = Range(0, 1)
@@ -19,7 +19,7 @@ class _BlueMoss:
     transform: callable = field(default=lambda x: x)
     
     # child nodes
-    nodes: list[_BlueMoss] = field(default_factory=list)
+    nodes: list[BlueMoss] = field(default_factory=list)
     
     @cached_property
     def full_path(self):
@@ -55,10 +55,10 @@ class _BlueMoss:
 
 
 @dataclass(frozen=True)
-class Root(_BlueMoss):
+class Root(BlueMoss):
     path_prefix: str = field(default="//")
 
 
 @dataclass(frozen=True)
-class Node(_BlueMoss):
+class Node(BlueMoss):
     path_prefix: str = field(default=".//")
