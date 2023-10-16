@@ -16,7 +16,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
     path="html",
     path_prefix="/",
     target=PersonProfile,
-    children=[
+    nodes=[
         Root(
             path="meta[@property='og:url']",
             key="profile_endpoint",
@@ -30,12 +30,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             path_prefix=".",
             key="publications",
-            children=[
+            nodes=[
                 Root(
                     path="li[contains(@class, 'personal-project')]",
                     target=PublicationItem,
                     range=Range(0, None),
-                    children=[
+                    nodes=[
                         Root(key="date", path="time"),
                         Root(key="headline", path="h3/a"),
                         Root(
@@ -55,12 +55,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="recommendations",
             path="section[contains(@class, 'recommendations')]",
-            children=[
+            nodes=[
                 Root(
                     path="div[contains(@class, 'endorsement-card')]",
                     target=RecommendationItem,
                     range=Range(0, None),
-                    children=[
+                    nodes=[
                         Root(key="text", path="p"),
                         Root(key="name", path="h3"),
                         Root(
@@ -76,7 +76,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             path_prefix=".",
             key="header",
             target=ProfileHeader,
-            children=[
+            nodes=[
                 Root(
                     key="name",
                     path="div[contains(@class, 'top-card-layout__entity-info')]//h1"
@@ -100,12 +100,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="education",
             path="section[contains(@class, 'education')]",
-            children=[
+            nodes=[
                 Root(
                     path="li",
                     target=EducationItem,
                     range=Range(0, None),
-                    children=[
+                    nodes=[
                          Root(key="institution", path="h3"),
                          Root(key="degree_info", path="h4"),
                          Root(
@@ -124,12 +124,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="volunteering",
             path="section[contains(@class, 'volunteering')]",
-            children=[
+            nodes=[
                 Root(
                     path="li",
                     target=VolunteerItem,
                     range=Range(0, None),
-                    children=[
+                    nodes=[
                         Root(key="position", path="h3"),
                         Root(key="institution", path="h4")
                     ] + date_duration_description_moss_list()
@@ -139,12 +139,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="awards",
             path="section[contains(@class, 'awards')]",
-            children=[
+            nodes=[
                 Root(
                     path="li",
                     target=Award,
                     range=Range(0, None),
-                    children=[
+                    nodes=[
                         Root(key="title", path="h3"),
                         Root(key="institution", path="h4")
                     ] + date_duration_description_moss_list()
@@ -154,12 +154,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="certifications",
             path="section[contains(@class, 'certifications')]",
-            children=[
+            nodes=[
                 Root(
                     path="li",
                     range=Range(0, None),
                     target=Certification,
-                    children=[
+                    nodes=[
                         Root(key="name", path="h3"),
                         Root(key="institution", path="h4"),
                         Root(key="date_issued", path="time")
@@ -170,12 +170,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="languages",
             path="section[contains(@class, 'languages')]",
-            children=[
+            nodes=[
                 Root(
                     path="li",
                     target=Language,
                     range=Range(0, None),
-                    children=[
+                    nodes=[
                         Root(key="lang", path="h3"),
                         Root(key="level", path="h4")
                     ]
@@ -186,13 +186,13 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             path="section[contains(@class, 'experience')]",
             target=Experience,
             key="experience",
-            children=[
+            nodes=[
                 Root(
                     range=Range(0, None),
                     target=ExperienceGroup,
                     key="_experience_groups",
                     path="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
-                    children=[
+                    nodes=[
                         Root(
                             key="duration",
                             path="p[contains(@class, 'experience-group-header__duration')]"
@@ -211,7 +211,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                             key="entries",
                             target=ExperienceGroupItem,
                             range=Range(0, None),
-                            children=[
+                            nodes=[
                                 Root(key="position", path="h3"),
                                 Root(
                                     key="location",
@@ -226,7 +226,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                     target=ExperienceItem,
                     key="_experience_items",
                     path="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
-                    children=[
+                    nodes=[
                         Root(key="position", path="h3"),
                         Root(key="company_name", path="h4"),
                         Root(key="location", path="p[contains(@class, 'location')]"),
@@ -242,12 +242,12 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         Root(
             key="people_also_viewed",
             path="section/h2[contains(text(), 'People also viewed')]/..",
-            children=[
+            nodes=[
                 Root(
                     path="li",
                     range=Range(0, None),
                     target=PeopleAlsoViewedItem,
-                    children=[
+                    nodes=[
                         Root(key="name", path="h3"),
                         Root(key="headline", path="p"),
                         Root(key="location", path="div[contains(@class, 'text-sm')]"),

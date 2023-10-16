@@ -7,7 +7,7 @@ REUTERS_WORLD_NEWS_ARTICLES_MOSS: Root = Root(
     path="li[contains(@class, 'story-collection')]/div[contains(@class, 'media-story-card')]",
     range=Range(0, None),
     target=Article,
-    children=[
+    nodes=[
         Root(
             path="a",
             key="url",

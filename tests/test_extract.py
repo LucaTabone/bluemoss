@@ -9,11 +9,11 @@ html: str = WITH_LINKS_HTML
 
 def test_found_extraction():
     # tag can be found
-    moss = Root("div[contains(@class, 'id_1')]", extract=Ex.FOUND)
+    moss = Root("div[@class='id_1']", extract=Ex.FOUND)
     assert extract(moss, html) is True
 
     # tag cannot be found
-    moss = Root("div[contains(@class, 'id_3')]", extract=Ex.FOUND)
+    moss = Root("div[@class='id_3']", extract=Ex.FOUND)
     assert extract(moss, html) is False
 
 

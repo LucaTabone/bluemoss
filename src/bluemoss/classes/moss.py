@@ -24,7 +24,7 @@ class Root:
     extract: Ex | str = field(default=Ex.TEXT_CONTENT_CLEAN)
     
     # child nodes
-    children: list[Root | Node] = field(default_factory=list)
+    nodes: list[Node] = field(default_factory=list)
     
     @cached_property
     def full_path(self):
@@ -32,22 +32,22 @@ class Root:
 
     @cached_property
     def target_is_dict(self) -> bool:
-        return self.target is None and all([c.key for c in self.children])
+        return self.target is None and all([c.key for c in self.nodes])
 
     @cached_property
     def target_is_list(self) -> bool:
-        return self.target is None and len(self.children) > 1 and all([c.key is None for c in self.children])
+        return self.target is None and len(self.nodes) > 1 and all([c.key is None for c in self.nodes])
 
     @cached_property
     def keys_in_children(self) -> set[str]:
-        return {c.key for c in self.children if c.key is not None}
+        return {c.key for c in self.nodes if c.key is not None}
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """
 
         assert is_valid_xpath(self.full_path), f"{self.full_path} is not a valid XPath query."
 
-        assert len(self.children) <= 1 or self.target or self.target_is_list or self.target_is_dict
+        assert len(self.nodes) <= 1 or self.target or self.target_is_list or self.target_is_dict
             
         if self.target is None:
             return

@@ -7,7 +7,7 @@ ZALANDO_ARTICLES_MOSS: Root = Root(
     path_prefix="/html",
     path="//article[contains(@class, 'z5x6ht')]",
     range=Range(0, None),
-    children=[
+    nodes=[
         Root(key="brand", path="h3"),
         Root(key="img_url", path="img/@src"),
         Root(key="url", path="a", extract=Ex.HREF),

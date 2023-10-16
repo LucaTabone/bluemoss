@@ -1,22 +1,16 @@
-from bluemoss import Root, Range, extract
 from examples.blog.classes import BlogPost
+from bluemoss import Root, Node, Range, extract
 
 
 BLOG_POSTS_MOSS: Root = Root(
-    path_prefix="/html",
-    path="//div[@class='post']",
+    "div[@class='post']",
     range=Range(0, None),
     target=BlogPost,
-    children=[
-        Root(key="title", path="a"),
-        Root(key="url", path="a[@href]"),
-        Root(key="date", path="span[@class='date']"),
-        Root(
-            path_prefix="",
-            range=Range(0, None),
-            key="_text_lines",
-            path=".//p[not(@*)] | .//li[not(@*)]"
-        )
+    nodes=[
+        Node("a", key="title"),
+        Node("a/@href", key="url"),
+        Node("span[@class='date']", key="date"),
+        Node("p[not(@*)] | .//li[not(@*)]", key="_text_lines", range=Range(0, None))
     ]
 )
 

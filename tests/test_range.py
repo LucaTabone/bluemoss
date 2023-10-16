@@ -52,7 +52,7 @@ def test_find_range_with_dict_result():
     # first two
     moss = Root(
         path="html",
-        children=[
+        nodes=[
             Node("div", key="1"),
             Node("div[2]", key="2")
         ]
@@ -63,14 +63,14 @@ def test_find_range_with_dict_result():
     li: list[Root] = [
         Root(
             "html",
-            children=[
-                Node(key="1", path="div", range=Range(1, 2)),
-                Node(key="2", path="div", range=Range(2, 3))
+            nodes=[
+                Node("div", key="1", range=Range(1, 2)),
+                Node("div", key="2", range=Range(2, 3))
             ]
         ),
         Root(
             "html",
-            children=[
+            nodes=[
                 Node("div[2]", key="1"),
                 Node("div[3]", key="2")
             ]
@@ -93,9 +93,9 @@ def test_find_range_with_class_result():
     moss = Root(
         "html",
         target=MyClass,
-        children=[
-            Root(key="a", path="div"),
-            Root(key="b", path="div[2]")
+        nodes=[
+            Node("div", key="a"),
+            Node("div[2]", key="b")
         ]
     )
     assert extract(moss, html) == MyClass(a="Hello 1", b="Hello 2")
@@ -105,7 +105,7 @@ def test_find_range_with_class_result():
         Root(
             "html",
             target=MyClass,
-            children=[
+            nodes=[
                 Node("div", key="a", range=Range(1, 2)),
                 Node("div", key="b", range=Range(2, 3))
             ]
@@ -113,7 +113,7 @@ def test_find_range_with_class_result():
         Root(
             "html",
             target=MyClass,
-            children=[
+            nodes=[
                 Node("div[2]", key="a"),
                 Node("div[3]", key="b")
             ]
@@ -128,13 +128,13 @@ def test_bad_indexing():
     moss = Root("div", range=Range(5, None))
     assert extract(moss, html) == []
 
-    # 2) find single & valid indexing for Range object
+    # 2) find single & valid (but out of bound) indexing for Range object
     moss = Root("div", range=Range(5, 6))
     assert extract(moss, html) is None
 
     # 3) find single & valid indexing for Range object
-    Root("div", range=Range(3, -1))
-    assert extract(moss, html) is None
+    moss = Root("div", range=Range(3, -1))
+    assert extract(moss, html) == []
 
     # 4) invalid indexing for Range object
     with pytest.raises(AssertionError):

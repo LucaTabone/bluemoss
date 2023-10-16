@@ -32,7 +32,7 @@ def _extract(moss: Root, root) -> any:
             nodes = nodes[::-1]
     except IndexError:
         return None
-    if not moss.children:
+    if not moss.nodes:
         res = [
             moss.transform(_extract_leaf_node(moss, node))
             for node in nodes
@@ -43,7 +43,7 @@ def _extract(moss: Root, root) -> any:
     else:
         res: list = [
             _extract(moss=_moss, root=node)
-            for _moss in moss.children
+            for _moss in moss.nodes
             for node in nodes
         ]
     return moss.transform(res[0] if res else None) if moss.range.find_single else moss.transform(res)
@@ -89,12 +89,12 @@ def _extract_leaf_node(moss: Root, node) -> any:
 
 def _build_target_instance(moss: Root, node):
     if moss.target_is_dict:
-        return PrettyDict({c.key: _extract(moss=c, root=node) for c in moss.children})
+        return PrettyDict({c.key: _extract(moss=c, root=node) for c in moss.nodes})
     elif moss.target_is_list:
-        return [_extract(moss=c, root=node) for c in moss.children]
+        return [_extract(moss=c, root=node) for c in moss.nodes]
     values: dict[str, any] = {}
     params_with_defaults: set[str] = get_params_with_default_value(moss.target)
-    for _moss in moss.children:
+    for _moss in moss.nodes:
         val: any = _extract(moss=_moss, root=node)
         if not (val is None and _moss.key in params_with_defaults):
             values[_moss.key] = val
