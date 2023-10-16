@@ -9,19 +9,14 @@ from ..utils import is_valid_xpath, get_init_params
 
 
 @dataclass(frozen=True)
-class Root:
-    # xpath
+class _BlueMoss:
     path: str
-    path_prefix: str = field(default="//")
-    
-    # search range
+    path_prefix: str
     range: Range = Range(0, 1)
-    
-    # extraction
     key: str | None = field(default=None)
     target: Type[any] | None = field(default=None)
+    extract: Ex | str = field(default=Ex.FULL_TEXT)
     transform: callable = field(default=lambda x: x)
-    extract: Ex | str = field(default=Ex.TEXT_CONTENT_CLEAN)
     
     # child nodes
     nodes: list[Node] = field(default_factory=list)
@@ -39,7 +34,7 @@ class Root:
         return self.target is None and len(self.nodes) > 1 and all([c.key is None for c in self.nodes])
 
     @cached_property
-    def keys_in_children(self) -> set[str]:
+    def keys_in_nodes(self) -> set[str]:
         return {c.key for c in self.nodes if c.key is not None}
 
     def __post_init__(self):
@@ -56,9 +51,14 @@ class Root:
 
         assert get_init_params(self.target)
 
-        assert self.keys_in_children.issubset(get_init_params(self.target))
+        assert self.keys_in_nodes.issubset(get_init_params(self.target))
 
 
 @dataclass(frozen=True)
-class Node(Root):
+class Root(_BlueMoss):
+    path_prefix: str = field(default="//")
+
+
+@dataclass(frozen=True)
+class Node(_BlueMoss):
     path_prefix: str = field(default=".//")
