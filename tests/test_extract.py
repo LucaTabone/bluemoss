@@ -1,36 +1,50 @@
-import pytest
+from lxml import etree
+from bs4 import BeautifulSoup
 from .constants import WITH_LINKS_HTML
 from src.bluemoss.utils import url as url_utils
 from src.bluemoss import Root, Range, Ex, extract
 
 
-html: str = WITH_LINKS_HTML
+HTML: str = WITH_LINKS_HTML
 
 
 def test_found_extraction():
     # tag can be found
     moss = Root("div[@class='id_1']", extract=Ex.FOUND)
-    assert extract(moss, html) is True
+    assert extract(moss, HTML) is True
 
     # tag cannot be found
     moss = Root("div[@class='id_3']", extract=Ex.FOUND)
-    assert extract(moss, html) is False
+    assert extract(moss, HTML) is False
 
 
 def test_text_extraction():
-    pass
+    moss = Root("p", extract=Ex.TEXT)
+    assert extract(moss, HTML) == "Lorem 1"
+
+    moss = Root("div", extract=Ex.TEXT)
+    assert extract(moss, HTML) == "Ipsum 2"
 
 
 def test_full_text_extraction():
-    pass
+    moss = Root("div", extract=Ex.FULL_TEXT)
+    assert extract(moss, HTML) == "Ipsum 2 Lorem 2 Link 2"
 
 
 def test_tag_extraction():
-    pass
+    moss = Root("div", extract=Ex.TAG)
+    tag: BeautifulSoup = extract(moss, HTML)
+    assert isinstance(tag, BeautifulSoup)
+
+    moss = Root("div")
+    assert extract(moss, tag.prettify()) == "Ipsum 2 Lorem 2 Link 2"
 
 
 def test_etree_extraction():
-    pass
+    moss = Root("div", extract=Ex.ETREE)
+    elem: etree._Element = extract(moss, HTML)
+    assert isinstance(elem, etree._Element)
+    # TODO
 
 
 def test_tag_as_string_extraction():
