@@ -4,13 +4,13 @@ from bluemoss import BlueMoss, Root, Node, Range, extract
 
 BLOG_POSTS_MOSS: BlueMoss = Root(
     "div[@class='post']",
-    range=Range(0, None),
+    range=None,
     target=BlogPost,
     nodes=[
         Node("a", key="title"),
         Node("a/@href", key="url"),
         Node("span[@class='date']", key="date"),
-        Node("p[not(@*)] | .//li[not(@*)]", key="_text_lines", range=Range(0, None))
+        Node("p[not(@*)] | .//li[not(@*)]", key="_text_lines", range=None)
     ]
 )
 
