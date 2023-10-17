@@ -14,7 +14,7 @@ def test_find_first():
 
 
 def test_find_last():
-    moss = Root("div", range=Range(-1, None))
+    moss = Root("div", range=-1)
     assert extract(moss, html) == "Hello 4"
 
 
@@ -34,17 +34,17 @@ def test_find_range_reversed():
     assert extract(moss, html) == ["Hello 2", "Hello 1"]
 
     # middle two reversed
-    moss = Root("div", range=Range(1, -1, reverse=True))
+    moss = Root("div", range=Range(1, -1, True))
     assert extract(moss, html) == ["Hello 3", "Hello 2"]
 
 
 def test_find_all():
-    moss = Root("div", range=Range(0, None))
+    moss = Root("div", range=None)
     assert extract(moss, html) == [f"Hello {i}" for i in range(1, 5)]
 
 
 def test_find_all_reversed():
-    moss = Root("div", range=Range(0, None, reverse=True))
+    moss = Root("div", range=Range(0, None, True))
     assert extract(moss, html) == [f"Hello {i}" for i in range(4, 0, -1)]
 
 
@@ -64,8 +64,8 @@ def test_find_range_with_dict_result():
         Root(
             "html",
             nodes=[
-                Node("div", key="1", range=Range(1, 2)),
-                Node("div", key="2", range=Range(2, 3))
+                Node("div", key="1", range=1),
+                Node("div", key="2", range=2)  # Node("div[3]", key="2")
             ]
         ),
         Root(
@@ -106,8 +106,8 @@ def test_find_range_with_class_result():
             "html",
             target=MyClass,
             nodes=[
-                Node("div", key="a", range=Range(1, 2)),
-                Node("div", key="b", range=Range(2, 3))
+                Node("div", key="a", range=1),
+                Node("div", key="b", range=2)
             ]
         ),
         Root(
@@ -125,11 +125,11 @@ def test_find_range_with_class_result():
 
 def test_bad_indexing():
     # 1) find many
-    moss = Root("div", range=Range(5, None))
+    moss = Root("div", range=Range(5))
     assert extract(moss, html) == []
 
     # 2) find single & valid (but out of bound) indexing for Range object
-    moss = Root("div", range=Range(5, 6))
+    moss = Root("div", range=5)
     assert extract(moss, html) is None
 
     # 3) find single & valid indexing for Range object
