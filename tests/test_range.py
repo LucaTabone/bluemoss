@@ -14,37 +14,37 @@ def test_find_first():
 
 
 def test_find_last():
-    moss = Root("div", range=-1)
+    moss = Root("div", filter=-1)
     assert extract(moss, html) == "Hello 4"
 
 
 def test_find_range():
     # first two
-    moss = Root("div", range=Range(0, 2))
+    moss = Root("div", filter=Range(0, 2))
     assert extract(moss, html) == ["Hello 1", "Hello 2"]
 
     # middle two
-    moss = Root("div",range=Range(1, -1))
+    moss = Root("div", filter=Range(1, -1))
     assert extract(moss, html) == ["Hello 2", "Hello 3"]
 
 
 def test_find_range_reversed():
     # first two reversed
-    moss = Root("div", range=Range(0, 2, reverse=True))
+    moss = Root("div", filter=Range(0, 2, reverse=True))
     assert extract(moss, html) == ["Hello 2", "Hello 1"]
 
     # middle two reversed
-    moss = Root("div", range=Range(1, -1, True))
+    moss = Root("div", filter=Range(1, -1, True))
     assert extract(moss, html) == ["Hello 3", "Hello 2"]
 
 
 def test_find_all():
-    moss = Root("div", range=None)
+    moss = Root("div", filter=None)
     assert extract(moss, html) == [f"Hello {i}" for i in range(1, 5)]
 
 
 def test_find_all_reversed():
-    moss = Root("div", range=Range(0, None, True))
+    moss = Root("div", filter=Range(0, None, True))
     assert extract(moss, html) == [f"Hello {i}" for i in range(4, 0, -1)]
 
 
@@ -64,8 +64,8 @@ def test_find_range_with_dict_result():
         Root(
             "html",
             nodes=[
-                Node("div", key="1", range=1),
-                Node("div", key="2", range=2)  # Node("div[3]", key="2")
+                Node("div", key="1", filter=1),
+                Node("div", key="2", filter=2)  # Node("div[3]", key="2")
             ]
         ),
         Root(
@@ -106,8 +106,8 @@ def test_find_range_with_class_result():
             "html",
             target=MyClass,
             nodes=[
-                Node("div", key="a", range=1),
-                Node("div", key="b", range=2)
+                Node("div", key="a", filter=1),
+                Node("div", key="b", filter=2)
             ]
         ),
         Root(
@@ -125,17 +125,17 @@ def test_find_range_with_class_result():
 
 def test_bad_indexing():
     # 1) find many
-    moss = Root("div", range=Range(5))
+    moss = Root("div", filter=Range(5))
     assert extract(moss, html) == []
 
     # 2) find single & valid (but out of bound) indexing for Range object
-    moss = Root("div", range=5)
+    moss = Root("div", filter=5)
     assert extract(moss, html) is None
 
     # 3) find single & valid indexing for Range object
-    moss = Root("div", range=Range(3, -1))
+    moss = Root("div", filter=Range(3, -1))
     assert extract(moss, html) == []
 
     # 4) invalid indexing for Range object
     with pytest.raises(AssertionError):
-        Root("div", range=Range(5, 5))
+        Root("div", filter=Range(5, 5))

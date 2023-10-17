@@ -23,10 +23,10 @@ def _extract(moss: BlueMoss, root) -> any:
             return False
         return
     try:
-        if isinstance(moss.range, int):
-            elems = [elems[moss.range]]
-        elif isinstance(moss.range, Range):
-            elems = moss.range.filter(elems)
+        if isinstance(moss.filter, int):
+            elems = [elems[moss.filter]]
+        elif isinstance(moss.filter, Range):
+            elems = moss.filter.filter(elems)
     except IndexError:
         return None
     if not moss.nodes:

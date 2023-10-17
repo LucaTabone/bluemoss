@@ -3,7 +3,7 @@ from bluemoss import Ex, Root, Range, extract
 
 
 REUTERS_WORLD_NEWS_ARTICLES_MOSS: Root = Root(
-    range=None,
+    filter=None,
     path_prefix="//",
     path="li[contains(@class, 'story-collection')]/div[contains(@class, 'media-story-card')]",
     target=Article,

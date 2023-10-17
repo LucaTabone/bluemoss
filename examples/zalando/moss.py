@@ -3,7 +3,7 @@ from bluemoss import extract, Ex, Root, Range
 
 
 ZALANDO_ARTICLES_MOSS: Root = Root(
-    range=None,
+    filter=None,
     target=Article,
     path_prefix="/html",
     path="//article[contains(@class, 'z5x6ht')]",
@@ -11,8 +11,8 @@ ZALANDO_ARTICLES_MOSS: Root = Root(
         Root(key="brand", path="h3"),
         Root(key="img_url", path="img/@src"),
         Root(key="url", path="a", extract=Ex.HREF),
-        Root(key="_price_text", path="p/span", range=-1),
-        Root(key="short_description", path="h3", range=-1),
+        Root(key="_price_text", path="p/span", filter=-1),
+        Root(key="short_description", path="h3", filter=-1),
         Root(key="discount", path="span[contains(@class, 'Km7l2y r9BRio')]"),
         Root(
             key="is_deal",

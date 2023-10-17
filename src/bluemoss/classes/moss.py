@@ -12,7 +12,7 @@ from ..utils import is_valid_xpath, get_init_params
 class BlueMoss:
     path: str
     path_prefix: str
-    range: int | None | Range = 0
+    filter: int | None | Range = 0
     key: str | None = field(default=None)
     target: Type[any] | None = field(default=None)
     extract: Ex | str = field(default=Ex.FULL_TEXT)
@@ -39,7 +39,7 @@ class BlueMoss:
 
     @property
     def find_single(self) -> bool:
-        return isinstance(self.range, int)
+        return isinstance(self.filter, int)
 
     def __post_init__(self):
         """ Some assertions after instance initiation. """

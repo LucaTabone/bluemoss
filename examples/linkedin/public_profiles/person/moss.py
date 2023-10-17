@@ -34,7 +34,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Root(
                     path="li[contains(@class, 'personal-project')]",
                     target=PublicationItem,
-                    range=None,
+                    filter=None,
                     nodes=[
                         Root(key="date", path="time"),
                         Root(key="headline", path="h3/a"),
@@ -59,7 +59,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Root(
                     path="div[contains(@class, 'endorsement-card')]",
                     target=RecommendationItem,
-                    range=None,
+                    filter=None,
                     nodes=[
                         Root(key="text", path="p"),
                         Root(key="name", path="h3"),
@@ -104,7 +104,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Root(
                     path="li",
                     target=EducationItem,
-                    range=None,
+                    filter=None,
                     nodes=[
                          Root(key="institution", path="h3"),
                          Root(key="degree_info", path="h4"),
@@ -128,7 +128,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Root(
                     path="li",
                     target=VolunteerItem,
-                    range=None,
+                    filter=None,
                     nodes=[
                         Root(key="position", path="h3"),
                         Root(key="institution", path="h4")
@@ -143,7 +143,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Root(
                     path="li",
                     target=Award,
-                    range=None,
+                    filter=None,
                     nodes=[
                         Root(key="title", path="h3"),
                         Root(key="institution", path="h4")
@@ -157,7 +157,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             nodes=[
                 Root(
                     path="li",
-                    range=None,
+                    filter=None,
                     target=Certification,
                     nodes=[
                         Root(key="name", path="h3"),
@@ -174,7 +174,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Root(
                     path="li",
                     target=Language,
-                    range=None,
+                    filter=None,
                     nodes=[
                         Root(key="lang", path="h3"),
                         Root(key="level", path="h4")
@@ -188,7 +188,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             key="experience",
             nodes=[
                 Root(
-                    range=None,
+                    filter=None,
                     target=ExperienceGroup,
                     key="_experience_groups",
                     path="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
@@ -210,7 +210,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                             path="li",
                             key="entries",
                             target=ExperienceGroupItem,
-                            range=None,
+                            filter=None,
                             nodes=[
                                 Root(key="position", path="h3"),
                                 Root(
@@ -222,7 +222,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                     ]
                 ),
                 Root(
-                    range=None,
+                    filter=None,
                     target=ExperienceItem,
                     key="_experience_items",
                     path="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
@@ -245,7 +245,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             nodes=[
                 Root(
                     path="li",
-                    range=None,
+                    filter=None,
                     target=PeopleAlsoViewedItem,
                     nodes=[
                         Root(key="name", path="h3"),
