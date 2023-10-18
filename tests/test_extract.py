@@ -41,10 +41,15 @@ def test_tag_extraction():
 
 
 def test_etree_extraction():
+    # 1) extract the found tag as an etree._Element instance
     moss = Root("div", extract=Ex.ETREE)
     elem: etree._Element = extract(moss, HTML)
     assert isinstance(elem, etree._Element)
-    # TODO
+
+    # 2) transform the etree._Element into a html string and test the full-text-extraction on it
+    html: str = etree.tostring(elem, method="html")
+    moss = Root("div")
+    assert extract(moss, html) == "Ipsum 2 Lorem 2 Link 2"
 
 
 def test_tag_as_string_extraction():
