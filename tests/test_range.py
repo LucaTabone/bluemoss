@@ -4,48 +4,48 @@ from .constants import FOUR_DIVS_HTML
 from src.bluemoss import Root, Node, Range, extract
 
 
-html: str = FOUR_DIVS_HTML
+HTML: str = FOUR_DIVS_HTML
 
 
 def test_find_first():
     expected_output: str = "Hello 1"
-    assert extract(Root("div"), html) == expected_output
-    assert extract(Root("html//div"), html) == expected_output
+    assert extract(Root("div"), HTML) == expected_output
+    assert extract(Root("html//div"), HTML) == expected_output
 
 
 def test_find_last():
     moss = Root("div", filter=-1)
-    assert extract(moss, html) == "Hello 4"
+    assert extract(moss, HTML) == "Hello 4"
 
 
 def test_find_range():
     # first two
     moss = Root("div", filter=Range(0, 2))
-    assert extract(moss, html) == ["Hello 1", "Hello 2"]
+    assert extract(moss, HTML) == ["Hello 1", "Hello 2"]
 
     # middle two
     moss = Root("div", filter=Range(1, -1))
-    assert extract(moss, html) == ["Hello 2", "Hello 3"]
+    assert extract(moss, HTML) == ["Hello 2", "Hello 3"]
 
 
 def test_find_range_reversed():
     # first two reversed
     moss = Root("div", filter=Range(0, 2, reverse=True))
-    assert extract(moss, html) == ["Hello 2", "Hello 1"]
+    assert extract(moss, HTML) == ["Hello 2", "Hello 1"]
 
     # middle two reversed
     moss = Root("div", filter=Range(1, -1, True))
-    assert extract(moss, html) == ["Hello 3", "Hello 2"]
+    assert extract(moss, HTML) == ["Hello 3", "Hello 2"]
 
 
 def test_find_all():
     moss = Root("div", filter=None)
-    assert extract(moss, html) == [f"Hello {i}" for i in range(1, 5)]
+    assert extract(moss, HTML) == [f"Hello {i}" for i in range(1, 5)]
 
 
 def test_find_all_reversed():
     moss = Root("div", filter=Range(0, None, True))
-    assert extract(moss, html) == [f"Hello {i}" for i in range(4, 0, -1)]
+    assert extract(moss, HTML) == [f"Hello {i}" for i in range(4, 0, -1)]
 
 
 def test_find_range_with_dict_result():
@@ -57,7 +57,7 @@ def test_find_range_with_dict_result():
             Node("div[2]", key="2")
         ]
     )
-    assert extract(moss, html) == {"1": "Hello 1", "2": "Hello 2"}
+    assert extract(moss, HTML) == {"1": "Hello 1", "2": "Hello 2"}
 
     # middle two
     li: list[Root] = [
@@ -77,7 +77,7 @@ def test_find_range_with_dict_result():
         )
     ]
     for moss in li:
-        assert extract(moss, html) == {"1": "Hello 2", "2": "Hello 3"}
+        assert extract(moss, HTML) == {"1": "Hello 2", "2": "Hello 3"}
 
 
 def test_find_range_with_class_result():
@@ -98,7 +98,7 @@ def test_find_range_with_class_result():
             Node("div[2]", key="b")
         ]
     )
-    assert extract(moss, html) == MyClass(a="Hello 1", b="Hello 2")
+    assert extract(moss, HTML) == MyClass(a="Hello 1", b="Hello 2")
 
     # middle two
     li: list[Root] = [
@@ -120,21 +120,21 @@ def test_find_range_with_class_result():
         )
     ]
     for moss in li:
-        assert extract(moss, html) == MyClass(a="Hello 2", b="Hello 3")
+        assert extract(moss, HTML) == MyClass(a="Hello 2", b="Hello 3")
 
 
 def test_bad_indexing():
     # 1) find many
     moss = Root("div", filter=Range(5))
-    assert extract(moss, html) == []
+    assert extract(moss, HTML) == []
 
     # 2) find single & valid (but out of bound) indexing for Range object
     moss = Root("div", filter=5)
-    assert extract(moss, html) is None
+    assert extract(moss, HTML) is None
 
     # 3) find single & valid indexing for Range object
     moss = Root("div", filter=Range(3, -1))
-    assert extract(moss, html) == []
+    assert extract(moss, HTML) == []
 
     # 4) invalid indexing for Range object
     with pytest.raises(AssertionError):
