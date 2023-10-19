@@ -10,15 +10,13 @@ from ..utils import is_valid_xpath, get_init_params
 
 @dataclass(frozen=True)
 class BlueMoss:
-    path: str
-    path_prefix: str
+    path: str = ""
+    path_prefix: str = ""
+    key: str | None = None
     filter: int | None | Range = 0
-    key: str | None = field(default=None)
-    target: Type[any] | None = field(default=None)
-    extract: Ex | str = field(default=Ex.FULL_TEXT)
-    transform: callable = field(default=lambda x: x)
-    
-    # child nodes
+    target: Type[any] | None = None
+    extract: Ex | str = Ex.FULL_TEXT
+    transform: callable = lambda x: x
     nodes: list[BlueMoss] = field(default_factory=list)
     
     @cached_property
@@ -31,7 +29,7 @@ class BlueMoss:
 
     @cached_property
     def target_is_list(self) -> bool:
-        return self.target is None and len(self.nodes) > 1 and all([c.key is None for c in self.nodes])
+        return self.target is None and all([c.key is None for c in self.nodes])
 
     @cached_property
     def keys_in_nodes(self) -> set[str]:
@@ -41,12 +39,16 @@ class BlueMoss:
     def find_single(self) -> bool:
         return isinstance(self.filter, int)
 
+    @property
+    def no_path(self) -> bool:
+        return self.path == ""
+
     def __post_init__(self):
         """ Some assertions after instance initiation. """
 
-        assert is_valid_xpath(self.full_path), f"{self.full_path} is not a valid XPath query."
+        assert is_valid_xpath(self.full_path) or self.no_path, f"{self.full_path} is not a valid XPath query."
 
-        assert len(self.nodes) <= 1 or self.target or self.target_is_list or self.target_is_dict
+        assert self.target or self.target_is_list or self.target_is_dict
             
         if self.target is None:
             return

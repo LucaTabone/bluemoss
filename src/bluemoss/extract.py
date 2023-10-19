@@ -18,7 +18,9 @@ def extract(moss: BlueMoss, html: str) -> any:
 
 
 def _extract(moss: BlueMoss, root) -> any:
-    if not (elems := root.xpath(moss.full_path)):
+    if moss.no_path:
+        elems = [root]
+    elif not (elems := root.xpath(moss.full_path)):
         if moss.extract == Ex.FOUND:
             return False
         return
