@@ -3,9 +3,9 @@ from bluemoss import BlueMoss, Root, Node, Range, extract
 
 
 BLOG_POSTS_MOSS: BlueMoss = Root(
-    "div[@class='post']",
     filter=None,
     target=BlogPost,
+    path="div[@class='post']",
     nodes=[
         Node("a", key="title"),
         Node("a/@href", key="url"),

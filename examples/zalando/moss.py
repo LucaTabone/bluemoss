@@ -5,7 +5,6 @@ from bluemoss import extract, Ex, Root, Range
 ZALANDO_ARTICLES_MOSS: Root = Root(
     filter=None,
     target=Article,
-    path_prefix="/html",
     path="//article[contains(@class, 'z5x6ht')]",
     nodes=[
         Root(key="brand", path="h3"),

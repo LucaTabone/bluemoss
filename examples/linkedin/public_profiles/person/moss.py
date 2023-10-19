@@ -1,95 +1,84 @@
+from bluemoss import extract, Ex, Root, Node
 from bluemoss.utils import get_infix, get_endpoint
-from bluemoss import extract, Ex, Root, Range
 from examples.linkedin.public_profiles.person.classes import *
 
 
-def date_duration_description_moss_list() -> list[Root]:
+def date_duration_description_moss_list() -> list[Node]:
     return [
-        Root(key="duration", path="span[contains(@class, 'date-range')]/span"),
-        Root(key="_date_and_duration_text", path="span[contains(@class, 'date-range')]"),
-        Root(key="_description_more_text", path="p[contains(@class, 'show-more-less-text__text--less')]"),
-        Root(key="_description_less_text", path="p[contains(@class, 'show-more-less-text__text--more')]")
+        Node(key="duration", path="span[contains(@class, 'date-range')]/span"),
+        Node(key="_date_and_duration_text", path="span[contains(@class, 'date-range')]"),
+        Node(key="_description_more_text", path="p[contains(@class, 'show-more-less-text__text--less')]"),
+        Node(key="_description_less_text", path="p[contains(@class, 'show-more-less-text__text--more')]")
     ]
 
 
 LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
     path="html",
-    path_prefix="/",
     target=PersonProfile,
     nodes=[
-        Root(
+        Node(
             path="meta[@property='og:url']",
             key="profile_endpoint",
             transform=get_endpoint,
             extract="content"
         ),
-        Root(
+        Node(
             key="about",
             path="h2[contains(@class, 'section-title')]/..//p"
         ),
-        Root(
-            path_prefix=".",
+        Node(
             key="publications",
+            path="li[contains(@class, 'personal-project')]",
+            target=PublicationItem,
+            filter=None,
             nodes=[
-                Root(
-                    path="li[contains(@class, 'personal-project')]",
-                    target=PublicationItem,
-                    filter=None,
-                    nodes=[
-                        Root(key="date", path="time"),
-                        Root(key="headline", path="h3/a"),
-                        Root(
-                            key="journal",
-                            path="span[contains(@class, 'text-color-text-low-emphasis')]"
-                        ),
-                        Root(
-                            path="a",
-                            key="url",
-                            extract=Ex.HREF_QUERY_PARAMS,
-                            transform=lambda params: params.get("url", None)
-                        ),
-                    ]
-                )
+                Node(key="date", path="time"),
+                Node(key="headline", path="h3/a"),
+                Node(
+                    key="journal",
+                    path="span[contains(@class, 'text-color-text-low-emphasis')]"
+                ),
+                Node(
+                    path="a",
+                    key="url",
+                    extract=Ex.HREF_QUERY_PARAMS,
+                    transform=lambda params: params.get("url", None)
+                ),
             ]
         ),
-        Root(
+        Node(
             key="recommendations",
-            path="section[contains(@class, 'recommendations')]",
+            path="section[contains(@class, 'recommendations')]//div[contains(@class, 'endorsement-card')]",
+            target=RecommendationItem,
+            filter=None,
             nodes=[
-                Root(
-                    path="div[contains(@class, 'endorsement-card')]",
-                    target=RecommendationItem,
-                    filter=None,
-                    nodes=[
-                        Root(key="text", path="p"),
-                        Root(key="name", path="h3"),
-                        Root(
-                            path="a",
-                            key="profile_endpoint",
-                            extract=Ex.HREF_ENDPOINT
-                        )
-                    ]
+                Node("p", key="text"),
+                Node("h3", key="name"),
+                Node(
+                    "a",
+                    key="profile_endpoint",
+                    extract=Ex.HREF_ENDPOINT
                 )
             ]
         ),
-        Root(
+        Node(
             path_prefix=".",
             key="header",
             target=ProfileHeader,
             nodes=[
-                Root(
+                Node(
                     key="name",
                     path="div[contains(@class, 'top-card-layout__entity-info')]//h1"
                 ),
-                Root(
+                Node(
                     key="headline",
                     path="h2[contains(@class, 'top-card-layout__headline')]"
                 ),
-                Root(
+                Node(
                     key="followers",
                     path="span[contains(text(), 'followers')]"
                 ),
-                Root(
+                Node(
                     path="head",
                     extract=Ex.TAG,
                     key="_location_text",
@@ -97,123 +86,98 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 ),
             ]
         ),
-        Root(
+        Node(
             key="education",
-            path="section[contains(@class, 'education')]",
+            path="section[contains(@class, 'education')]//li",
+            target=EducationItem,
+            filter=None,
             nodes=[
-                Root(
-                    path="li",
-                    target=EducationItem,
-                    filter=None,
-                    nodes=[
-                         Root(key="institution", path="h3"),
-                         Root(key="degree_info", path="h4"),
-                         Root(
-                             key="_description_text",
-                             path="div[contains(@class, 'education__item--details')]/p"
-                         ),
-                         Root(
-                             path="a",
-                             extract=Ex.HREF_ENDPOINT,
-                             key="school_profile_endpoint"
-                         )
-                    ] + date_duration_description_moss_list()
-                )
-            ]
+                      Node(key="institution", path="h3"),
+                      Node(key="degree_info", path="h4"),
+                      Node(
+                          key="_description_text",
+                          path="div[contains(@class, 'education__item--details')]/p"
+                      ),
+                      Node(
+                          path="a",
+                          extract=Ex.HREF_ENDPOINT,
+                          key="school_profile_endpoint"
+                      )
+                  ] + date_duration_description_moss_list()
         ),
-        Root(
+        Node(
             key="volunteering",
-            path="section[contains(@class, 'volunteering')]",
+            path="section[contains(@class, 'volunteering')]//li",
+            target=VolunteerItem,
+            filter=None,
             nodes=[
-                Root(
-                    path="li",
-                    target=VolunteerItem,
-                    filter=None,
-                    nodes=[
-                        Root(key="position", path="h3"),
-                        Root(key="institution", path="h4")
-                    ] + date_duration_description_moss_list()
-                )
-            ]
+                Node(key="position", path="h3"),
+                Node(key="institution", path="h4")
+            ] + date_duration_description_moss_list()
         ),
-        Root(
+        Node(
             key="awards",
-            path="section[contains(@class, 'awards')]",
+            path="section[contains(@class, 'awards')]//li",
+            target=Award,
+            filter=None,
             nodes=[
-                Root(
-                    path="li",
-                    target=Award,
-                    filter=None,
-                    nodes=[
-                        Root(key="title", path="h3"),
-                        Root(key="institution", path="h4")
-                    ] + date_duration_description_moss_list()
-                )
-            ]
+                Node(key="title", path="h3"),
+                Node(key="institution", path="h4")
+            ] + date_duration_description_moss_list()
         ),
-        Root(
+        Node(
             key="certifications",
-            path="section[contains(@class, 'certifications')]",
+            path="section[contains(@class, 'certifications')]//li",
+            filter=None,
+            target=Certification,
             nodes=[
-                Root(
-                    path="li",
-                    filter=None,
-                    target=Certification,
-                    nodes=[
-                        Root(key="name", path="h3"),
-                        Root(key="institution", path="h4"),
-                        Root(key="date_issued", path="time")
-                    ]
-                )
+                Node(key="name", path="h3"),
+                Node(key="institution", path="h4"),
+                Node(key="date_issued", path="time")
             ]
         ),
-        Root(
+        Node(
             key="languages",
-            path="section[contains(@class, 'languages')]",
+            path="section[contains(@class, 'languages')]//li",
+            target=Language,
+            filter=None,
             nodes=[
-                Root(
-                    path="li",
-                    target=Language,
-                    filter=None,
-                    nodes=[
-                        Root(key="lang", path="h3"),
-                        Root(key="level", path="h4")
-                    ]
-                )
+                Node(key="lang", path="h3"),
+                Node(key="level", path="h4")
             ]
         ),
-        Root(
+        Node(
             path="section[contains(@class, 'experience')]",
             target=Experience,
             key="experience",
             nodes=[
-                Root(
+                Node(
                     filter=None,
                     target=ExperienceGroup,
                     key="_experience_groups",
                     path="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
                     nodes=[
-                        Root(
+                        Node(
                             key="duration",
                             path="p[contains(@class, 'experience-group-header__duration')]"
                         ),
-                        Root(
+                        Node(
                             key="company_name",
                             path="h4[contains(@class, 'experience-group-header__company')]"
                         ),
-                        Root(
+                        Node(
                             key="company_profile_endpoint",
                             extract=Ex.HREF_ENDPOINT,
                             path="a"
                         ),
-                        Root(
+                        Node(
                             path="li",
                             key="entries",
                             target=ExperienceGroupItem,
                             filter=None,
                             nodes=[
-                                Root(key="position", path="h3"),
-                                Root(
+                                Node(key="position", path="h3"),
+                                Node(
                                     key="location",
                                     path="p[contains(@class, 'experience-group-position__location')]"
                                 )
@@ -221,16 +185,16 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                         )
                     ]
                 ),
-                Root(
+                Node(
                     filter=None,
                     target=ExperienceItem,
                     key="_experience_items",
                     path="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
                     nodes=[
-                        Root(key="position", path="h3"),
-                        Root(key="company_name", path="h4"),
-                        Root(key="location", path="p[contains(@class, 'location')]"),
-                        Root(
+                        Node(key="position", path="h3"),
+                        Node(key="company_name", path="h4"),
+                        Node(key="location", path="p[contains(@class, 'location')]"),
+                        Node(
                             key="company_profile_endpoint",
                             extract=Ex.HREF_ENDPOINT,
                             path="a"
@@ -239,24 +203,19 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 )
             ]
         ),
-        Root(
+        Node(
             key="people_also_viewed",
-            path="section/h2[contains(text(), 'People also viewed')]/..",
+            path="section/h2[contains(text(), 'People also viewed')]/..//li",
+            filter=None,
+            target=PeopleAlsoViewedItem,
             nodes=[
-                Root(
-                    path="li",
-                    filter=None,
-                    target=PeopleAlsoViewedItem,
-                    nodes=[
-                        Root(key="name", path="h3"),
-                        Root(key="headline", path="p"),
-                        Root(key="location", path="div[contains(@class, 'text-sm')]"),
-                        Root(
-                            key="profile_endpoint",
-                            extract=Ex.HREF_ENDPOINT,
-                            path="a"
-                        )
-                    ]
+                Node(key="name", path="h3"),
+                Node(key="headline", path="p"),
+                Node(key="location", path="div[contains(@class, 'text-sm')]"),
+                Node(
+                    key="profile_endpoint",
+                    extract=Ex.HREF_ENDPOINT,
+                    path="a"
                 )
             ]
         )
@@ -265,6 +224,6 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
 
 
 if __name__ == '__main__':
-    with open("./static/jeff.html", "r") as f:
+    with open("./static/adam.html", "r") as f:
         profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS, f.read())
         print(profile)
