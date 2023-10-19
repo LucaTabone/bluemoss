@@ -1,4 +1,4 @@
-from lxml import html as lxml_html
+from lxml import html as lxml_html, etree
 from .classes import Ex, BlueMoss, Range, DictableWithTag, PrettyDict
 from .utils import (
     clean_text,
@@ -14,10 +14,10 @@ from .utils import (
 
 
 def extract(moss: BlueMoss, html: str) -> any:
-    return _extract(moss, lxml_html.fromstring(html))
+    return _extract(moss, lxml_html.fromstring(html), 0)
 
 
-def _extract(moss: BlueMoss, root) -> any:
+def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
     if moss.no_path:
         elems = [root]
     elif not (elems := root.xpath(moss.full_path)):
@@ -32,23 +32,23 @@ def _extract(moss: BlueMoss, root) -> any:
     except IndexError:
         return None
     if not moss.nodes:
-        res = [
-            moss.transform(_extract_from_leaf_node(moss, elem))
-            for elem in elems
-        ]
-        return (res[0] if res else None) if moss.find_single else res
-    if moss.target or moss.target_is_dict or moss.target_is_list:
-        res: list = [_build_target_instance(moss, elem) for elem in elems]
+        if moss.find_single:
+            val = moss.transform(_extract_from_leaf_node(moss, elems[0]))
+        else:
+            val = [
+                moss.transform(_extract_from_leaf_node(moss, elem))
+                for elem in elems
+            ]
+    elif moss.find_single:
+        val = moss.transform(_build_target_instance(moss, elems[0], level))
     else:
-        res: list = [
-            _extract(_moss, elem)
-            for _moss in moss.nodes
-            for elem in elems
-        ]
-    return moss.transform(res[0] if res else None) if moss.find_single else moss.transform(res)
+        val = moss.transform([_build_target_instance(moss, elem, level) for elem in elems])
+    if moss.key is not None and level == 0:
+        return {moss.key: val}
+    return val
 
 
-def _extract_from_leaf_node(moss: BlueMoss, elem) -> any:
+def _extract_from_leaf_node(moss: BlueMoss, elem: etree.Element) -> any:
     if type(elem).__name__ == '_ElementUnicodeResult':
         return str(elem)
     if isinstance(moss.extract, str):
@@ -84,15 +84,15 @@ def _extract_from_leaf_node(moss: BlueMoss, elem) -> any:
             return get_endpoint_with_query(elem.get("href"))
 
 
-def _build_target_instance(moss: BlueMoss, elem):
+def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
     if moss.target_is_dict:
-        return PrettyDict({c.key: _extract(c, elem) for c in moss.nodes})
+        return PrettyDict({c.key: _extract(c, elem, level+1) for c in moss.nodes})
     elif moss.target_is_list:
-        return [_extract(c, elem) for c in moss.nodes]
+        return [_extract(c, elem, level+1) for c in moss.nodes]
     values: dict[str, any] = {}
     params_with_defaults: set[str] = get_params_with_default_value(moss.target)
     for _moss in moss.nodes:
-        val: any = _extract(_moss, elem)
+        val: any = _extract(_moss, elem, level+1)
         if not (val is None and _moss.key in params_with_defaults):
             values[_moss.key] = val
     if issubclass(moss.target, DictableWithTag):

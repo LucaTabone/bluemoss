@@ -25,11 +25,11 @@ class BlueMoss:
 
     @cached_property
     def target_is_dict(self) -> bool:
-        return self.target is None and all([c.key for c in self.nodes])
+        return self.target is None and self.nodes != [] and all([c.key for c in self.nodes])
 
     @cached_property
     def target_is_list(self) -> bool:
-        return self.target is None and all([c.key is None for c in self.nodes])
+        return self.target is None and self.nodes != [] and all([c.key is None for c in self.nodes])
 
     @cached_property
     def keys_in_nodes(self) -> set[str]:
@@ -48,7 +48,7 @@ class BlueMoss:
 
         assert is_valid_xpath(self.full_path) or self.no_path, f"{self.full_path} is not a valid XPath query."
 
-        assert self.target or self.target_is_list or self.target_is_dict
+        # assert self.target or self.target_is_list or self.target_is_dict
             
         if self.target is None:
             return
