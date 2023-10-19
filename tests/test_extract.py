@@ -1,8 +1,7 @@
 from lxml import etree
 from bs4 import BeautifulSoup
 from .constants import WITH_LINKS_HTML
-from src.bluemoss.utils import url as url_utils
-from src.bluemoss import Root, Range, Ex, extract
+from src.bluemoss import Root, Ex, extract
 
 
 HTML: str = WITH_LINKS_HTML
@@ -53,32 +52,47 @@ def test_etree_extraction():
 
 
 def test_tag_as_string_extraction():
-    pass
+    moss = Root("div", extract=Ex.TAG_AS_STRING)
+    html: str = extract(moss, HTML)
+    assert isinstance(html, str)
+    moss = Root("div")
+    assert extract(moss, html) == "Ipsum 2 Lorem 2 Link 2"
 
 
 def test_href_extraction():
-    pass
+    expected_output: str = "https://www.nvidia.com/link3?p=3&q=3"
+    for moss in [
+        Root("a", filter=2, extract=Ex.HREF),
+        Root("(//a)[3]", path_prefix="", extract=Ex.HREF)
+    ]:
+        assert extract(moss, HTML) == expected_output
 
 
 def test_href_query_extraction():
-    pass
+    moss = Root("a", extract=Ex.HREF_QUERY)
+    assert extract(moss, HTML) == "p=1&q=1"
 
 
 def test_href_domain_extraction():
-    pass
-
-
-def test_href_endpoint_extraction():
-    pass
+    moss = Root("a", filter=3, extract=Ex.HREF_DOMAIN)
+    assert extract(moss, HTML) == "chat.openai.com"
 
 
 def test_href_base_domain_extraction():
-    pass
+    moss = Root("a", filter=3, extract=Ex.HREF_BASE_DOMAIN)
+    assert extract(moss, HTML) == "openai.com"
 
 
-def test_href_query_params_extraction():
-    pass
+def test_href_endpoint_extraction():
+    moss = Root("a", filter=3, extract=Ex.HREF_ENDPOINT)
+    assert extract(moss, HTML) == "/page4/link4"
 
 
 def test_href_endpoint_with_query_extraction():
-    pass
+    moss = Root("a", filter=3, extract=Ex.HREF_ENDPOINT_WITH_QUERY)
+    assert extract(moss, HTML) == "/page4/link4?p=4&q=4"
+
+
+def test_href_query_params_extraction():
+    moss = Root("a", filter=3, extract=Ex.HREF_QUERY_PARAMS)
+    assert extract(moss, HTML) == {"p": "4", "q": "4"}
