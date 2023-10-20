@@ -23,7 +23,7 @@ def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
     elif not (elems := root.xpath(moss.full_path)):
         if moss.extract == Ex.FOUND:
             return False
-        return
+        return None if isinstance(moss.filter, int) else []
     try:
         if isinstance(moss.filter, int):
             elems = [elems[moss.filter]]
