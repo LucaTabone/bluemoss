@@ -1,12 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from .constants import WITH_LINKS_HTML
+from .constants import WITH_LINKS_HTML as HTML
 from src.bluemoss.classes.dict import Dictable
 from src.bluemoss.utils import url as url_utils
 from src.bluemoss import BlueMoss, Root, Node, Ex, extract
-
-
-HTML: str = WITH_LINKS_HTML
 
 
 @dataclass

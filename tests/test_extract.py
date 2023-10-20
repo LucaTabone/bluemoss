@@ -1,10 +1,7 @@
 from lxml import etree
 from bs4 import BeautifulSoup
-from .constants import WITH_LINKS_HTML
 from src.bluemoss import Root, Ex, extract
-
-
-HTML: str = WITH_LINKS_HTML
+from .constants import WITH_LINKS_HTML as HTML
 
 
 def test_found_extraction():

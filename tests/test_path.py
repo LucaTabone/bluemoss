@@ -1,10 +1,7 @@
 from __future__ import annotations
 import pytest
-from .constants import HIGH_NESTING_LEVEL_HTML
 from src.bluemoss import Root, Range, Ex, extract
-
-
-HTML: str = HIGH_NESTING_LEVEL_HTML
+from .constants import HIGH_NESTING_LEVEL_HTML as HTML
 
 
 def test_valid_paths():
