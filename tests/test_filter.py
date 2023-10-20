@@ -1,10 +1,7 @@
 import pytest
 from dataclasses import dataclass
-from .constants import FOUR_DIVS_HTML
+from .constants import FOUR_DIVS_HTML as HTML
 from src.bluemoss import Root, Node, Range, extract
-
-
-HTML: str = FOUR_DIVS_HTML
 
 
 def test_find_first():
