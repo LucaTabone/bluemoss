@@ -19,23 +19,24 @@ class Link(Dictable):
     url: str
 
     @property
-    def domain(self):
+    def domain(self) -> str:
         return url_utils.get_domain(self.url)
 
     @property
-    def base_domain(self):
+    def base_domain(self) -> str:
         return url_utils.get_base_domain(self.url)
 
     @property
-    def endpoint(self):
+    def endpoint(self) -> str:
         return url_utils.get_endpoint(self.url)
 
     @property
-    def dict(self):
-        return super().dict | {
+    def dict(self) -> dict:
+        return {
+            "url": self.url,
             "domain": self.domain,
-            "base_domain": self.base_domain,
-            "endpoint": self.endpoint
+            "endpoint": self.endpoint,
+            "base_domain": self.base_domain
         }
 
 
