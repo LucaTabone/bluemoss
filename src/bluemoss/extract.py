@@ -23,26 +23,29 @@ def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
     elif not (elems := root.xpath(moss.full_path)):
         if moss.extract == Ex.FOUND:
             return False
-        return None if isinstance(moss.filter, int) else []
+        return moss.transform(None if isinstance(moss.filter, int) else [])
     try:
         if isinstance(moss.filter, int):
             elems = [elems[moss.filter]]
         elif isinstance(moss.filter, Range):
             elems = moss.filter.filter(elems)
     except IndexError:
-        return None
+        return moss.transform(None if isinstance(moss.filter, int) else [])
     if not moss.nodes:
         if moss.find_single:
             val = moss.transform(_extract_from_leaf_node(moss, elems[0]))
         else:
-            val = [
-                moss.transform(_extract_from_leaf_node(moss, elem))
+            val = moss.transform([
+                _extract_from_leaf_node(moss, elem)
                 for elem in elems
-            ]
+            ])
     elif moss.find_single:
         val = moss.transform(_build_target_instance(moss, elems[0], level))
     else:
-        val = moss.transform([_build_target_instance(moss, elem, level) for elem in elems])
+        val = moss.transform([
+            _build_target_instance(moss, elem, level)
+            for elem in elems
+        ])
     if moss.key is not None and level == 0:
         return {moss.key: val}
     return val
