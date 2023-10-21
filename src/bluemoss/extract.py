@@ -31,24 +31,41 @@ def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
             elems = moss.filter.filter(elems)
     except IndexError:
         return moss.transform(None if isinstance(moss.filter, int) else [])
-    if not moss.nodes:
+    if moss.nodes:
         if moss.find_single:
-            val = moss.transform(_extract_from_leaf_node(moss, elems[0]))
+            val = moss.transform(_build_target_instance(moss, elems[0], level))
         else:
             val = moss.transform([
-                _extract_from_leaf_node(moss, elem)
+                _build_target_instance(moss, elem, level)
                 for elem in elems
             ])
     elif moss.find_single:
-        val = moss.transform(_build_target_instance(moss, elems[0], level))
+        val = moss.transform(_extract_from_leaf_node(moss, elems[0]))
     else:
         val = moss.transform([
-            _build_target_instance(moss, elem, level)
+            _extract_from_leaf_node(moss, elem)
             for elem in elems
         ])
     if moss.key is not None and level == 0:
         return {moss.key: val}
     return val
+
+
+def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
+    if moss.target is None:
+        if moss.keys_in_nodes:
+            return PrettyDict({node.key: _extract(node, elem, level+1) for node in moss.nodes})
+        return [_extract(node, elem, level+1) for node in moss.nodes]
+    values: dict[str, any] = {}
+    params_with_defaults: set[str] = get_params_with_default_value(moss.target)
+    for node in moss.nodes:
+        val: any = _extract(node, elem, level+1)
+        if not (val is None and node.key in params_with_defaults):
+            values[node.key] = val
+    if issubclass(moss.target, DictableWithTag):
+        values |= {"_tag": elem}
+    # noinspection PyArgumentList
+    return moss.target(**values)
 
 
 def _extract_from_leaf_node(moss: BlueMoss, elem: etree.Element) -> any:
@@ -85,19 +102,3 @@ def _extract_from_leaf_node(moss: BlueMoss, elem: etree.Element) -> any:
             return get_url_query_params(elem.get("href"))
         case Ex.HREF_ENDPOINT_WITH_QUERY:
             return get_endpoint_with_query(elem.get("href"))
-
-
-def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
-    if moss.target_is_dict:
-        return PrettyDict({c.key: _extract(c, elem, level+1) for c in moss.nodes})
-    elif moss.target_is_list:
-        return [_extract(c, elem, level+1) for c in moss.nodes]
-    values: dict[str, any] = {}
-    params_with_defaults: set[str] = get_params_with_default_value(moss.target)
-    for _moss in moss.nodes:
-        val: any = _extract(_moss, elem, level+1)
-        if not (val is None and _moss.key in params_with_defaults):
-            values[_moss.key] = val
-    if issubclass(moss.target, DictableWithTag):
-        values |= {"_tag": elem}
-    return moss.target(**values)
