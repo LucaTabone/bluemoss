@@ -1,10 +1,10 @@
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from bluemoss import Dictable, DictableWithTag
+from bluemoss import Jsonify, JsonifyWithTag
 
 
 @dataclass
-class _DictableWithDateDurationDescription(Dictable):
+class _JsonifyWithDateDurationDescription(Jsonify):
     """
     Many sections within a LI person-profile reference a date, a duration and a descriptive text in the same way.
     The dataclasses which inherit from this abstract dataclass can now access these parameters through the
@@ -63,7 +63,7 @@ class _DictableWithDateDurationDescription(Dictable):
 
 
 @dataclass
-class ProfileHeader(Dictable):
+class ProfileHeader(Jsonify):
     """
     Stores the information of the title-tag of a public person-profile
     (name, current company/employer, current position).
@@ -83,7 +83,7 @@ class ProfileHeader(Dictable):
 
 
 @dataclass
-class ExperienceItem(_DictableWithDateDurationDescription, DictableWithTag):
+class ExperienceItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     """
     Stores a simple experience-item. It is used for an entry in a persons experience section
     in case the person was working in ONE position at a company for certain time-period.
@@ -98,7 +98,7 @@ class ExperienceItem(_DictableWithDateDurationDescription, DictableWithTag):
 
 
 @dataclass
-class ExperienceGroupItem(_DictableWithDateDurationDescription, DictableWithTag):
+class ExperienceGroupItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     """
     Stores an experience-item. It is used within an experience-group instance.
     """
@@ -110,7 +110,7 @@ class ExperienceGroupItem(_DictableWithDateDurationDescription, DictableWithTag)
 
 
 @dataclass
-class ExperienceGroup(DictableWithTag):
+class ExperienceGroup(JsonifyWithTag):
     """
     Stores an experience-group. An experience-group is used instead of an experience-item in case a person
     was in multiple positions at the same company without any breaks between those positions.
@@ -131,7 +131,7 @@ class ExperienceGroup(DictableWithTag):
 
 
 @dataclass
-class Experience(Dictable):
+class Experience(Jsonify):
     """ Stores the entire experience-section of a public person-profile. """
     _experience_items: list[ExperienceItem]
     _experience_groups: list[ExperienceGroup]
@@ -156,7 +156,7 @@ class Experience(Dictable):
 
 
 @dataclass
-class EducationItem(_DictableWithDateDurationDescription, DictableWithTag):
+class EducationItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     """ Stores an entry in the education-section of a public person-profile. """
     degree_info: str | None
     institution: str | None
@@ -170,7 +170,7 @@ class EducationItem(_DictableWithDateDurationDescription, DictableWithTag):
 
 
 @dataclass
-class VolunteerItem(_DictableWithDateDurationDescription, DictableWithTag):
+class VolunteerItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     """ Stores and entry in the 'Volunteer Experience' section of a public person-profile. """
     position: str | None
     institution: str | None
@@ -180,7 +180,7 @@ class VolunteerItem(_DictableWithDateDurationDescription, DictableWithTag):
 
 
 @dataclass
-class Award(_DictableWithDateDurationDescription, DictableWithTag):
+class Award(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     """ Stores an entry in the "Honors & Awards" section of a public person-profile. """
     title: str
     institution: str | None
@@ -190,7 +190,7 @@ class Award(_DictableWithDateDurationDescription, DictableWithTag):
 
 
 @dataclass
-class Language(Dictable):
+class Language(Jsonify):
     """ Store an entry in the "Languages" section of a public person-profile. """
     lang: str
     level: str
@@ -200,7 +200,7 @@ class Language(Dictable):
 
 
 @dataclass
-class Certification(Dictable):
+class Certification(Jsonify):
     """ Store an entry in the "Licenses & Certifications" section of a public person-profile. """
     name: str
     institution: str
@@ -211,7 +211,7 @@ class Certification(Dictable):
 
 
 @dataclass
-class PeopleAlsoViewedItem(Dictable):
+class PeopleAlsoViewedItem(Jsonify):
     """ Stores an entry from the "People also viewed" section of a public person-profile.. """
     name: str
     headline: str | None
@@ -224,7 +224,7 @@ class PeopleAlsoViewedItem(Dictable):
 
 
 @dataclass
-class RecommendationItem(Dictable):
+class RecommendationItem(Jsonify):
     """ Stores an entry from the "Recommendations received" section of a public person-profile. """
     text: str
     name: str
@@ -235,7 +235,7 @@ class RecommendationItem(Dictable):
 
 
 @dataclass
-class PublicationItem(Dictable):
+class PublicationItem(Jsonify):
     """ Stores an entry from the "Publications received" section of a public person-profile. """
     date: str | None
     journal: str | None
@@ -247,13 +247,13 @@ class PublicationItem(Dictable):
 
 
 @dataclass
-class Endorsements(Dictable):
+class Endorsements(Jsonify):
     name: str
     endorsements: int
 
 
 @dataclass
-class PersonProfile(Dictable):
+class PersonProfile(Jsonify):
     """ Stores all the information scraped from a public person-profile. """
     profile_endpoint: str
     about: str | None

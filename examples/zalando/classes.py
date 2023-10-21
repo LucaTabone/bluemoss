@@ -1,9 +1,9 @@
-from bluemoss import Dictable
+from bluemoss import Jsonify
 from dataclasses import dataclass
 
 
 @dataclass
-class Article(Dictable):
+class Article(Jsonify):
     url: str
     brand: str
     img_url: str

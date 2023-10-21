@@ -13,7 +13,7 @@ class PrettyDict(dict):
 
 
 @dataclass
-class Dictable(abc.ABC):
+class Jsonify(abc.ABC):
     """
     An abstract dataclass to provide a .dict and a .json property, in order to turn any dataclass
     instance into a python dict or json object, while
@@ -54,19 +54,26 @@ class Dictable(abc.ABC):
             return val.strftime("%Y-%m-%d %H:%M:%S")
         if isinstance(val, date):
             return val.strftime("%Y-%m-%d")
-        if type(val) == list:
-            return [_val.dict if hasattr(_val, "dict") else self.dictify(_val) for _val in val]
-        if isinstance(val, Dictable):
+        if isinstance(val, Jsonify):
             return val.dict
+        if isinstance(val, list):
+            return [self.dictify(v) for v in val]
+        if isinstance(val, set):
+            return {self.dictify(v) for v in val}
+        if isinstance(val, OrderedDict):
+            return OrderedDict([
+                (self.dictify(k), self.dictify(v))
+                for (k, v) in val.items()
+            ])
         if isinstance(val, dict):
-            return val
+            return {self.dictify(k): self.dictify(v) for k, v in val.items()}
         if hasattr(val, "__dict__"):
             return val.__dict__
         return val
 
 
 @dataclass
-class DictableWithTag(Dictable):
+class JsonifyWithTag(Jsonify):
     """
     Some dataclass instances may need access to their source-html-tag.
     Those dataclasses can inherit from DictableWithTag and thus also get the benefits of the Dictable class.

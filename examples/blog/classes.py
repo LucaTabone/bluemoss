@@ -1,9 +1,9 @@
-from bluemoss import Dictable
+from bluemoss import Jsonify
 from dataclasses import dataclass, field
 
 
 @dataclass
-class BlogPost(Dictable):
+class BlogPost(Jsonify):
     url: str
     date: str
     title: str

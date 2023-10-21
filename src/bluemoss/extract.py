@@ -1,5 +1,5 @@
-from lxml import html as lxml_html, etree
-from .classes import Ex, BlueMoss, Range, DictableWithTag, PrettyDict
+from lxml import etree, html as lxml_html
+from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
 from .utils import (
     clean_text,
     get_domain,
@@ -62,7 +62,7 @@ def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
         val: any = _extract(node, elem, level+1)
         if not (val is None and node.key in params_with_defaults):
             values[node.key] = val
-    if issubclass(moss.target, DictableWithTag):
+    if issubclass(moss.target, JsonifyWithTag):
         values |= {"_tag": elem}
     # noinspection PyArgumentList
     return moss.target(**values)

@@ -1,18 +1,18 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from .constants import WITH_LINKS_HTML as HTML
-from src.bluemoss.classes.dict import Dictable
+from src.bluemoss.classes.dict import Jsonify
 from src.bluemoss.utils import url as url_utils
 from src.bluemoss import BlueMoss, Root, Node, Ex, extract
 
 
 @dataclass
-class Links(Dictable):
+class Links(Jsonify):
     links: list[Link]
 
 
 @dataclass
-class Link(Dictable):
+class Link(Jsonify):
     url: str
 
     @property
