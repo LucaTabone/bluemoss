@@ -62,7 +62,6 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             ]
         ),
         Node(
-            path_prefix=".",
             key="header",
             target=ProfileHeader,
             nodes=[
