@@ -29,15 +29,13 @@ def test_attempt_transform_on_none():
         extract(moss, HTML)
 
 
-@dataclass
-class Address:
-    line_1: str
-    line_2: str
-    zip: str | None = None
+def test_usage_and_non_usage_of_transform_param():
+    @dataclass
+    class Address:
+        line_1: str
+        line_2: str
 
-    
-def test_combo_1():
-    expected_result = Address(line_1='123 Main Street', line_2='City, State 12345')
+    expected: Address = Address(line_1='123 Main Street', line_2='City, State 12345')
     for moss in [
         Root(
             "address//p",
@@ -53,4 +51,4 @@ def test_combo_1():
             ]
         )
     ]:
-        assert extract(moss, HTML) == expected_result
+        assert extract(moss, HTML) == expected
