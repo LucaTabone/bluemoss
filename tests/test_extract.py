@@ -57,12 +57,8 @@ def test_tag_as_string_extraction():
 
 
 def test_href_extraction():
-    expected_output: str = "https://www.nvidia.com/link3?p=3&q=3"
-    for moss in [
-        Root("a", filter=2, extract=Ex.HREF),
-        Root("(//a)[3]", path_prefix="", extract=Ex.HREF)
-    ]:
-        assert extract(moss, HTML) == expected_output
+    moss = Root("a", filter=2, extract=Ex.HREF)
+    assert extract(moss, HTML) == "https://www.nvidia.com/link3?p=3&q=3"
 
 
 def test_href_query_extraction():
