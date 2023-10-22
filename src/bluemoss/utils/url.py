@@ -1,4 +1,3 @@
-from functools import cache
 from urllib.parse import urlparse, parse_qs
 
 
@@ -10,6 +9,7 @@ def get_base_domain(url: str | None) -> str | None:
 
 def get_domain(url: str | None) -> str | None:
     """ @return: the full domain of the given @param url. """
+    url: str | None = url.strip() if url else None
     if not url:
         return
     domain = urlparse(url).netloc
@@ -18,14 +18,22 @@ def get_domain(url: str | None) -> str | None:
 
 def get_endpoint(url: str | None) -> str | None:
     """ @return: the endpoint of the given @param url ."""
+    url: str | None = url.strip() if url else None
+    if not url:
+        return
     endpoint: str | None = urlparse(url).path if url else None
     if endpoint and endpoint.endswith("/"):
-        return endpoint[:-1]
-    return endpoint
+        endpoint = endpoint[:-1]
+    if endpoint:
+        return endpoint
 
 
 def get_url_query(url: str | None) -> str | None:
-    return urlparse(url).query if url else None
+    url: str | None = url.strip() if url else None
+    if not url:
+        return
+    query: str = urlparse(url).query
+    return query if query else None
 
 
 def get_endpoint_with_query(url: str | None) -> str | None:
@@ -36,11 +44,5 @@ def get_endpoint_with_query(url: str | None) -> str | None:
     return f"{endpoint}?{query}"
 
 
-@cache
-def get_url_query_params(url: str | None, only_initial_values: bool = True) -> dict:
-    params: dict = parse_qs(urlparse(url).query) if url else None
-    if not params:
-        return {}
-    if not only_initial_values:
-        return params
-    return {k: v[0] for k, v in params.items()}
+def get_url_query_params(url: str | None) -> dict:
+    return parse_qs(urlparse(url).query) if url else {}
