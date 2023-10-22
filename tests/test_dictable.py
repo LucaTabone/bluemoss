@@ -118,5 +118,5 @@ expected_dict: OrderedDict = OrderedDict([
 ])
 
 
-def test_person__dict():
+def test_person_dict():
     assert person.dict == expected_dict
