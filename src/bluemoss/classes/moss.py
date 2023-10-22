@@ -1,4 +1,5 @@
 from __future__ import annotations
+import builtins
 from .utils import ClassType
 from .extract import Ex
 from .range import Range
@@ -48,7 +49,7 @@ class BlueMoss:
         if self.target is None:
             return
 
-        if not isclass(self.target):
+        if not isclass(self.target) or self.target.__name__ in dir(builtins):
             raise InvalidTargetTypeException(self)
 
         if not self.keys_in_nodes.issubset(get_class_init_params(self.target)):

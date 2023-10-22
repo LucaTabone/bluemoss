@@ -1,9 +1,10 @@
 from __future__ import annotations
+import pytest
 from dataclasses import dataclass
-from .constants import WITH_LINKS_HTML as HTML
 from src.bluemoss.classes.dict import Jsonify
+from .constants import WITH_LINKS_HTML as HTML
 from src.bluemoss.utils import url as url_utils
-from src.bluemoss import BlueMoss, Root, Node, Ex, extract
+from src.bluemoss import BlueMoss, Root, Node, Ex, extract, InvalidTargetTypeException, InvalidKeysForTargetException
 
 
 @dataclass
@@ -83,3 +84,17 @@ MOSS_WITHOUT_TARGET: BlueMoss = Root(
 
 def test_extract_equality():
     assert extract(MOSS_WITH_TARGET, HTML).dict == extract(MOSS_WITHOUT_TARGET, HTML)
+
+
+def test_invalid_target_type():
+    with pytest.raises(InvalidTargetTypeException):
+        Root(target=list)
+    with pytest.raises(InvalidTargetTypeException):
+        Root(target=dict)
+    with pytest.raises(InvalidTargetTypeException):
+        Root(target=set)
+
+
+def test_invalid_keys_for_target():
+    with pytest.raises(InvalidKeysForTargetException):
+        Root(target=Link, nodes=[Node(key="domain")])
