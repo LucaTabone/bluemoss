@@ -1,20 +1,25 @@
 import inspect
-from typing import Type
 from functools import cache
-from dataclasses import fields, Field, MISSING
+from src.bluemoss.classes.utils import ClassType
+from dataclasses import fields, Field, MISSING, is_dataclass
 
 
 @cache
-def get_init_params(class_ref: Type[any]) -> set[str]:
-    assert inspect.isclass(class_ref)
-    return set(inspect.getfullargspec(class_ref.__init__).args[1:])
+def get_class_init_params(cls: ClassType) -> set[str]:
+    assert inspect.isclass(cls)
+    return set(inspect.getfullargspec(cls.__init__).args[1:])
 
 
 @cache
-def get_params_with_default_value(dataclass_type) -> set[str]:
+def get_class_params_with_default_value(cls: ClassType) -> set[str]:
+    if is_dataclass(cls):
+        return {
+            f.name for f in fields(cls)
+            if f.default != MISSING or f.default_factory != MISSING
+        }
     return {
-        f.name for f in fields(dataclass_type)
-        if f.default != MISSING or f.default_factory != MISSING
+        name for name, param in inspect.signature(cls.__init__).parameters.items()
+        if param.default != inspect.Parameter.empty
     }
 
 

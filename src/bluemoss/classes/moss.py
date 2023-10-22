@@ -5,7 +5,7 @@ from inspect import isclass
 from .utils import ClassType
 from functools import cached_property
 from dataclasses import dataclass, field
-from ..utils import is_valid_xpath, get_init_params
+from ..utils import is_valid_xpath, get_class_init_params
 
 
 @dataclass(frozen=True)
@@ -42,7 +42,7 @@ class BlueMoss:
             
         if self.target:
             assert isclass(self.target)
-            assert self.keys_in_nodes.issubset(get_init_params(self.target))
+            assert self.keys_in_nodes.issubset(get_class_init_params(self.target))
 
 
 @dataclass(frozen=True)

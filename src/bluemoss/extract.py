@@ -9,7 +9,7 @@ from .utils import (
     get_base_domain,
     get_url_query_params,
     get_endpoint_with_query,
-    get_params_with_default_value,
+    get_class_params_with_default_value,
 )
 
 
@@ -57,7 +57,7 @@ def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
             return PrettyDict({node.key: _extract(node, elem, level+1) for node in moss.nodes})
         return [_extract(node, elem, level+1) for node in moss.nodes]
     values: dict[str, any] = {}
-    params_with_defaults: set[str] = get_params_with_default_value(moss.target)
+    params_with_defaults: set[str] = get_class_params_with_default_value(moss.target)
     for node in moss.nodes:
         val: any = _extract(node, elem, level+1)
         if not (val is None and node.key in params_with_defaults):
