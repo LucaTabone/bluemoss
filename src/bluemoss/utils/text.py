@@ -14,8 +14,16 @@ def get_infix(text: str, prefix: str, suffix: str) -> str | None:
     return res[:idx]
 
 
-def clean_text(text: str) -> str:
-    text = text.strip().replace("\n", "")
+def clean_text(text: str | None) -> str | None:
+    if text is None:
+        return
+    text = text.strip()
     while "  " in text:
         text = text.replace("  ", " ")
+    while "\n " in text:
+        text = text.strip().replace("\n ", "\n")
+    while " \n" in text:
+        text = text.strip().replace(" \n", "\n")
+    while "\n\n\n" in text:
+        text = text.strip().replace("\n\n\n", "\n\n")
     return text
