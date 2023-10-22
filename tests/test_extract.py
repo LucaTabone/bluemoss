@@ -83,9 +83,9 @@ def test_href_endpoint_extraction():
 
 def test_href_endpoint_with_query_extraction():
     moss = Root("a", filter=3, extract=Ex.HREF_ENDPOINT_WITH_QUERY)
-    assert extract(moss, HTML) == "/page4/link4?p=4&q=4"
+    assert extract(moss, HTML) == "/page4/link4?p=4&q=4&p=5"
 
 
 def test_href_query_params_extraction():
     moss = Root("a", filter=3, extract=Ex.HREF_QUERY_PARAMS)
-    assert extract(moss, HTML) == {"p": "4", "q": "4"}
+    assert extract(moss, HTML) == {"p": ["4", "5"], "q": ["4"]}
