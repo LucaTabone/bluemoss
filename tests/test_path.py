@@ -1,7 +1,7 @@
 from __future__ import annotations
 import pytest
-from src.bluemoss import Root, Range, Ex, extract
 from .constants import HIGH_NESTING_LEVEL_HTML as HTML
+from src.bluemoss import Root, Range, Ex, InvalidXpathException, extract
 
 
 def test_valid_paths():
@@ -12,17 +12,17 @@ def test_valid_paths():
 
 
 def test_invalid_path_1():
-    with pytest.raises(AssertionError):
+    with pytest.raises(InvalidXpathException):
         Root("body///section")
 
 
 def test_invalid_path_2():
-    with pytest.raises(AssertionError):
+    with pytest.raises(InvalidXpathException):
         Root("//")
 
 
 def test_invalid_path_3():
-    with pytest.raises(AssertionError):
+    with pytest.raises(InvalidXpathException):
         Root("///a")
 
 

@@ -1,8 +1,8 @@
 from __future__ import annotations
-from . import Ex
+from .utils import ClassType
+from .extract import Ex
 from .range import Range
 from inspect import isclass
-from .utils import ClassType
 from functools import cached_property
 from dataclasses import dataclass, field
 from ..utils import is_valid_xpath, get_class_init_params
@@ -36,13 +36,23 @@ class BlueMoss:
         return {c.key for c in self.nodes if c.key is not None}
 
     def __post_init__(self):
-        assert self.no_path or is_valid_xpath(self.full_path), f"{self.full_path} is not a valid XPath query."
+        if not (self.no_path or is_valid_xpath(self.full_path)):
+            raise InvalidXpathException(self)
 
-        assert all([c.key is not None for c in self.nodes]) or all([c.key is None for c in self.nodes])
+        if not (
+                all([c.key is not None for c in self.nodes]) or
+                all([c.key is None for c in self.nodes])
+        ):
+            raise PartialKeysException(self)
             
-        if self.target:
-            assert isclass(self.target)
-            assert self.keys_in_nodes.issubset(get_class_init_params(self.target))
+        if self.target is None:
+            return
+
+        if not isclass(self.target):
+            raise InvalidTargetTypeException(self)
+
+        if not self.keys_in_nodes.issubset(get_class_init_params(self.target)):
+            raise InvalidKeysForTargetException(self)
 
 
 @dataclass(frozen=True)
@@ -53,3 +63,38 @@ class Root(BlueMoss):
 @dataclass(frozen=True)
 class Node(BlueMoss):
     path_prefix: str = field(default=".//", init=False)
+
+
+class InvalidXpathException(Exception):
+    def __init__(self, moss: BlueMoss):
+        message: str = ""
+        super().__init__(message)
+
+
+class PartialKeysException(Exception):
+    def __init__(self, moss: BlueMoss):
+        message: str = ""
+        super().__init__(message)
+
+
+class InvalidTargetTypeException(Exception):
+    def __init__(self, moss: BlueMoss):
+        message: str = ""
+        super().__init__(message)
+
+
+class InvalidKeysForTargetException(Exception):
+    def __init__(self, moss: BlueMoss):
+        message: str = ""
+        super().__init__(message)
+
+
+__all__ = [
+    "BlueMoss",
+    "Root",
+    "Node",
+    "InvalidXpathException",
+    "PartialKeysException",
+    "InvalidTargetTypeException",
+    "InvalidKeysForTargetException"
+]

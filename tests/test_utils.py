@@ -65,7 +65,7 @@ def test_clean_text():
               
     """
     assert utils.clean_text(text) == \
-        "Hello world!\nHere.\n\nThis is a test.\n\nHello world!\n\nTest.\nHello world!"
+        "Hello world!\nHere.\nThis is a test.\nHello world!\nTest.\nHello world!"
     assert utils.clean_text(None) is None
 
 

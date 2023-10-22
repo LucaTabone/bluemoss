@@ -91,3 +91,10 @@ class JsonifyWithTag(Jsonify):
     def source_line(self) -> int:
         """ The line within the source-html-doc in which @param self._tag was found. """
         return self._tag.sourceline
+
+
+__all__ = [
+    "PrettyDict",
+    "Jsonify",
+    "JsonifyWithTag"
+]

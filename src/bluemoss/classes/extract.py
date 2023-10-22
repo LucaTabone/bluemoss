@@ -23,3 +23,8 @@ class Ex(Enum):
     HREF_BASE_DOMAIN = "href_base_domain"
     HREF_QUERY_PARAMS = "href_query_params"
     HREF_ENDPOINT_WITH_QUERY = "href_endpoint_with_query"
+
+
+__all__ = [
+    "Ex"
+]

@@ -24,6 +24,12 @@ def clean_text(text: str | None) -> str | None:
         text = text.strip().replace("\n ", "\n")
     while " \n" in text:
         text = text.strip().replace(" \n", "\n")
-    while "\n\n\n" in text:
-        text = text.strip().replace("\n\n\n", "\n\n")
+    while "\n\n" in text:
+        text = text.strip().replace("\n\n", "\n")
     return text
+
+
+__all__ = [
+    "get_infix",
+    "clean_text"
+]

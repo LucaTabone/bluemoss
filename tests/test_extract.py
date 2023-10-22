@@ -24,7 +24,7 @@ def test_text_extraction():
 
 def test_full_text_extraction():
     moss = Root("div", extract=Ex.FULL_TEXT)
-    assert extract(moss, HTML) == "Ipsum 2 Lorem 2 Link 2"
+    assert extract(moss, HTML) == "Ipsum 2\nLorem 2\nLink 2"
 
 
 def test_tag_extraction():
@@ -33,7 +33,7 @@ def test_tag_extraction():
     assert isinstance(tag, BeautifulSoup)
 
     moss = Root("div")
-    assert extract(moss, tag.prettify()) == "Ipsum 2 Lorem 2 Link 2"
+    assert extract(moss, tag.prettify()) == "Ipsum 2\nLorem 2\nLink 2"
 
 
 def test_etree_extraction():
@@ -45,7 +45,7 @@ def test_etree_extraction():
     # 2) transform the etree._Element into a html string and test the full-text-extraction on it
     html: str = etree.tostring(elem, method="html")
     moss = Root("div")
-    assert extract(moss, html) == "Ipsum 2 Lorem 2 Link 2"
+    assert extract(moss, html) == "Ipsum 2\nLorem 2\nLink 2"
 
 
 def test_tag_as_string_extraction():
@@ -53,7 +53,7 @@ def test_tag_as_string_extraction():
     html: str = extract(moss, HTML)
     assert isinstance(html, str)
     moss = Root("div")
-    assert extract(moss, html) == "Ipsum 2 Lorem 2 Link 2"
+    assert extract(moss, html) == "Ipsum 2\nLorem 2\nLink 2"
 
 
 def test_href_extraction():

@@ -1,7 +1,7 @@
 import pytest
 from dataclasses import dataclass
 from .constants import FOUR_DIVS_HTML as HTML
-from src.bluemoss import Root, Node, Range, extract
+from src.bluemoss import Root, Node, Range, extract, EqualIndicesException
 
 
 def test_find_first():
@@ -134,5 +134,5 @@ def test_bad_indexing():
     assert extract(moss, HTML) == []
 
     # 4) invalid indexing for Range object
-    with pytest.raises(AssertionError):
+    with pytest.raises(EqualIndicesException):
         Root("div", filter=Range(5, 5))

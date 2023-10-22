@@ -30,3 +30,11 @@ def remove_tags(soup: BeautifulSoup, tag_names: list[str]) -> str:
     for data in soup(tag_names):
         data.decompose()
     return soup.prettify()
+
+
+__all__ = [
+    "is_valid_xpath",
+    "etree_to_bs4",
+    "etree_to_string",
+    "remove_tags"
+]

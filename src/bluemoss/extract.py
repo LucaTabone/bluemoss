@@ -1,16 +1,6 @@
+import src.bluemoss.utils as utils
 from lxml import etree, html as lxml_html
 from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
-from .utils import (
-    clean_text,
-    get_domain,
-    etree_to_bs4,
-    get_endpoint,
-    get_url_query,
-    get_base_domain,
-    get_url_query_params,
-    get_endpoint_with_query,
-    get_class_params_with_default_value,
-)
 
 
 def extract(moss: BlueMoss, html: str) -> any:
@@ -57,7 +47,7 @@ def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
             return PrettyDict({node.key: _extract(node, elem, level+1) for node in moss.nodes})
         return [_extract(node, elem, level+1) for node in moss.nodes]
     values: dict[str, any] = {}
-    params_with_defaults: set[str] = get_class_params_with_default_value(moss.target)
+    params_with_defaults: set[str] = utils.get_class_params_with_default_value(moss.target)
     for node in moss.nodes:
         val: any = _extract(node, elem, level+1)
         if not (val is None and node.key in params_with_defaults):
@@ -73,8 +63,6 @@ def _extract_from_leaf_node(moss: BlueMoss, elem: etree.Element) -> any:
         return str(elem)
     if isinstance(moss.extract, str):
         return elem.get(moss.extract)
-    if not isinstance(moss.extract, Ex):
-        raise ValueError(f"The @param moss.extract must be a string or Extract value.")
     match moss.extract:
         case None | Ex.ETREE:
             return elem
@@ -83,22 +71,22 @@ def _extract_from_leaf_node(moss: BlueMoss, elem: etree.Element) -> any:
         case Ex.TEXT:
             return elem.text.strip()
         case Ex.FULL_TEXT:
-            return clean_text(elem.text_content().strip())
+            return utils.clean_text(elem.text_content().strip())
         case Ex.TAG:
-            return etree_to_bs4(elem)
+            return utils.etree_to_bs4(elem)
         case Ex.TAG_AS_STRING:
-            return etree_to_bs4(elem).prettify()
+            return utils.etree_to_bs4(elem).prettify()
         case Ex.HREF:
             return elem.get("href")
         case Ex.HREF_QUERY:
-            return get_url_query(elem.get("href"))
+            return utils.get_url_query(elem.get("href"))
         case Ex.HREF_DOMAIN:
-            return get_domain(elem.get("href"))
+            return utils.get_domain(elem.get("href"))
         case Ex.HREF_ENDPOINT:
-            return get_endpoint(elem.get("href"))
+            return utils.get_endpoint(elem.get("href"))
         case Ex.HREF_BASE_DOMAIN:
-            return get_base_domain(elem.get("href"))
+            return utils.get_base_domain(elem.get("href"))
         case Ex.HREF_QUERY_PARAMS:
-            return get_url_query_params(elem.get("href"))
+            return utils.get_url_query_params(elem.get("href"))
         case Ex.HREF_ENDPOINT_WITH_QUERY:
-            return get_endpoint_with_query(elem.get("href"))
+            return utils.get_endpoint_with_query(elem.get("href"))
