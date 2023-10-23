@@ -44,7 +44,7 @@ class BlueMoss:
                 all([c.key is not None for c in self.nodes]) or
                 all([c.key is None for c in self.nodes])
         ):
-            raise PartialKeysException(self)
+            raise PartialKeysException()
             
         if self.target is None:
             return
@@ -68,25 +68,47 @@ class Node(BlueMoss):
 
 class InvalidXpathException(Exception):
     def __init__(self, moss: BlueMoss):
-        message: str = ""
+        message: str = (
+            f"\n{moss.full_path} seems to be an invalid xpath. "
+            f"Feel free to use ChatGPT to check if your path is compatible with the XPath 1.0 syntax. "
+            f"Note that xpath queries using XPath syntax of any version higher than 1.0 are not supported."
+        )
         super().__init__(message)
 
 
 class PartialKeysException(Exception):
-    def __init__(self, moss: BlueMoss):
-        message: str = ""
+    def __init__(self):
+        message: str = (
+            f"\n\nSome Node instances in your nodes list have a key attribute set while others don't."
+            f"\nYou can either provide a list of nodes where ALL instances set a key, or NO instances do."
+        )
         super().__init__(message)
 
 
 class InvalidTargetTypeException(Exception):
     def __init__(self, moss: BlueMoss):
-        message: str = ""
+        message: str = (
+            f"\n\nThe type of your target '{str(moss.target)}' is not a custom class nor a dataclass."
+            f"\nMake sure the target either refers to a class or a dataclass."
+            f"\n\nPro Tips:"
+            f"\n1) If you want your target to be a DICT, "
+            f"then you don't have to set the 'target' parameter. All you have to do is to provide keys "
+            f"with all Node instances in your 'nodes' list."
+            f"\n2) If you want your target to be a LIST, then you also don't need to set your 'target' parameter. "
+            f"Just provide the list of Node instances in your 'nodes' list "
+            f"without any of the Node instances having set the 'key' parameter."
+        )
         super().__init__(message)
 
 
 class InvalidKeysForTargetException(Exception):
     def __init__(self, moss: BlueMoss):
-        message: str = ""
+        target_fields: set[str] = get_class_init_params(moss.target)
+        invalid_fields: set[str] = {field for field in moss.keys_in_nodes if field not in target_fields}
+        message: str = (
+            f"A Node instance in your 'nodes' list defines a key that is no valid init "
+            f"parameter for your target {str(moss.target)}: {invalid_fields.pop()}"
+        )
         super().__init__(message)
 
 

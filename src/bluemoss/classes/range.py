@@ -22,7 +22,14 @@ class Range:
 
 class EqualIndicesException(Exception):
     def __init__(self, index: int):
-        message = ""
+        message: str = (
+            f"\n\nYou have defined a Range instance with start_idx={index} and end_idx={index}."
+            f"\nMake sure to provide unequal values for your 'start_idx' and 'end_idx' parameters."
+            f"\n\nPro Tips:"
+            f"\n1) You can define a Range instance with just one value, "
+            f"e.g. Range(2) which will filter all matched html-tags from index 2 onwards."
+            f"\n2) An instance like Range(0, 2) will filter for the first two matched html-tags."
+        )
         super().__init__(message)
 
 
