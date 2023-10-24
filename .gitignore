@@ -6,3 +6,10 @@ __pycache__/
 
 .pytest_cache
 .nox
+
+build
+dist
+
+eggs/
+.eggs/
+*.egg-info/
