@@ -36,7 +36,7 @@ setup(
     maintainer='Luca Tabone',
     license='APACHE',
     url='https://github.com/LucaTabone/bluemoss',
-    description='BlueMoss enables you to easily scrape websites.',
+    description='bluemoss enables you to easily scrape websites.',
     install_requires=requirements('base.txt'),
     long_description=readme,
     long_description_content_type='text/markdown',
