@@ -7,7 +7,7 @@ from setuptools import (setup, find_packages)
 
 
 def requirements(name: str) -> List[str]:
-    root = Path(__file__).parent / 'requirements'
+    root = Path(__file__).parent / 'requirements.txt'
     return root.joinpath(name).read_text().splitlines()
 
 
