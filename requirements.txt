@@ -1,0 +1,4 @@
+lxml
+beautifulsoup4
+pytest
+nox
