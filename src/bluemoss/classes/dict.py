@@ -1,7 +1,7 @@
 import abc
 from enum import Enum
 from json import dumps
-from lxml import etree
+from bs4 import BeautifulSoup
 from dataclasses import dataclass
 from datetime import datetime, date
 from collections import OrderedDict
@@ -78,13 +78,13 @@ class JsonifyWithTag(Jsonify):
     Some dataclass instances may need access to their source-html-tag.
     Those dataclasses can inherit from DictableWithTag and thus also get the benefits of the Dictable class.
     """
-    _tag: etree.Element
+    _tag: BeautifulSoup
 
     def __post_init__(self):
         super().__post_init__()
 
     @property
-    def tag(self) -> etree.Element:
+    def tag(self) -> BeautifulSoup:
         return self._tag
 
     @property
