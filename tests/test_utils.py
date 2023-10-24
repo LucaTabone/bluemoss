@@ -92,7 +92,7 @@ def test_remove_tags():
         ("body", "<html></html>"),
         ("html", "")
     ]:
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, "html.parser")
         utils.remove_tags(soup, tags_to_remove)
         assert str(soup) == expected_html
 
