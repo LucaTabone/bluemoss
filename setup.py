@@ -63,6 +63,7 @@ setup(
         'xpath',
         'scrape,'
         'scraping',
+        'bluemoss',
         'webscraping',
         'web-scraping',
         'recipe-scraping',

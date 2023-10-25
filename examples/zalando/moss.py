@@ -28,7 +28,6 @@ ZALANDO_ARTICLES_MOSS: Root = Root(
 
 
 if __name__ == '__main__':
-    Root(target=list)
     with open("./static/shoes.html", "r") as f:
         for article in extract(ZALANDO_ARTICLES_MOSS, f.read()):
             print(article)
