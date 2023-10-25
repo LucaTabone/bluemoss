@@ -1,4 +1,4 @@
-import src.bluemoss.utils as utils
+from . import utils
 from lxml import etree, html as lxml_html
 from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
 
