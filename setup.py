@@ -17,7 +17,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 with open('src/bluemoss/__init__.py', encoding='utf-8') as f:
     match = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE
+        r"^__version__\s=\s'([\d\.]+(?:-[a-zA-Z]+(?:\.\d+)?)?)'$", f.read(), re.MULTILINE
     )
     if not match:
         raise RuntimeError('version is not set')
