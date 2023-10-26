@@ -44,8 +44,11 @@ def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
 def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
     if moss.target is None:
         if moss.keys_in_nodes:
+            # target is dict
             return PrettyDict({node.key: _extract(node, elem, level+1) for node in moss.nodes})
+        # target is list
         return [_extract(node, elem, level+1) for node in moss.nodes]
+    # target is class/dataclass
     values: dict[str, any] = {}
     params_with_defaults: set[str] = utils.get_class_params_with_default_value(moss.target)
     for node in moss.nodes:
