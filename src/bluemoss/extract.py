@@ -14,14 +14,14 @@ def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
     elif not (elems := root.xpath(moss.full_path)):
         if moss.extract == Ex.FOUND:
             return False
-        return moss.transform(None if isinstance(moss.filter, int) else [])
+        return moss.transform(None if moss.find_single else [])
     try:
-        if isinstance(moss.filter, int):
+        if moss.find_single:
             elems = [elems[moss.filter]]
         elif isinstance(moss.filter, Range):
             elems = moss.filter.filter(elems)
     except IndexError:
-        return moss.transform(None if isinstance(moss.filter, int) else [])
+        return moss.transform(None if moss.find_single else [])
     if moss.nodes:
         if moss.find_single:
             val = moss.transform(_build_target_instance(moss, elems[0], level))
