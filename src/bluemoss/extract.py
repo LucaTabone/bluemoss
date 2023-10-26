@@ -1,4 +1,5 @@
 from . import utils
+from .utils import etree_to_bs4
 from lxml import etree, html as lxml_html
 from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
 
@@ -56,7 +57,7 @@ def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
         if not (val is None and node.key in params_with_defaults):
             values[node.key] = val
     if issubclass(moss.target, JsonifyWithTag):
-        values |= {"_tag": elem}
+        values |= {"_tag": etree_to_bs4(elem)}
     # noinspection PyArgumentList
     return moss.target(**values)
 
