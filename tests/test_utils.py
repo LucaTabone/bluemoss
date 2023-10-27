@@ -79,7 +79,7 @@ def test_get_infix():
 # html.py
 def test_etree_to_bs4():
     html: str = "<html><body><p>Hello world!</p></body></html>"
-    soup: BeautifulSoup = utils.etree_to_bs4(lxml_html.fromstring(html))
+    soup: BeautifulSoup = utils.lxml_etree_to_bs4(lxml_html.fromstring(html))
     assert isinstance(soup, BeautifulSoup)
     assert str(soup) == html
 
@@ -93,14 +93,14 @@ def test_remove_tags():
         ("html", "")
     ]:
         soup = BeautifulSoup(html, "html.parser")
-        utils.remove_tags(soup, tags_to_remove)
+        utils.remove_tags_from_soup(soup, tags_to_remove)
         assert str(soup) == expected_html
 
 
 def test_etree_to_string():
     html: str = "<html><body><p>Hello world!</p></body></html>"
     elem: etree.Element = lxml_html.fromstring(html)
-    assert utils.etree_to_string(elem) == html
+    assert utils.lxml_etree_to_string(elem) == html
 
 
 # url.py

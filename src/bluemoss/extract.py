@@ -1,5 +1,5 @@
 from . import utils
-from .utils import etree_to_bs4
+from .utils import lxml_etree_to_bs4
 from lxml import etree, html as lxml_html
 from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
 
@@ -57,7 +57,7 @@ def _build_target_instance(moss: BlueMoss, elem: etree.Element, level: int):
         if not (val is None and node.key in params_with_defaults):
             values[node.key] = val
     if issubclass(moss.target, JsonifyWithTag):
-        values |= {"_tag": etree_to_bs4(elem)}
+        values |= {"_tag": elem}
     # noinspection PyArgumentList
     return moss.target(**values)
 
@@ -77,9 +77,9 @@ def _extract_from_leaf_node(moss: BlueMoss, elem: etree.Element) -> any:
         case Ex.FULL_TEXT:
             return utils.clean_text(elem.text_content().strip())
         case Ex.TAG:
-            return utils.etree_to_bs4(elem)
+            return utils.lxml_etree_to_bs4(elem)
         case Ex.TAG_AS_STRING:
-            return utils.etree_to_bs4(elem).prettify()
+            return utils.lxml_etree_to_bs4(elem).prettify()
         case Ex.HREF:
             return elem.get("href")
         case Ex.HREF_QUERY:

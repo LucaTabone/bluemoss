@@ -1,9 +1,9 @@
 from __future__ import annotations
 import builtins
-from .utils import ClassType
 from .extract import Ex
 from .range import Range
 from inspect import isclass
+from .utils import ClassType
 from functools import cached_property
 from dataclasses import dataclass, field
 from ..utils import is_valid_xpath, get_class_init_params

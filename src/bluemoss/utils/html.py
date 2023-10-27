@@ -12,15 +12,15 @@ def is_valid_xpath(xpath_query: str):
         return False
 
 
-def etree_to_bs4(node: etree.Element) -> BeautifulSoup:
-    return BeautifulSoup(etree_to_string(node), "html.parser")
+def lxml_etree_to_bs4(node: etree.Element) -> BeautifulSoup:
+    return BeautifulSoup(lxml_etree_to_string(node), "html.parser")
 
 
-def etree_to_string(node: etree.Element) -> str:
+def lxml_etree_to_string(node: etree.Element) -> str:
     return etree.tostring(node, method="html").decode("utf-8")
 
 
-def remove_tags(soup: BeautifulSoup, tag_names: list[str]) -> str:
+def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> str:
     """
     Removes specific HTML tags from a BeautifulSoup object.
 
@@ -34,7 +34,7 @@ def remove_tags(soup: BeautifulSoup, tag_names: list[str]) -> str:
 
 __all__ = [
     "is_valid_xpath",
-    "etree_to_bs4",
-    "etree_to_string",
-    "remove_tags"
+    "lxml_etree_to_bs4",
+    "lxml_etree_to_string",
+    "remove_tags_from_soup"
 ]
