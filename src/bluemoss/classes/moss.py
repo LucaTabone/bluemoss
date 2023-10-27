@@ -70,8 +70,8 @@ class InvalidXpathException(Exception):
     def __init__(self, moss: BlueMoss):
         message: str = (
             f"\n{moss.full_path} seems to be an invalid xpath. "
-            f"Feel free to use ChatGPT to check if your path is compatible with the XPath 1.0 syntax. "
-            f"Note that xpath queries using XPath syntax of any version higher than 1.0 are not supported."
+            f"\nFeel free to use ChatGPT to check if your path is compatible with the XPath 1.0 syntax."
+            f"\nNote that xpath queries using XPath syntax of any version higher than 1.0 are not supported."
         )
         super().__init__(message)
 
