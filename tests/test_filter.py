@@ -45,6 +45,11 @@ def test_find_all_reversed():
     assert extract(moss, HTML) == [f"Hello {i}" for i in range(4, 0, -1)]
 
 
+def test_find_with_list_of_ints():
+    moss = Root("div", filter=[1, 2])
+    assert extract(moss, HTML) == [f"Hello 2", "Hello 3"]
+
+
 def test_find_range_with_dict_result():
     # first two
     moss = Root(

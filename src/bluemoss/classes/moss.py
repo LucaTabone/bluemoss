@@ -14,10 +14,10 @@ class BlueMoss:
     path: str = ""
     path_prefix: str = ""
     key: str | None = None
-    filter: int | None | Range = 0
     target: ClassType | None = None
     extract: Ex | str = Ex.FULL_TEXT
     transform: callable = lambda x: x
+    filter: int | list[int] | Range | None = 0
     nodes: list[Node] = field(default_factory=list)
 
     @property

@@ -1,5 +1,4 @@
 from . import utils
-from .utils import lxml_etree_to_bs4
 from lxml import etree, html as lxml_html
 from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
 
@@ -20,6 +19,8 @@ def _extract(moss: BlueMoss, root: etree.Element, level: int) -> any:
             elems = [elems[moss.filter]]
         elif isinstance(moss.filter, Range):
             elems = moss.filter.filter(elems)
+        elif isinstance(moss.filter, list):
+            elems = [elem for i, elem in enumerate(elems) if i in set(moss.filter)]
     except IndexError:
         return moss.transform(None if moss.find_single else [])
     if moss.nodes:
