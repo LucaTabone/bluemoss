@@ -24,7 +24,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         ),
         Node(
             key="about",
-            path="h2[contains(@class, 'section-title')]/..//p"
+            path="h2[contains(@class, 'top-card-layout__headline')]"
         ),
         Node(
             key="publications",
@@ -78,9 +78,9 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                     path="span[contains(text(), 'followers')]"
                 ),
                 Node(
-                    path="head",
+                    path="script[contains(@type, 'application/ld+json')]",
                     extract=Ex.TAG,
-                    key="_location_text",
+                    key="location",
                     transform=lambda tag: get_infix(str(tag), 'addressLocality":"', '"')
                 ),
             ]
@@ -223,6 +223,6 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
 
 
 if __name__ == '__main__':
-    with open("./static/adam.html", "r") as f:
+    with open("./static/alex.html", "r") as f:
         profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS, f.read())
         print(profile)

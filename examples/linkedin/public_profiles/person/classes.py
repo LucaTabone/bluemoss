@@ -70,16 +70,11 @@ class ProfileHeader(Jsonify):
     """
     name: str | None
     headline: str | None
+    location: str | None
     followers: str | None
-    _location_text: str | None
-    location: str | None = field(default=None, init=False)
 
     def __post_init__(self):
         super().__post_init__()
-        self._set_location()
-
-    def _set_location(self):
-        self.location = self._location_text
 
 
 @dataclass
