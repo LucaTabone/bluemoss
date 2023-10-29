@@ -5,41 +5,41 @@ from examples.linkedin.public_profiles.person.classes import *
 
 def date_duration_description_moss_list() -> list[Node]:
     return [
-        Node(key="duration", path="span[contains(@class, 'date-range')]/span"),
-        Node(key="_date_and_duration_text", path="span[contains(@class, 'date-range')]"),
-        Node(key="_description_more_text", path="p[contains(@class, 'show-more-less-text__text--less')]"),
-        Node(key="_description_less_text", path="p[contains(@class, 'show-more-less-text__text--more')]")
+        Node(key="duration", xpath="span[contains(@class, 'date-range')]/span"),
+        Node(key="_date_and_duration_text", xpath="span[contains(@class, 'date-range')]"),
+        Node(key="_description_more_text", xpath="p[contains(@class, 'show-more-less-text__text--less')]"),
+        Node(key="_description_less_text", xpath="p[contains(@class, 'show-more-less-text__text--more')]")
     ]
 
 
 LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
-    path="html",
+    xpath="html",
     target=PersonProfile,
     nodes=[
         Node(
-            path="meta[@property='og:url']",
+            xpath="meta[@property='og:url']",
             key="profile_endpoint",
             transform=get_endpoint,
             extract="content"
         ),
         Node(
             key="about",
-            path="h2[contains(@class, 'top-card-layout__headline')]"
+            xpath="h2[contains(@class, 'top-card-layout__headline')]"
         ),
         Node(
             key="publications",
-            path="li[contains(@class, 'personal-project')]",
+            xpath="li[contains(@class, 'personal-project')]",
             target=PublicationItem,
             filter=None,
             nodes=[
-                Node(key="date", path="time"),
-                Node(key="headline", path="h3/a"),
+                Node(key="date", xpath="time"),
+                Node(key="headline", xpath="h3/a"),
                 Node(
                     key="journal",
-                    path="span[contains(@class, 'text-color-text-low-emphasis')]"
+                    xpath="span[contains(@class, 'text-color-text-low-emphasis')]"
                 ),
                 Node(
-                    path="a",
+                    xpath="a",
                     key="url",
                     extract=Ex.HREF_QUERY_PARAMS,
                     transform=lambda params: params.get("url", None)
@@ -48,7 +48,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         ),
         Node(
             key="recommendations",
-            path="section[contains(@class, 'recommendations')]//div[contains(@class, 'endorsement-card')]",
+            xpath="section[contains(@class, 'recommendations')]//div[contains(@class, 'endorsement-card')]",
             target=RecommendationItem,
             filter=None,
             nodes=[
@@ -67,19 +67,19 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
             nodes=[
                 Node(
                     key="name",
-                    path="div[contains(@class, 'top-card-layout__entity-info')]//h1"
+                    xpath="div[contains(@class, 'top-card-layout__entity-info')]//h1"
                 ),
                 Node(
                     key="headline",
-                    path="h2[contains(@class, 'top-card-layout__headline')]"
+                    xpath="h2[contains(@class, 'top-card-layout__headline')]"
                 ),
                 Node(
                     key="followers",
-                    path="span[contains(text(), 'followers')]"
+                    xpath="span[contains(text(), 'followers')]"
                 ),
                 Node(
-                    path="script[contains(@type, 'application/ld+json')]",
-                    extract=Ex.TAG,
+                    xpath="script[contains(@type, 'application/ld+json')]",
+                    extract=Ex.BS4_TAG,
                     key="location",
                     transform=lambda tag: get_infix(str(tag), 'addressLocality":"', '"')
                 ),
@@ -87,18 +87,18 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         ),
         Node(
             key="education",
-            path="section[contains(@class, 'education')]//li",
+            xpath="section[contains(@class, 'education')]//li",
             target=EducationItem,
             filter=None,
             nodes=[
-                      Node(key="institution", path="h3"),
-                      Node(key="degree_info", path="h4"),
+                      Node(key="institution", xpath="h3"),
+                      Node(key="degree_info", xpath="h4"),
                       Node(
                           key="_description_text",
-                          path="div[contains(@class, 'education__item--details')]/p"
+                          xpath="div[contains(@class, 'education__item--details')]/p"
                       ),
                       Node(
-                          path="a",
+                          xpath="a",
                           extract=Ex.HREF_ENDPOINT,
                           key="school_profile_endpoint"
                       )
@@ -106,47 +106,47 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         ),
         Node(
             key="volunteering",
-            path="section[contains(@class, 'volunteering')]//li",
+            xpath="section[contains(@class, 'volunteering')]//li",
             target=VolunteerItem,
             filter=None,
             nodes=[
-                Node(key="position", path="h3"),
-                Node(key="institution", path="h4")
+                Node(key="position", xpath="h3"),
+                Node(key="institution", xpath="h4")
             ] + date_duration_description_moss_list()
         ),
         Node(
             key="awards",
-            path="section[contains(@class, 'awards')]//li",
+            xpath="section[contains(@class, 'awards')]//li",
             target=Award,
             filter=None,
             nodes=[
-                Node(key="title", path="h3"),
-                Node(key="institution", path="h4")
+                Node(key="title", xpath="h3"),
+                Node(key="institution", xpath="h4")
             ] + date_duration_description_moss_list()
         ),
         Node(
             key="certifications",
-            path="section[contains(@class, 'certifications')]//li",
+            xpath="section[contains(@class, 'certifications')]//li",
             filter=None,
             target=Certification,
             nodes=[
-                Node(key="name", path="h3"),
-                Node(key="institution", path="h4"),
-                Node(key="date_issued", path="time")
+                Node(key="name", xpath="h3"),
+                Node(key="institution", xpath="h4"),
+                Node(key="date_issued", xpath="time")
             ]
         ),
         Node(
             key="languages",
-            path="section[contains(@class, 'languages')]//li",
+            xpath="section[contains(@class, 'languages')]//li",
             target=Language,
             filter=None,
             nodes=[
-                Node(key="lang", path="h3"),
-                Node(key="level", path="h4")
+                Node(key="lang", xpath="h3"),
+                Node(key="level", xpath="h4")
             ]
         ),
         Node(
-            path="section[contains(@class, 'experience')]",
+            xpath="section[contains(@class, 'experience')]",
             target=Experience,
             key="experience",
             nodes=[
@@ -154,31 +154,31 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                     filter=None,
                     target=ExperienceGroup,
                     key="_experience_groups",
-                    path="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
+                    xpath="li[contains(@class, 'experience-group') and contains(@class, 'experience-item')]",
                     nodes=[
                         Node(
                             key="duration",
-                            path="p[contains(@class, 'experience-group-header__duration')]"
+                            xpath="p[contains(@class, 'experience-group-header__duration')]"
                         ),
                         Node(
                             key="company_name",
-                            path="h4[contains(@class, 'experience-group-header__company')]"
+                            xpath="h4[contains(@class, 'experience-group-header__company')]"
                         ),
                         Node(
                             key="company_profile_endpoint",
                             extract=Ex.HREF_ENDPOINT,
-                            path="a"
+                            xpath="a"
                         ),
                         Node(
-                            path="li",
+                            xpath="li",
                             key="entries",
                             target=ExperienceGroupItem,
                             filter=None,
                             nodes=[
-                                Node(key="position", path="h3"),
+                                Node(key="position", xpath="h3"),
                                 Node(
                                     key="location",
-                                    path="p[contains(@class, 'experience-group-position__location')]"
+                                    xpath="p[contains(@class, 'experience-group-position__location')]"
                                 )
                             ] + date_duration_description_moss_list()
                         )
@@ -188,15 +188,15 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                     filter=None,
                     target=ExperienceItem,
                     key="_experience_items",
-                    path="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
+                    xpath="li[contains(@class, 'profile-section-card') and contains(@class, 'experience-item')]",
                     nodes=[
-                        Node(key="position", path="h3"),
-                        Node(key="company_name", path="h4"),
-                        Node(key="location", path="p[contains(@class, 'location')]"),
+                        Node(key="position", xpath="h3"),
+                        Node(key="company_name", xpath="h4"),
+                        Node(key="location", xpath="p[contains(@class, 'location')]"),
                         Node(
                             key="company_profile_endpoint",
                             extract=Ex.HREF_ENDPOINT,
-                            path="a"
+                            xpath="a"
                         ),
                     ] + date_duration_description_moss_list()
                 )
@@ -204,17 +204,17 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
         ),
         Node(
             key="people_also_viewed",
-            path="section/h2[contains(text(), 'People also viewed')]/..//li",
+            xpath="section/h2[contains(text(), 'People also viewed')]/..//li",
             filter=None,
             target=PeopleAlsoViewedItem,
             nodes=[
-                Node(key="name", path="h3"),
-                Node(key="headline", path="p"),
-                Node(key="location", path="div[contains(@class, 'text-sm')]"),
+                Node(key="name", xpath="h3"),
+                Node(key="headline", xpath="p"),
+                Node(key="location", xpath="div[contains(@class, 'text-sm')]"),
                 Node(
                     key="profile_endpoint",
                     extract=Ex.HREF_ENDPOINT,
-                    path="a"
+                    xpath="a"
                 )
             ]
         )

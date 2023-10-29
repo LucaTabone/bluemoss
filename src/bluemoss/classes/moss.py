@@ -3,7 +3,7 @@ import builtins
 from .extract import Ex
 from .range import Range
 from inspect import isclass
-from .utils import ClassType
+from .utils import Class
 from functools import cached_property
 from dataclasses import dataclass, field
 from ..utils import is_valid_xpath, get_class_init_params
@@ -11,10 +11,10 @@ from ..utils import is_valid_xpath, get_class_init_params
 
 @dataclass(frozen=True)
 class BlueMoss:
-    path: str = ""
-    path_prefix: str = ""
+    xpath: str = ""
+    xpath_prefix: str = ""
     key: str | None = None
-    target: ClassType | None = None
+    target: Class | None = None
     extract: Ex | str = Ex.FULL_TEXT
     transform: callable = lambda x: x
     filter: int | list[int] | Range | None = 0
@@ -22,15 +22,15 @@ class BlueMoss:
 
     @property
     def no_path(self) -> bool:
-        return self.path == ""
+        return self.xpath == ""
 
     @property
-    def find_single(self) -> bool:
+    def find_single_tag(self) -> bool:
         return isinstance(self.filter, int)
     
     @cached_property
     def full_path(self):
-        return f"{self.path_prefix}{self.path}"
+        return f"{self.xpath_prefix}{self.xpath}"
 
     @cached_property
     def keys_in_nodes(self) -> set[str]:
@@ -58,12 +58,12 @@ class BlueMoss:
 
 @dataclass(frozen=True)
 class Root(BlueMoss):
-    path_prefix: str = field(default="//", init=False)
+    xpath_prefix: str = field(default="//", init=False)
 
 
 @dataclass(frozen=True)
 class Node(BlueMoss):
-    path_prefix: str = field(default=".//", init=False)
+    xpath_prefix: str = field(default=".//", init=False)
 
 
 class InvalidXpathException(Exception):

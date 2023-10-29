@@ -5,7 +5,7 @@ from bluemoss import BlueMoss, Root, Node, Range, extract
 BLOG_POSTS_MOSS: BlueMoss = Root(
     filter=None,
     target=BlogPost,
-    path="div[@class='post']",
+    xpath="div[@class='post']",
     nodes=[
         Node("a", key="title"),
         Node("a/@href", key="url"),

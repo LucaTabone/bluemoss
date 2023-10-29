@@ -1,8 +1,8 @@
 from typing import TypeVar
 
 
-ClassType = TypeVar("ClassType", bound=object)
+Class = TypeVar("Class", bound=object)
 
 __all__ = [
-    "ClassType"
+    "Class"
 ]

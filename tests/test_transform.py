@@ -6,9 +6,8 @@ from src.bluemoss import Root, Node, Range, Ex, extract
 
 
 def test_domain_extract_via_transform():
-    path: str = "footer//li[contains(text(), 'mail')]/a"
     moss = Root(
-        path,
+        "footer//li[contains(text(), 'mail')]/a",
         extract=Ex.HREF,
         transform=lambda mail: mail.split('@')[-1] if mail else None
     )

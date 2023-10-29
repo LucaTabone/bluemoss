@@ -27,30 +27,30 @@ def test_invalid_path_3():
 
 
 def test_non_existent_path():
-    path: str = "h4"
-    assert extract(Root(path), HTML) is None
-    assert extract(Root(path, filter=3), HTML) is None
-    assert extract(Root(path, filter=None), HTML) == []
+    xpath: str = "h4"
+    assert extract(Root(xpath), HTML) is None
+    assert extract(Root(xpath, filter=3), HTML) is None
+    assert extract(Root(xpath, filter=None), HTML) == []
 
 
 def test_nested_path():
-    path: str = "body//section//li/a/../h3"
-    assert extract(Root(path, filter=None), HTML) == ["Service 1", "Service 2"]
-    assert extract(Root(path), HTML) == "Service 1"
-    assert extract(Root(path, filter=0), HTML) == "Service 1"
-    assert extract(Root(path, filter=1), HTML) == "Service 2"
-    assert extract(Root(path, filter=Range(0)), HTML) == ["Service 1", "Service 2"]
-    assert extract(Root(path, filter=Range(1)), HTML) == ["Service 2"]
-    assert extract(Root(path, filter=Range(4)), HTML) == []
+    xpath: str = "body//section//li/a/../h3"
+    assert extract(Root(xpath, filter=None), HTML) == ["Service 1", "Service 2"]
+    assert extract(Root(xpath), HTML) == "Service 1"
+    assert extract(Root(xpath, filter=0), HTML) == "Service 1"
+    assert extract(Root(xpath, filter=1), HTML) == "Service 2"
+    assert extract(Root(xpath, filter=Range(0)), HTML) == ["Service 1", "Service 2"]
+    assert extract(Root(xpath, filter=Range(1)), HTML) == ["Service 2"]
+    assert extract(Root(xpath, filter=Range(4)), HTML) == []
 
 
 def test_nested_path_with_tag_attribute_search():
-    path: str = "body//section//li/a[@href='/info']/../h3"
-    assert extract(Root(path, filter=None), HTML) == ["Service 2"]
-    assert extract(Root(path), HTML) == "Service 2"
+    xpath: str = "body//section//li/a[@href='/info']/../h3"
+    assert extract(Root(xpath, filter=None), HTML) == ["Service 2"]
+    assert extract(Root(xpath), HTML) == "Service 2"
 
 
 def test_nested_path_with_text_search():
-    path: str = "html//section/ul//h3[text()='Service 1']/../a"
-    assert extract(Root(path), HTML) == "Learn More"
-    assert extract(Root(path, extract=Ex.HREF_ENDPOINT), HTML) == "/learn-more"
+    xpath: str = "html//section/ul//h3[text()='Service 1']/../a"
+    assert extract(Root(xpath), HTML) == "Learn More"
+    assert extract(Root(xpath, extract=Ex.HREF_ENDPOINT), HTML) == "/learn-more"

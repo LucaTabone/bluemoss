@@ -42,7 +42,7 @@ MOSS_WITH_TARGET: BlueMoss = Root(
     target=Links,
     nodes=[
         Node(
-            path="a",
+            xpath="a",
             key="links",
             target=Link,
             filter=None,
@@ -58,7 +58,7 @@ MOSS_WITH_TARGET: BlueMoss = Root(
 
 
 MOSS_WITHOUT_TARGET: BlueMoss = Root(
-    path="a",
+    xpath="a",
     key="links",
     filter=None,
     nodes=[
