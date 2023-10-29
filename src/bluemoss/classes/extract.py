@@ -3,16 +3,13 @@ from enum import unique, Enum
 
 @unique
 class Ex(Enum):
-    # found
-    FOUND = "found"
-
     # text
     TEXT = "text"
     FULL_TEXT = "full_text"
 
     # tag
-    TAG = "tag"
-    ETREE = "etree"
+    BS4_TAG = "tag"
+    ETREE_ELEMENT = "etree_element"
     TAG_AS_STRING = "tag_as_string"
 
     # href

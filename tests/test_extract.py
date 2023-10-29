@@ -28,7 +28,7 @@ def test_full_text_extraction():
 
 
 def test_tag_extraction():
-    moss = Root("div", extract=Ex.TAG)
+    moss = Root("div", extract=Ex.BS4_TAG)
     tag: BeautifulSoup = extract(moss, HTML)
     assert isinstance(tag, BeautifulSoup)
 
@@ -38,7 +38,7 @@ def test_tag_extraction():
 
 def test_etree_extraction():
     # 1) extract the found tag as an etree._Element instance
-    moss = Root("div", extract=Ex.ETREE)
+    moss = Root("div", extract=Ex.ETREE_ELEMENT)
     elem: etree._Element = extract(moss, HTML)
     assert isinstance(elem, etree._Element)
 
