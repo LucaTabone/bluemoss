@@ -46,14 +46,14 @@ def test_find_all_reversed():
 
 
 def test_find_with_list_of_ints():
-    moss = Root("div", filter=[1, 2])
-    assert extract(moss, HTML) == [f"Hello 2", "Hello 3"]
+    moss = Root("div", filter=[1, 2, 5, 1, 7])
+    assert extract(moss, HTML) == ["Hello 2", "Hello 3", None, "Hello 2", None]
 
 
 def test_find_range_with_dict_result():
     # first two
     moss = Root(
-        path="html",
+        xpath="html",
         nodes=[
             Node("div", key="1"),
             Node("div[2]", key="2")
