@@ -11,7 +11,7 @@ class PersonDataClass:
     name: str
     birthday: date
     address: str | None = field(default=None)
-    friends: list[PersonDataClass] | None = field(default_factory=list)
+    friends: list[PersonDataClass] = field(default_factory=list)
     last_updated: datetime | None = field(default=None, init=False)
 
 
@@ -20,15 +20,13 @@ class PersonClass:
             self,
             name: str,
             birthday: date,
-            address: str | None = None,
-            friends=None,
+            address: str,
+            friends: list[PersonClass],
     ):
-        if friends is None:
-            friends = []
         self.name = name
         self.birthday = birthday
         self.address = address
-        self.friends = [] if friends is None else friends
+        self.friends = friends
         self.last_updated = datetime.now()
 
 
