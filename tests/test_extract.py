@@ -4,16 +4,6 @@ from src.bluemoss import Root, Ex, extract
 from .constants import WITH_LINKS_HTML as HTML
 
 
-def test_found_extraction():
-    # tag can be found
-    moss = Root("div[@class='id_1']", extract=Ex.FOUND)
-    assert extract(moss, HTML) is True
-
-    # tag cannot be found
-    moss = Root("div[@class='id_3']", extract=Ex.FOUND)
-    assert extract(moss, HTML) is False
-
-
 def test_text_extraction():
     moss = Root("p", extract=Ex.TEXT)
     assert extract(moss, HTML) == "Lorem 1"
@@ -59,6 +49,15 @@ def test_tag_as_string_extraction():
 def test_href_extraction():
     moss = Root("a", filter=2, extract=Ex.HREF)
     assert extract(moss, HTML) == "https://www.nvidia.com/link3?p=3&q=3"
+
+
+def test_href_extraction_with_xpath():
+    for moss in [
+        Root("a/@href", filter=2),
+        Root("a/@href", filter=2, extract=Ex.HREF_BASE_DOMAIN),
+        Root("a/@href", filter=2, extract="some_random_tag_attribute"),
+    ]:
+        assert extract(moss, HTML) == "https://www.nvidia.com/link3?p=3&q=3"
 
 
 def test_href_query_extraction():
