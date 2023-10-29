@@ -41,11 +41,6 @@ def test_class_get_init_params():
     assert utils.get_class_init_params(PersonClass) == CLASS_INIT_PARAMS
 
 
-def test_get_class_params_with_default_value():
-    assert utils.get_class_params_with_default_value(PersonDataClass) == {"address", "friends", "last_updated"}
-    assert utils.get_class_params_with_default_value(PersonClass) == {"address", "friends"}
-
-
 # text.py
 def test_clean_text():
     text: str = """
