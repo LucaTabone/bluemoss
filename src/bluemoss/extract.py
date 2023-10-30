@@ -74,7 +74,7 @@ def _extract(
             - So, a way to make use of moss.key when level == 0, is to build a dictionary 
               where moss.key points to @param val.
         """
-        val: dict[any, any] = {moss.key: val}
+        return {moss.key: moss.transform(val)}
 
     return moss.transform(val)
 
