@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from src.bluemoss.classes.dict import Jsonify
 from .constants import WITH_LINKS_HTML as HTML
 from src.bluemoss.utils import url as url_utils
-from src.bluemoss import BlueMoss, Root, Node, Ex, extract, InvalidTargetTypeException, InvalidKeysForTargetException
+from src.bluemoss import (BlueMoss, Root, Node, Ex, extract, InvalidTargetTypeException,
+                          InvalidKeysForTargetException, MissingTargetKeysException)
 
 
 @dataclass
@@ -98,3 +99,10 @@ def test_invalid_target_type():
 def test_invalid_keys_for_target():
     with pytest.raises(InvalidKeysForTargetException):
         Root(target=Link, nodes=[Node(key="domain")])
+
+
+def test_missing_keys_for_target():
+    expected_message_ending: str = "Missing keys in nodes list for target 'Link': ['url']"
+    with pytest.raises(MissingTargetKeysException) as exc_info:
+        Root(target=Link)
+        assert str(exc_info.value).endswith(expected_message_ending)
