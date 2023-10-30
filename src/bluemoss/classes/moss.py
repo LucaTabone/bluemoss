@@ -88,58 +88,106 @@ class BlueMoss:
     nodes: list[Node] = field(default_factory=list)
 
     @property
-    def no_path(self) -> bool:
+    def no_xpath(self) -> bool:
+        """
+        :rtype: bool
+        :return: True if no xpath was provided, False otherwise.
+        """
         return self.xpath == ""
 
     @property
     def find_single_tag(self) -> bool:
+        """
+        :rtype: bool
+        :return: True if only one tag should be filtered out of the matched tags, False otherwise.
+        """
         return isinstance(self.filter, int)
     
     @cached_property
-    def full_path(self):
+    def full_xpath(self) -> str:
+        """
+        :rtype: str
+        :return: The xpath to use when querying html with the extract function.
+        """
         return f"{self.xpath_prefix}{self.xpath}"
 
     @cached_property
     def keys_in_nodes(self) -> set[str]:
+        """
+        If this set is not empty, then we use these keys in the dictionary that instantiates a target object:
+            1) If the target value of the parent-node (if any) is not None,
+               then we instantiate that class using the dict.
+            2) If the target value of the parent node is None, then we simply use the dict as the target object.
+
+        :rtype: set[str]
+        :return: The set of all keys in the :param nodes.
+        """
         return {c.key for c in self.nodes if c.key is not None}
 
     def __post_init__(self):
-        if not (self.no_path or is_valid_xpath(self.full_path)):
+        if not (self.no_xpath or is_valid_xpath(self.full_xpath)):
+            """ Check the provided xpath for syntactical correctness. """
             raise InvalidXpathException(self)
 
         if not (
             all([c.key is not None for c in self.nodes]) or
             all([c.key is None for c in self.nodes])
         ):
+            """
+            Asserts that either all (or none) of the BlueMoss instances in :param nodes set the 'key' param.
+            - In case none of the instances set a key value, the target object will be a list.
+            - I case all of the instances set a value for the 'key' param , then the target is either a dict 
+              or a class/dataclass, depending on whether the parent node has set a value for the 'target' param.
+              If it hasn't, then the target is a dict.
+            """
             raise PartialKeysException()
             
         if self.target is None:
+            """ Early return in case no target was provided. """
             return
 
         if not isclass(self.target) or self.target.__name__ in dir(builtins):
+            """ Make sure the value of the 'target' param references a class, which is not a builtin class. """
             raise InvalidTargetTypeException(self)
 
         if not self.keys_in_nodes.issubset(get_all_class_init_params(self.target)):
+            """
+            Make sure that all keys provided in the instances of the 'nodes' 
+            param are valid init params for the target class.
+            """
             raise InvalidKeysForTargetException(self)
 
         if not get_required_class_init_params(self.target).issubset(self.keys_in_nodes):
+            """ 
+            Make sure that the instances in the 'nodes' param cover all mandatory 
+            initialization parameters of the target class.
+            """
             raise MissingTargetKeysException(self)
 
 
 @dataclass(frozen=True)
 class Root(BlueMoss):
+    """
+    BlueMoss subclass which comes with :param xpath_prefix set to '//'.
+    This class is suited to be used as the most outer parent node in a BlueMoss tree.
+    """
     xpath_prefix: str = field(default="//", init=False)
 
 
 @dataclass(frozen=True)
 class Node(BlueMoss):
+    """
+    BlueMoss subclass which comes with :param xpath_prefix set to './/'.
+    This class is suited to be used as a child node in a BlueMoss tree as the preceding '.' char
+    tells us to match :param full_path against the tag(s) matched in the parent node.
+    """
     xpath_prefix: str = field(default=".//", init=False)
 
 
 class InvalidXpathException(Exception):
     def __init__(self, moss: BlueMoss):
         message: str = (
-            f"\n{moss.full_path} seems to be an invalid xpath. "
+            f"\n{moss.full_xpath} seems to be an invalid xpath. "
             f"\nFeel free to use ChatGPT to check if your path is compatible with the XPath 1.0 syntax."
             f"\nNote that xpath queries using XPath syntax of any version higher than 1.0 are not supported."
         )

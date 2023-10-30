@@ -35,12 +35,12 @@ def _extract(
     :return: data extracted from :param html
     """
 
-    if moss.no_path:
+    if moss.no_xpath:
         """ if no xpath was defined, we continue to work with the current tag """
         tags: list[HtmlElement] = [tag]
     else:
         """ find matching tags """
-        tags: list[HtmlElement | str] = tag.xpath(moss.full_path)
+        tags: list[HtmlElement | str] = tag.xpath(moss.full_xpath)
         """ filter the matched tags against moss.filter """
         tags: list[HtmlElement | str | None] = _filter_matched_tags(moss, tags)
 
