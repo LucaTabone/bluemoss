@@ -130,7 +130,7 @@ def _build_target(
     """
 
     if tag is None:
-        return None
+        return
 
     if moss.target is None:
         """ the target type will be derived by """
@@ -176,6 +176,10 @@ def _extract_from_leaf_node(
         return None
 
     if isinstance(tag, str):
+        """ 
+        @param tag is a string if moss.xpath endswith with e.g. /@href,  /@class or /text(),
+        i.e. when we do not select for a tag but for a tag-property, like text or an attribute.
+        """
         return str(tag)
 
     if isinstance(moss.extract, str):
