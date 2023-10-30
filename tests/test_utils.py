@@ -20,8 +20,8 @@ class PersonClass:
             self,
             name: str,
             birthday: date,
-            address: str,
             friends: list[PersonClass],
+            address: str | None = None
     ):
         self.name = name
         self.birthday = birthday
@@ -34,9 +34,14 @@ CLASS_INIT_PARAMS: set[str] = {"name", "birthday", "address", "friends"}
 
 
 # general.py
-def test_class_get_init_params():
-    assert utils.get_class_init_params(PersonDataClass) == CLASS_INIT_PARAMS
-    assert utils.get_class_init_params(PersonClass) == CLASS_INIT_PARAMS
+def test_get_init_params():
+    assert utils.get_all_class_init_params(PersonDataClass) == CLASS_INIT_PARAMS
+    assert utils.get_all_class_init_params(PersonClass) == CLASS_INIT_PARAMS
+
+
+def test_get_optional_init_params():
+    assert utils.get_optional_class_init_params(PersonDataClass) == {"address", "friends", "last_updated"}
+    assert utils.get_optional_class_init_params(PersonClass) == {"address"}
 
 
 # text.py

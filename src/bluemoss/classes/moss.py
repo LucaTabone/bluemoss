@@ -108,8 +108,8 @@ class BlueMoss:
             raise InvalidXpathException(self)
 
         if not (
-                all([c.key is not None for c in self.nodes]) or
-                all([c.key is None for c in self.nodes])
+            all([c.key is not None for c in self.nodes]) or
+            all([c.key is None for c in self.nodes])
         ):
             raise PartialKeysException()
             
@@ -119,8 +119,11 @@ class BlueMoss:
         if not isclass(self.target) or self.target.__name__ in dir(builtins):
             raise InvalidTargetTypeException(self)
 
-        if not self.keys_in_nodes.issubset(get_class_init_params(self.target)):
+        if not self.keys_in_nodes.issubset(get_all_class_init_params(self.target)):
             raise InvalidKeysForTargetException(self)
+
+        if not get_required_class_init_params(self.target).issubset(self.keys_in_nodes):
+            raise MissingTargetKeysException(self)
 
 
 @dataclass(frozen=True)
@@ -155,7 +158,7 @@ class PartialKeysException(Exception):
 class InvalidTargetTypeException(Exception):
     def __init__(self, moss: BlueMoss):
         message: str = (
-            f"\n\nThe type of your target '{str(moss.target)}' is not a custom class nor a dataclass."
+            f"\n\nThe type of your target '{moss.target.__name__}' is not a custom class nor a dataclass."
             f"\nMake sure the target either refers to a class or a dataclass."
             f"\n\nPro Tips:"
             f"\n1) If you want your target to be a DICT, "
@@ -170,11 +173,22 @@ class InvalidTargetTypeException(Exception):
 
 class InvalidKeysForTargetException(Exception):
     def __init__(self, moss: BlueMoss):
-        target_fields: set[str] = get_class_init_params(moss.target)
-        invalid_fields: set[str] = {field for field in moss.keys_in_nodes if field not in target_fields}
+        invalid_keys: set[str] = {
+            key for key in moss.keys_in_nodes
+            if key not in get_all_class_init_params(moss.target)
+        }
         message: str = (
-            f"A Node instance in your 'nodes' list defines a key that is no valid init "
-            f"parameter for your target {str(moss.target)}: {invalid_fields.pop()}"
+            f"A Node instance in your nodes list defines a key that is no valid init "
+            f"parameter for your target {moss.target.__name__}: {invalid_keys.pop()}"
+        )
+        super().__init__(message)
+
+
+class MissingTargetKeysException(Exception):
+    def __init__(self, moss: BlueMoss):
+        missing_keys: list[str] = sorted(list((get_required_class_init_params(moss.target) - moss.keys_in_nodes)))
+        message: str = (
+            f"\n\nMissing keys in nodes list for target '{moss.target.__name__}': {missing_keys}"
         )
         super().__init__(message)
 
@@ -185,6 +199,7 @@ __all__ = [
     "Node",
     "InvalidXpathException",
     "PartialKeysException",
+    "MissingTargetKeysException",
     "InvalidTargetTypeException",
     "InvalidKeysForTargetException"
 ]
