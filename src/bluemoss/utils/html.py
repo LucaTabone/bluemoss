@@ -1,5 +1,6 @@
 from lxml import etree
 from bs4 import BeautifulSoup
+from lxml.html import HtmlElement
 
 
 def is_valid_xpath(xpath_query: str):
@@ -12,15 +13,17 @@ def is_valid_xpath(xpath_query: str):
         return False
 
 
-def lxml_etree_to_bs4(node: etree.Element) -> BeautifulSoup:
-    return BeautifulSoup(lxml_etree_to_string(node), "html.parser")
+def lxml_etree_to_bs4(tag: HtmlElement | str) -> BeautifulSoup | None:
+    if isinstance(tag, HtmlElement):
+        return BeautifulSoup(lxml_etree_to_string(tag), "html.parser")
 
 
-def lxml_etree_to_string(node: etree.Element) -> str:
-    return etree.tostring(node, method="html").decode("utf-8")
+def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
+    if isinstance(tag, HtmlElement):
+        return etree.tostring(tag, method="html").decode("utf-8")
 
 
-def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> str:
+def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]):
     """
     Removes specific HTML tags from a BeautifulSoup object.
 
@@ -29,7 +32,6 @@ def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> str:
     """
     for data in soup(tag_names):
         data.decompose()
-    return soup.prettify()
 
 
 __all__ = [

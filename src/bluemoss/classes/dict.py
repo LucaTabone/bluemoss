@@ -1,12 +1,12 @@
 import abc
 from enum import Enum
-from lxml import etree
 from json import dumps
 from bs4 import BeautifulSoup
-from ..utils import lxml_etree_to_bs4
+from lxml.html import HtmlElement
 from dataclasses import dataclass
 from datetime import datetime, date
 from collections import OrderedDict
+from ..utils import lxml_etree_to_bs4
 
 
 class PrettyDict(dict):
@@ -80,18 +80,19 @@ class JsonifyWithTag(Jsonify):
     Some dataclass instances may need access to their source-html-tag.
     Those dataclasses can inherit from DictableWithTag and thus also get the benefits of the Dictable class.
     """
-    _tag: etree._Element
+    _tag: HtmlElement | str
 
     def __post_init__(self):
         super().__post_init__()
 
     @property
-    def lxml_etree_tag(self) -> etree._Element:
+    def lxml_tag(self) -> HtmlElement | str:
         return self._tag
 
     @property
-    def bs4_tag(self) -> BeautifulSoup:
-        return lxml_etree_to_bs4(self._tag)
+    def bs4_tag(self) -> BeautifulSoup | None:
+        if isinstance(self._tag, HtmlElement):
+            return lxml_etree_to_bs4(self._tag)
 
     @property
     def source_line(self) -> int:

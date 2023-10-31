@@ -190,7 +190,7 @@ def _extract_from_leaf_node(
     match moss.extract:
         case Ex.FULL_TEXT:
             return utils.clean_text(tag.text_content().strip())
-        case Ex.ETREE_ELEMENT:
+        case Ex.LXML_HTML_ELEMENT:
             return tag
         case Ex.TEXT:
             return tag.text.strip()
