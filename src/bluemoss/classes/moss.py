@@ -62,17 +62,7 @@ class BlueMoss:
                 E.g. if we have matched the following tags [tag_1, tag_2, tag_3] and :param filter is [2, 0, 5, 2],
                 then we will transform our matched tags to the list [tag_3, tag_1, None, tag_3]
                 before extracting data from them.
-            3) Range:
-                A Range object is a simple way to filter for a subset of subsequent html-tags among the matched tags.
-                Let's consider our example from above where we have matched the tags [tag_1, tag_2, tag_3]
-                against self.full_path.
-
-                3.1) Range(1) would filter for all matched tags from index 1 and onwards: [tag_2, tag_3]
-                3.2) Range(0, 2) would filter for the matched tags at index 0 and 1: [tag_1, tag_2].
-                     In our example Range(0, 2) would yield the same result as Range(0, -1) similar to how
-                     the python range specifier [0:2] would yield the same result as [0:-1].
-                3.3) Range(1, reverse=True) would filter for the same tags as in 3.1,
-                     but would return them in reverse order: [tag_3, tag_2].
+            3) Range: A Range object (docs in ./range.py)
             4) None:
                 If we set :param filter to None, then we will apply no filter onto the matched tags.
                 Use this setting when want to extract data from all the matched tags.
