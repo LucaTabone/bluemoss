@@ -41,13 +41,6 @@ def get_optional_class_init_params(cls) -> set[str]:
     }
 
 
-def _get_default_value(f: Field) -> any:
-    if f.default != MISSING:
-        return f.default
-    if f.default_factory != MISSING:
-        return f.default_factory()
-
-
 __all__ = [
     "get_all_class_init_params",
     "get_optional_class_init_params",
