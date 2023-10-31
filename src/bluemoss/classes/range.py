@@ -3,16 +3,33 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Range:
+    """
+    A Range instance can be provided to the 'filter' parameter of a 'BlueMoss' instance.
+    It basically tells the 'extract' function to filter out a sequence of subsequent html-tags
+    that where matched against the 'full_xpath' parameter of the 'BlueMoss' instance.
+
+    Example. Let's assume we have matched the following html-tags against our xpath: [tag_1, tag_2, tag_3]
+        1) Range(1) would filter for all tags from index 1 and onwards: [tag_2, tag_3],
+           i.e. Range(x) is equivalent to the list-filtering-notation [x:]
+        2) Range(0, 2) would filter for the tags at index 0 and 1: [tag_1, tag_2],
+           i.e. Range(x, y) is equivalent to the list-filtering-notation [x:y].
+        3) Range(1, reverse=True) would filter for the same tags as in 3.1,
+           but would return them in reverse order: [tag_3, tag_2],
+           i.e. Range(x, reverse=True) is equivalent to the list-filtering-notation [x:][::-1].
+        4) Range(1, 10, reverse=True) would yield [tag_3, tag_2], equivalent to the notation [x:y][::-1]
+    """
     start_idx: int
     end_idx: int | None = None
     reverse: bool = field(default=False)
 
     def __post_init__(self):
+        """ If end_idx is not provided, assert that start_idx is not equal to end_idx. """
         if isinstance(self.end_idx, int):
             if self.end_idx == self.start_idx:
                 raise EqualIndicesException(self.start_idx)
 
     def filter(self, li: list) -> list:
+        """ Method to filter a list of elements against the configuration of this Range instance. """
         if self.end_idx is None:
             res = li[self.start_idx:]
         else:
