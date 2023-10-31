@@ -19,8 +19,8 @@ class Jsonify(abc.ABC):
     """
     An abstract dataclass to provide a .dict and a .json property, in order to turn any dataclass
     instance into a python dict or json object, while
-        1. considering the order of parameters as they are defined within each dataclass that inherits from Dictable.
-        2. dropping all protected parameters (those which begin with an underscore).
+    1. considering the order of parameters as they are defined within each dataclass that inherits from Dictable.
+    2. dropping all protected parameters (those which begin with an underscore).
 
     Consider a dataclass instance p of type Profile(header: Header, pages: list[list[[Page]])
     while Profile, Header and Page are all dataclasses which inherit from Dictable.
