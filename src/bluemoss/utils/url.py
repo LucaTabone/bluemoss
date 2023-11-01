@@ -29,9 +29,9 @@ def get_domain(url: str | None) -> str | None:
     :rtype: str | None
     :return: The full domain of @param url.
     """
-    url: str | None = url.strip() if url else None
+    url = url.strip() if url else None
     if not url:
-        return
+        return None
     domain = urlparse(url).netloc
     return domain.replace('www.', '', 1)
 
@@ -49,14 +49,13 @@ def get_endpoint(url: str | None) -> str | None:
     :rtype: str | None
     :return: The endpoint of @param url.
     """
-    url: str | None = url.strip() if url else None
+    url = url.strip() if url else None
     if not url:
-        return
+        return None
     endpoint: str | None = urlparse(url).path if url else None
     if endpoint and endpoint.endswith('/'):
         endpoint = endpoint[:-1]
-    if endpoint:
-        return endpoint
+    return endpoint if endpoint else None
 
 
 def get_url_query(url: str | None) -> str | None:
@@ -71,9 +70,9 @@ def get_url_query(url: str | None) -> str | None:
     :rtype: str | None
     :return: The url-query-string of @param url.
     """
-    url: str | None = url.strip() if url else None
+    url = url.strip() if url else None
     if not url:
-        return
+        return None
     query: str = urlparse(url).query
     return query if query else None
 
@@ -97,13 +96,13 @@ def get_endpoint_with_query(url: str | None) -> str | None:
     if not (query := get_url_query(url)):
         query = ''
     if not endpoint and not query:
-        return
+        return None
     if not query:
         return endpoint
     return f'{endpoint}?{query}'
 
 
-def get_url_query_params(url: str | None) -> dict:
+def get_url_query_params(url: str | None) -> dict[str, list[str]]:
     """
     Returns the query-parameters of @param url as a dict.
     Example:

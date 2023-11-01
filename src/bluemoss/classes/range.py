@@ -1,3 +1,5 @@
+from __future__ import annotations
+from lxml.html import HtmlElement
 from dataclasses import dataclass, field
 
 
@@ -23,13 +25,13 @@ class Range:
     end_idx: int | None = None
     reverse: bool = field(default=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """If end_idx is not provided, assert that start_idx is not equal to end_idx."""
         if isinstance(self.end_idx, int):
             if self.end_idx == self.start_idx:
                 raise EqualIndicesException(self.start_idx)
 
-    def filter(self, li: list) -> list:
+    def filter(self, li: list[HtmlElement]) -> list[HtmlElement]:
         """Method to filter a list of elements against the configuration of this Range instance."""
         if self.end_idx is None:
             res = li[self.start_idx :]

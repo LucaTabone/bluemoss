@@ -16,16 +16,16 @@ def get_infix(text: str, prefix: str, suffix: str) -> str | None:
     :return: First string-infix in @param text that sits between @param prefix and @param suffix.
     """
     if not text:
-        return
+        return None
     idx: int = text.find(prefix)
     if idx == -1:
-        return
+        return None
     res: str = text[idx + len(prefix) :]
     if not suffix:
         return res
     idx = res.find(suffix)
     if idx == -1:
-        return
+        return None
     return res[:idx]
 
 
@@ -43,7 +43,7 @@ def clean_text(text: str | None) -> str | None:
     :return: The updated text.
     """
     if text is None:
-        return
+        return None
     text = text.strip()
     while '  ' in text:
         text = text.replace('  ', ' ')

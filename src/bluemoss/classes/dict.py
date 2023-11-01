@@ -10,7 +10,7 @@ from collections import OrderedDict
 from ..utils import lxml_etree_to_bs4
 
 
-class PrettyDict(dict):
+class PrettyDict(dict[Any, Any]):
     def __str__(self) -> str:
         return (
             '{\n'
@@ -33,10 +33,10 @@ class Jsonify(abc.ABC):
     but also all Page instances within the nested list of lists of @param p.pages.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__dataclass_fields__ = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         pass
 
     def __str__(self) -> str:
@@ -47,8 +47,8 @@ class Jsonify(abc.ABC):
         return dumps(self.dict, indent=4)
 
     @property
-    def dict(self) -> OrderedDict:
-        d: dict = {
+    def dict(self) -> OrderedDict[str, Any]:
+        d: dict[str, Any] = {
             k: v for k, v in self.__dict__.items() if not k.startswith('_')
         }
         return OrderedDict(
@@ -92,7 +92,7 @@ class JsonifyWithTag(Jsonify):
 
     _tag: HtmlElement | str
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         super().__post_init__()
 
     @property
@@ -101,13 +101,20 @@ class JsonifyWithTag(Jsonify):
 
     @property
     def bs4_tag(self) -> BeautifulSoup | None:
-        if isinstance(self._tag, HtmlElement):
-            return lxml_etree_to_bs4(self._tag)
+        return (
+            lxml_etree_to_bs4(self._tag)
+            if isinstance(self._tag, HtmlElement)
+            else None
+        )
 
     @property
-    def source_line(self) -> int:
+    def source_line(self) -> int | None:
         """The line within the source-html-doc in which @param self._tag was found."""
-        return self._tag.sourceline
+        return (
+            self._tag.sourceline
+            if isinstance(self._tag, HtmlElement)
+            else None
+        )
 
 
 __all__ = ['PrettyDict', 'Jsonify', 'JsonifyWithTag']

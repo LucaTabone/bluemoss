@@ -24,8 +24,12 @@ def lxml_etree_to_bs4(tag: HtmlElement | str) -> BeautifulSoup | None:
     :rtype: BeautifulSoup | None
     :return: BeautifulSoup representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
-    if isinstance(tag, HtmlElement):
-        return BeautifulSoup(lxml_etree_to_string(tag), 'html.parser')
+    if not isinstance(tag, HtmlElement):
+        return None
+    tag_as_str: str | None = lxml_etree_to_string(tag)
+    if tag_as_str is None:
+        return None
+    return BeautifulSoup(tag_as_str, 'html.parser')
 
 
 def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
@@ -34,11 +38,12 @@ def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
     :rtype: str | None
     :return: String representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
-    if isinstance(tag, HtmlElement):
-        return etree.tostring(tag, method='html').decode('utf-8')
+    if not isinstance(tag, HtmlElement):
+        return None
+    return etree.tostring(tag, method='html').decode('utf-8')
 
 
-def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]):
+def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> None:
     """
     Removes html-tags with certain ids (@param tag_names) from the given BeautifulSoup object @param soup.
     Exampl: if tag_names is ["h1", "h2"], then all "h1" and "h2" tags will be removed from @param soup.

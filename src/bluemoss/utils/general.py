@@ -1,35 +1,38 @@
 import inspect
-from functools import cache
-from dataclasses import fields, Field, MISSING, is_dataclass
+from typing import Type, Any
+from dataclasses import fields, MISSING, is_dataclass
 
 
-@cache
-def get_required_class_init_params(cls) -> set[str]:
+def get_required_class_init_params(cls: Type[Any] | None) -> set[str]:
     """
     :param cls: class reference
     :rtype: set[str]
     :return: The set of required initialization parameters for the given class.
     """
+    if cls is None:
+        return set()
     return get_all_class_init_params(cls) - get_optional_class_init_params(cls)
 
 
-@cache
-def get_all_class_init_params(cls) -> set[str]:
+def get_all_class_init_params(cls: Type[Any] | None) -> set[str]:
     """
     :param cls: class reference
     :rtype: set[str]
     :return: The set of all initialization parameters for the given class.
     """
+    if cls is None:
+        return set()
     return set(inspect.getfullargspec(cls.__init__).args[1:])
 
 
-@cache
-def get_optional_class_init_params(cls) -> set[str]:
+def get_optional_class_init_params(cls: Type[Any] | None) -> set[str]:
     """
     :param cls: class reference
     :rtype: set[str]
     :return: The set of optional initialization parameters for the given class.
     """
+    if cls is None:
+        return set()
     if is_dataclass(cls):
         return {
             f.name

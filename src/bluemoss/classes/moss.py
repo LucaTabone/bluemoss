@@ -3,8 +3,8 @@ import builtins
 from .extract import Ex
 from .range import Range
 from inspect import isclass
-from .utils import Class
 from functools import cached_property
+from typing import Callable, Type, Any
 from dataclasses import dataclass, field
 from ..utils import (
     is_valid_xpath,
@@ -42,7 +42,7 @@ class BlueMoss:
         A string or an Ex enum value denoting the data to extract from an HTML tag. If `extract` is a string,
         the function will try to extract the value of the HTML tag attribute specified by `extract`.
     :param transform:
-        A callable for further processing of the extracted data.
+        A Callable for further processing of the extracted data.
     :param filter:
         Enables filtering for specific tags matched against `full_path`. It can be:
         1. int: From all matched tags, the int value denotes the index of the desired HTML tag.
@@ -54,10 +54,10 @@ class BlueMoss:
     xpath: str = ''
     xpath_prefix: str = ''
     key: str | None = None
-    target: Class | None = None
+    target: Type[Any] | None = None
     extract: Ex | str = Ex.FULL_TEXT
-    transform: callable = lambda x: x
     filter: int | list[int] | Range | None = 0
+    transform: Callable[[Any], Any] = lambda x: x
     nodes: list[Node] = field(default_factory=list)
 
     @property
@@ -97,7 +97,13 @@ class BlueMoss:
         """
         return {c.key for c in self.nodes if c.key is not None}
 
-    def __post_init__(self):
+    @cached_property
+    def target_class_name(self) -> str | None:
+        if self.target is None:
+            return None
+        return self.target.__name__
+
+    def __post_init__(self) -> None:
         if not (self.no_xpath or is_valid_xpath(self.full_xpath)):
             """Check the provided xpath for syntactical correctness."""
             raise InvalidXpathException(self)
@@ -113,7 +119,7 @@ class BlueMoss:
               or a class/dataclass, depending on whether the parent node has set a value for the 'target' param.
               If it hasn't, then the target is a dict.
             """
-            raise PartialKeysException()
+            raise PartialKeysException(self)
 
         if self.target is None:
             """Early return in case no target was provided."""
@@ -174,7 +180,7 @@ class InvalidXpathException(Exception):
 
 
 class PartialKeysException(Exception):
-    def __init__(self):
+    def __init__(self, moss: BlueMoss):
         message: str = (
             f"\n\nSome Node instances in your nodes list have a key attribute set while others don't."
             f'\nYou can either provide a list of nodes where ALL instances set a key, or NO instances do.'
@@ -185,7 +191,7 @@ class PartialKeysException(Exception):
 class InvalidTargetTypeException(Exception):
     def __init__(self, moss: BlueMoss):
         message: str = (
-            f"\n\nThe type of your target '{moss.target.__name__}' is not a custom class nor a dataclass."
+            f"\n\nThe type of your target '{moss.target_class_name}' is not a custom class nor a dataclass."
             f'\nMake sure the target either refers to a class or a dataclass.'
             f'\n\nPro Tips:'
             f'\n1) If you want your target to be a DICT, '
@@ -207,7 +213,7 @@ class InvalidKeysForTargetException(Exception):
         }
         message: str = (
             f'A Node instance in your nodes list defines a key that is no valid init '
-            f'parameter for your target {moss.target.__name__}: {invalid_keys.pop()}'
+            f'parameter for your target {moss.target_class_name}: {invalid_keys.pop()}'
         )
         super().__init__(message)
 
@@ -222,7 +228,7 @@ class MissingTargetKeysException(Exception):
                 )
             )
         )
-        message: str = f"\n\nMissing keys in nodes list for target '{moss.target.__name__}': {missing_keys}"
+        message: str = f"\n\nMissing keys in nodes list for target '{moss.target_class_name}': {missing_keys}"
         super().__init__(message)
 
 

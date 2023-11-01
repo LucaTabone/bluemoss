@@ -1,8 +1,8 @@
 from . import utils
-from typing import Any
 from lxml.html import HtmlElement
+from typing import Type, Any, cast
 from lxml import html as lxml_html
-from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict, Class
+from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
 
 
 def extract(moss: BlueMoss, html: str) -> Any:
@@ -13,12 +13,12 @@ def extract(moss: BlueMoss, html: str) -> Any:
     :rtype: Any
     :return: data extracted from :param html
     """
-
+    # noinspection PyTypeChecker
     tag: HtmlElement = lxml_html.fromstring(html)
     return _extract(0, moss, tag)
 
 
-def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> Any:
+def _extract(level: int, moss: BlueMoss, tag: HtmlElement) -> Any:
     """Internal main function, which is recursively called in order to scrape :param tag using :param moss.
 
     :param moss: Defines how to scrape :param tag.
@@ -33,46 +33,39 @@ def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> Any:
     """
 
     if moss.no_xpath:
-        """if no xpath was defined, we continue to work with the current tag"""
-        tags: list[HtmlElement] = [tag]
+        # if no xpath was defined, we continue to work with the current tag
+        matched_tags = [tag]
     else:
-        """find matching tags"""
+        # find matching tags
         tags: list[HtmlElement | str] = tag.xpath(moss.full_xpath)
-        """ filter the matched tags against moss.filter """
-        tags: list[HtmlElement | str | None] = _filter_matched_tags(moss, tags)
+        # filter the matched tags against moss.filter
+        matched_tags = _filter_matched_tags(moss, tags)
 
-    if len(tags) == 0:
-        """We either did not find any matching tags or we found matching tags but did not filter any of them."""
+    if len(matched_tags) == 0:
+        # We either did not find any matching tags or we found matching tags but did not filter any of them.
         return moss.transform(None if moss.find_single_tag else [])
 
     if moss.nodes:
-        """len(moss.nodes) > 0"""
-        val: list[list | dict | Class | None] = [
-            _build_target(level, moss, tag) for tag in tags
-        ]
+        # len(moss.nodes) > 0
+        val = [_build_target(level, moss, tag) for tag in matched_tags]
     else:
-        """len(moss.nodes) == 0"""
-        val: list[Any] = [_extract_from_leaf_node(moss, tag) for tag in tags]
+        # len(moss.nodes) == 0
+        val = [_extract_from_leaf_node(moss, tag) for tag in matched_tags]
 
-    if moss.find_single_tag:
-        """
-        len(val) == 1
-
-        If moss.find_single_tag is True, then we explicitly intent to match only one html-tag.
-        """
-        val: Any = val[0]
+    if isinstance(moss.filter, int):
+        # moss.filter is an int => we want to filter for a single tag
+        assert len(val) == 1
+        val = val[0]  # type: ignore
 
     if level == 0 and moss.key is not None:
-        """
-        About this if-condition:
-            1) level == 0: @param moss is most outer parent node (root node)
-            2) moss.key is not None: extracted data (val) shall be wrapped in a dictionary (since level == 0)
+        # About this if-condition:
+        #     1) level == 0: @param moss is most outer parent node (root node)
+        #     2) moss.key is not None: extracted data (val) shall be wrapped in a dictionary (since level == 0)
 
-        Why do we only want to get here if @param level is 0?
-            - If level > 0, then moss.key will be used in the function '_build_target'.
-            - So, a way to make use of moss.key when level == 0, is to build a dictionary
-              where moss.key points to @param val.
-        """
+        # Why do we only want to get here if @param level is 0?
+        #     - If level > 0, then moss.key will be used in the function '_build_target'.
+        #     - So, a way to make use of moss.key when level == 0, is to build a dictionary
+        #       where moss.key points to @param val.
         return {moss.key: moss.transform(val)}
 
     return moss.transform(val)
@@ -83,21 +76,21 @@ def _filter_matched_tags(
 ) -> list[HtmlElement | str | None]:
     """Filter the matched tags."""
 
-    if moss.find_single_tag:
-        """moss.filter is an int => we want to filter for a single tag"""
+    if isinstance(moss.filter, int):
+        # moss.filter is an int => we want to filter for a single tag
         try:
             return [tags[moss.filter]]
         except IndexError:
             return []
 
-    """ moss.filter is not an int => we want to filter for multiple tags """
+    # moss.filter is not an int => we want to filter for multiple tags
 
     if isinstance(moss.filter, Range):
-        """moss.filter is a Range object => filter for multiple subsequent tags"""
+        # moss.filter is a Range object => filter for multiple subsequent tags
         return moss.filter.filter(tags)
 
     if isinstance(moss.filter, list):
-        """moss.filter is a list of integers => filter for the tags whose index is contained in moss.filter"""
+        # moss.filter is a list of integers => filter for the tags whose index is contained in moss.filter
         _tags: list[HtmlElement | str | None] = []
         for idx in moss.filter:
             try:
@@ -106,13 +99,13 @@ def _filter_matched_tags(
                 _tags.append(None)
         return _tags
 
-    """ moss.filter is None => return all matched tags """
+    # moss.filter is None => return all matched tags
     return tags
 
 
 def _build_target(
     level: int, moss: BlueMoss, tag: HtmlElement | str | None
-) -> list | dict | Class | None:
+) -> list[Any] | dict[str, Any] | Type[Any] | None:
     """
     Builds the target instance (list, dict or class/dataclass instance) of :param moss.
     Called by '_extract' function in case :param moss defines its 'nodes' parameter.
@@ -126,38 +119,37 @@ def _build_target(
     """
 
     if tag is None:
-        return
+        return None
 
     if moss.target is None:
-        """the target type will be derived by"""
+        # the target type will be derived by
         if moss.keys_in_nodes:
-            """the target is a dict"""
+            # the target is a dict
             return PrettyDict(
                 {
                     node.key: _extract(level + 1, node, tag)
                     for node in moss.nodes
                 }
             )
-        """ the target is a list """
+        # the target is a list
         return [_extract(level + 1, node, tag) for node in moss.nodes]
 
-    """ the target is a class/dataclass """
+    # the target is a class/dataclass
 
-    """ :param values: dictionary to instantiate moss.target """
+    # :param values: dictionary to instantiate moss.target
     values: dict[str, Any] = {
-        node.key: _extract(level + 1, node, tag) for node in moss.nodes
+        node.key: _extract(level + 1, node, tag)
+        for node in moss.nodes
+        if node.key is not None
     }
 
     if issubclass(moss.target, JsonifyWithTag):
-        """
-        If moss.target inherits from JsonifyWithTag, the intention is to provide
-        the current html-tag @param tag to our target-instance using the key '_tag'.
-        """
+        # If moss.target inherits from JsonifyWithTag, the intention is to provide
+        # the current html-tag @param tag to our target-instance using the key '_tag'.
         values |= {'_tag': tag}
 
-    """ Instantiate and return the target-object. """
     # noinspection PyArgumentList
-    return moss.target(**values)
+    return moss.target(**values)  # type: ignore
 
 
 def _extract_from_leaf_node(
@@ -175,17 +167,15 @@ def _extract_from_leaf_node(
         return None
 
     if isinstance(tag, str):
-        """
-        @param tag is a string if moss.xpath endswith with e.g. /@href,  /@class or /text(),
-        i.e. when we do not select for a tag but for a tag-property, like text or an attribute.
-        """
+        # @param tag is a string if moss.xpath endswith with e.g. /@href,  /@class or /text(),
+        # i.e. when we do not select for a tag but for a tag-property, like text or an attribute.
         return str(tag)
 
     if isinstance(moss.extract, str):
-        """extract the value of the tag-attribute defined by moss.extract"""
+        # extract the value of the tag-attribute defined by moss.extract
         return tag.get(moss.extract)
 
-    """ extract data from @param tag by match-casing moss.extract """
+    # extract data from @param tag by match-casing moss.extract
     match moss.extract:
         case Ex.FULL_TEXT:
             return utils.clean_text(tag.text_content().strip())
@@ -196,7 +186,7 @@ def _extract_from_leaf_node(
         case Ex.BS4_TAG:
             return utils.lxml_etree_to_bs4(tag)
         case Ex.TAG_AS_STRING:
-            return utils.lxml_etree_to_bs4(tag).prettify()
+            return cast(Any, utils.lxml_etree_to_bs4(tag)).prettify()
         case Ex.HREF:
             return tag.get('href')
         case Ex.HREF_QUERY:
