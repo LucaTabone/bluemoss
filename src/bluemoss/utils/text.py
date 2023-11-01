@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def get_infix(text: str, prefix: str, suffix: str) -> str | None:
     """
     Compute the first string-infix in @param text that sits between @param prefix and @param suffix.

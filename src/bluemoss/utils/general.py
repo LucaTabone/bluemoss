@@ -1,3 +1,4 @@
+from __future__ import annotations
 import inspect
 from typing import Type, Any
 from dataclasses import fields, MISSING, is_dataclass

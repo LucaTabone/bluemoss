@@ -1,3 +1,4 @@
+from __future__ import annotations
 from . import utils
 from lxml.html import HtmlElement
 from typing import Type, Any, cast
@@ -176,30 +177,29 @@ def _extract_from_leaf_node(
         return tag.get(moss.extract)
 
     # extract data from @param tag by match-casing moss.extract
-    match moss.extract:
-        case Ex.FULL_TEXT:
-            return utils.clean_text(tag.text_content().strip())
-        case Ex.LXML_HTML_ELEMENT:
-            return tag
-        case Ex.TEXT:
-            return tag.text.strip()
-        case Ex.BS4_TAG:
-            return utils.lxml_etree_to_bs4(tag)
-        case Ex.TAG_AS_STRING:
-            return cast(Any, utils.lxml_etree_to_bs4(tag)).prettify()
-        case Ex.HREF:
-            return tag.get('href')
-        case Ex.HREF_QUERY:
-            return utils.get_url_query(tag.get('href'))
-        case Ex.HREF_DOMAIN:
-            return utils.get_domain(tag.get('href'))
-        case Ex.HREF_ENDPOINT:
-            return utils.get_endpoint(tag.get('href'))
-        case Ex.HREF_BASE_DOMAIN:
-            return utils.get_base_domain(tag.get('href'))
-        case Ex.HREF_QUERY_PARAMS:
-            return utils.get_url_query_params(tag.get('href'))
-        case Ex.HREF_ENDPOINT_WITH_QUERY:
-            return utils.get_endpoint_with_query(tag.get('href'))
-        case _:
-            raise NotImplementedError
+    if moss.extract == Ex.FULL_TEXT:
+        return utils.clean_text(tag.text_content().strip())
+    elif moss.extract == Ex.LXML_HTML_ELEMENT:
+        return tag
+    elif moss.extract == Ex.TEXT:
+        return tag.text.strip()
+    elif moss.extract == Ex.BS4_TAG:
+        return utils.lxml_etree_to_bs4(tag)
+    elif moss.extract == Ex.TAG_AS_STRING:
+        return cast(Any, utils.lxml_etree_to_bs4(tag)).prettify()
+    elif moss.extract == Ex.HREF:
+        return tag.get('href')
+    elif moss.extract == Ex.HREF_QUERY:
+        return utils.get_url_query(tag.get('href'))
+    elif moss.extract == Ex.HREF_DOMAIN:
+        return utils.get_domain(tag.get('href'))
+    elif moss.extract == Ex.HREF_ENDPOINT:
+        return utils.get_endpoint(tag.get('href'))
+    elif moss.extract == Ex.HREF_BASE_DOMAIN:
+        return utils.get_base_domain(tag.get('href'))
+    elif moss.extract == Ex.HREF_QUERY_PARAMS:
+        return utils.get_url_query_params(tag.get('href'))
+    elif moss.extract == Ex.HREF_ENDPOINT_WITH_QUERY:
+        return utils.get_endpoint_with_query(tag.get('href'))
+    else:
+        raise NotImplementedError
