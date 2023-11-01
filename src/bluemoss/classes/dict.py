@@ -1,5 +1,6 @@
 import abc
 from enum import Enum
+from typing import Any
 from json import dumps
 from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
@@ -58,7 +59,7 @@ class Jsonify(abc.ABC):
             ]
         )
 
-    def dictify(self, val: any) -> any:
+    def dictify(self, val: Any) -> Any:
         if isinstance(val, Enum):
             return val.value
         if isinstance(val, datetime):

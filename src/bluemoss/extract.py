@@ -1,15 +1,16 @@
 from . import utils
+from typing import Any
 from lxml.html import HtmlElement
 from lxml import html as lxml_html
 from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict, Class
 
 
-def extract(moss: BlueMoss, html: str) -> any:
+def extract(moss: BlueMoss, html: str) -> Any:
     """Main function of bluemoss: Scrapes :param html with the scraping-recipe defined by :param moss.
 
     :param moss: BlueMoss object. Defines how to scrape :param html.
     :param html: HTML doc to be scraped.
-    :rtype: any
+    :rtype: Any
     :return: data extracted from :param html
     """
 
@@ -17,7 +18,7 @@ def extract(moss: BlueMoss, html: str) -> any:
     return _extract(0, moss, tag)
 
 
-def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> any:
+def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> Any:
     """Internal main function, which is recursively called in order to scrape :param tag using :param moss.
 
     :param moss: Defines how to scrape :param tag.
@@ -27,7 +28,7 @@ def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> any:
         The reason for why we keep track of the depth level of @param moss in relation to it's root node, is because
         we want to allow for the root node (BlueMoss object, level = 0) to define a value for its parameter 'key'
         in which case we want to return a dict with just one key-value-pair (key pointing to the extracted data).
-    :rtype: any
+    :rtype: Any
     :return: data extracted from :param html
     """
 
@@ -51,7 +52,7 @@ def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> any:
         ]
     else:
         """len(moss.nodes) == 0"""
-        val: list[any] = [_extract_from_leaf_node(moss, tag) for tag in tags]
+        val: list[Any] = [_extract_from_leaf_node(moss, tag) for tag in tags]
 
     if moss.find_single_tag:
         """
@@ -59,7 +60,7 @@ def _extract(level: int, moss: BlueMoss, tag: HtmlElement | str | None) -> any:
 
         If moss.find_single_tag is True, then we explicitly intent to match only one html-tag.
         """
-        val: any = val[0]
+        val: Any = val[0]
 
     if level == 0 and moss.key is not None:
         """
@@ -143,7 +144,7 @@ def _build_target(
     """ the target is a class/dataclass """
 
     """ :param values: dictionary to instantiate moss.target """
-    values: dict[str, any] = {
+    values: dict[str, Any] = {
         node.key: _extract(level + 1, node, tag) for node in moss.nodes
     }
 
@@ -161,12 +162,12 @@ def _build_target(
 
 def _extract_from_leaf_node(
     moss: BlueMoss, tag: HtmlElement | str | None
-) -> any:
+) -> Any:
     """
     Extracts data from a leaf node.
     A leaf node is a BlueMoss object with an empty 'nodes' list (moss.nodes == []).
 
-    :rtype: any
+    :rtype: Any
     :return: data extracted from :param moss.
     """
 
