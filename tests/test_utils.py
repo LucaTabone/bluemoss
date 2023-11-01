@@ -55,18 +55,18 @@ def test_clean_text():
     text: str = """
         Hello world!
                         Here.
-        
+
         This is a test.
-        
-        
-        
+
+
+
             Hello world!
-            
-            
+
+
         Test.
             Hello world!
-        
-              
+
+
     """
     assert (
         utils.clean_text(text)
