@@ -1,0 +1,10 @@
+blue
+coverage
+lxml-stubs
+mkdocs
+mkdocs-material
+mypy
+nox
+pre-commit
+pytest-cov
+types-beautifulsoup4
