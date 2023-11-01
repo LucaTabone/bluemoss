@@ -16,7 +16,7 @@ copyright = '2023, Luca Tabone'
 author = 'Luca Tabone'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.23'
+release = '0.1.24'
 
 
 # -- General configuration ---------------------------------------------------
