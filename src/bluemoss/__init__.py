@@ -7,7 +7,18 @@ __copyright__ = 'Copyright 2023-2023 LucaTabone'
 __version__ = '0.1.23'
 
 from .classes import (
-    BlueMoss, Node, Root, Range, Ex, InvalidTargetTypeException, InvalidKeysForTargetException, JsonifyWithTag,
-    Jsonify, InvalidXpathException, PartialKeysException, EqualIndicesException, MissingTargetKeysException
+    BlueMoss,
+    Node,
+    Root,
+    Range,
+    Ex,
+    InvalidTargetTypeException,
+    InvalidKeysForTargetException,
+    JsonifyWithTag,
+    Jsonify,
+    InvalidXpathException,
+    PartialKeysException,
+    EqualIndicesException,
+    MissingTargetKeysException,
 )
 from .extract import extract

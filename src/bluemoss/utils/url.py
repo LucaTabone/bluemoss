@@ -14,7 +14,7 @@ def get_base_domain(url: str | None) -> str | None:
     :return: The base-domain of the given @param url.
     """
     domain: str | None = get_domain(url)
-    return ".".join(domain.split(".")[-2:]) if domain else None
+    return '.'.join(domain.split('.')[-2:]) if domain else None
 
 
 def get_domain(url: str | None) -> str | None:
@@ -33,7 +33,7 @@ def get_domain(url: str | None) -> str | None:
     if not url:
         return
     domain = urlparse(url).netloc
-    return domain.replace("www.", "", 1)
+    return domain.replace('www.', '', 1)
 
 
 def get_endpoint(url: str | None) -> str | None:
@@ -53,7 +53,7 @@ def get_endpoint(url: str | None) -> str | None:
     if not url:
         return
     endpoint: str | None = urlparse(url).path if url else None
-    if endpoint and endpoint.endswith("/"):
+    if endpoint and endpoint.endswith('/'):
         endpoint = endpoint[:-1]
     if endpoint:
         return endpoint
@@ -84,7 +84,7 @@ def get_endpoint_with_query(url: str | None) -> str | None:
     Example:
         1) get_endpoint_with_query("https://www.google.com?search=python") -> "?search=python"
         2) get_endpoint_with_query("https://www.products.apple.com?p=iphone") -> "?p=iphone"
-        3) get_endpoint_with_query("https://www.sub1.sub2.example.com/about/team?type=engineer") 
+        3) get_endpoint_with_query("https://www.sub1.sub2.example.com/about/team?type=engineer")
                 -> "/about/team?type=engineer"
         4) get_endpoint_with_query(None) -> None
         5) get_endpoint_with_query(
@@ -93,14 +93,14 @@ def get_endpoint_with_query(url: str | None) -> str | None:
     :return: endpoint + query of @param url.
     """
     if not (endpoint := get_endpoint(url)):
-        endpoint = ""
+        endpoint = ''
     if not (query := get_url_query(url)):
-        query = ""
+        query = ''
     if not endpoint and not query:
         return
     if not query:
         return endpoint
-    return f"{endpoint}?{query}"
+    return f'{endpoint}?{query}'
 
 
 def get_url_query_params(url: str | None) -> dict:
@@ -120,10 +120,10 @@ def get_url_query_params(url: str | None) -> dict:
 
 
 __all__ = [
-    "get_base_domain",
-    "get_domain",
-    "get_endpoint",
-    "get_url_query",
-    "get_endpoint_with_query",
-    "get_url_query_params"
+    'get_base_domain',
+    'get_domain',
+    'get_endpoint',
+    'get_url_query',
+    'get_endpoint_with_query',
+    'get_url_query_params',
 ]

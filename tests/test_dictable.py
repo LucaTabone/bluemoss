@@ -7,9 +7,9 @@ from src.bluemoss.classes.dict import Jsonify
 
 
 class Job(Enum):
-    ENGINEER = "Engineer"
-    FARMER = "Farmer"
-    LAWYER = "Lawyer"
+    ENGINEER = 'Engineer'
+    FARMER = 'Farmer'
+    LAWYER = 'Lawyer'
 
 
 @dataclass
@@ -49,73 +49,85 @@ class Person(Jsonify):
 
     @property
     def dict(self) -> dict:
-        return super().dict | {"age": self.age}
+        return super().dict | {'age': self.age}
 
 
 address = Address(
-    city="Los Angeles",
-    street="789 Creative Blvd",
-    zip_code="90001",
-    country_code="US"
+    city='Los Angeles',
+    street='789 Creative Blvd',
+    zip_code='90001',
+    country_code='US',
 )
 
 
 skill1 = Skill(
-    name="Software Development",
+    name='Software Development',
     started_at=date(2010, 6, 1),
-    experience_level=5
+    experience_level=5,
 )
 
 
 skill2 = Skill(
-    name="Database Management",
+    name='Database Management',
     started_at=date(2012, 8, 10),
-    experience_level=4
+    experience_level=4,
 )
 
 
 person = Person(
-    name="Charlie Davis",
-    email="charlie.davis@example.com",
+    name='Charlie Davis',
+    email='charlie.davis@example.com',
     birthday=date(1988, 10, 20),
     address=address,
     last_contacted=datetime(2023, 10, 21, 19, 24, 35),
     job=Job.ENGINEER,
     skills=[skill1, skill2],
-    languages={"English", "French"},
-    _last_updated=datetime.now()
+    languages={'English', 'French'},
+    _last_updated=datetime.now(),
 )
 
 
-expected_dict: OrderedDict = OrderedDict([
-    ('name', 'Charlie Davis'),
-    ('email', 'charlie.davis@example.com'),
-    ('birthday', '1988-10-20'),
-    ('address',
-        OrderedDict([
-            ('city', 'Los Angeles'),
-            ('street', '789 Creative Blvd'),
-            ('zip_code', '90001'),
-            ('country_code', 'US')
-        ])
-     ),
-     ('last_contacted', '2023-10-21 19:24:35'),
-     ('job', 'Engineer'),
-     ('skills', [
-         OrderedDict([
-             ('name', 'Software Development'),
-             ('started_at', '2010-06-01'),
-             ('experience_level', 5)
-         ]),
-         OrderedDict([
-             ('name', 'Database Management'),
-             ('started_at', '2012-08-10'),
-             ('experience_level', 4)
-        ])
-     ]),
-     ('languages', {'French', 'English'}),
-     ('age', 35)
-])
+expected_dict: OrderedDict = OrderedDict(
+    [
+        ('name', 'Charlie Davis'),
+        ('email', 'charlie.davis@example.com'),
+        ('birthday', '1988-10-20'),
+        (
+            'address',
+            OrderedDict(
+                [
+                    ('city', 'Los Angeles'),
+                    ('street', '789 Creative Blvd'),
+                    ('zip_code', '90001'),
+                    ('country_code', 'US'),
+                ]
+            ),
+        ),
+        ('last_contacted', '2023-10-21 19:24:35'),
+        ('job', 'Engineer'),
+        (
+            'skills',
+            [
+                OrderedDict(
+                    [
+                        ('name', 'Software Development'),
+                        ('started_at', '2010-06-01'),
+                        ('experience_level', 5),
+                    ]
+                ),
+                OrderedDict(
+                    [
+                        ('name', 'Database Management'),
+                        ('started_at', '2012-08-10'),
+                        ('experience_level', 4),
+                    ]
+                ),
+            ],
+        ),
+        ('languages', {'French', 'English'}),
+        ('age', 35),
+    ]
+)
 
 
 def test_person_dict():

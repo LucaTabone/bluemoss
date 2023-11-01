@@ -11,4 +11,6 @@ class BlogPost(Jsonify):
     _text_lines: list[str]
 
     def __post_init__(self):
-        self.text = "\n\n".join([line.strip() for line in self._text_lines if line.strip()])
+        self.text = '\n\n'.join(
+            [line.strip() for line in self._text_lines if line.strip()]
+        )

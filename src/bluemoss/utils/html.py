@@ -9,7 +9,7 @@ def is_valid_xpath(xpath_query: str) -> bool:
     :rtype: bool
     :return: True if @param xpath_query is a valid XPath expression, False otherwise.
     """
-    root = etree.Element("root")
+    root = etree.Element('root')
     doc = etree.ElementTree(root)
     try:
         doc.xpath(xpath_query)
@@ -25,7 +25,7 @@ def lxml_etree_to_bs4(tag: HtmlElement | str) -> BeautifulSoup | None:
     :return: BeautifulSoup representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
     if isinstance(tag, HtmlElement):
-        return BeautifulSoup(lxml_etree_to_string(tag), "html.parser")
+        return BeautifulSoup(lxml_etree_to_string(tag), 'html.parser')
 
 
 def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
@@ -35,7 +35,7 @@ def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
     :return: String representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
     if isinstance(tag, HtmlElement):
-        return etree.tostring(tag, method="html").decode("utf-8")
+        return etree.tostring(tag, method='html').decode('utf-8')
 
 
 def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]):
@@ -52,8 +52,8 @@ def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]):
 
 
 __all__ = [
-    "is_valid_xpath",
-    "lxml_etree_to_bs4",
-    "lxml_etree_to_string",
-    "remove_tags_from_soup"
+    'is_valid_xpath',
+    'lxml_etree_to_bs4',
+    'lxml_etree_to_string',
+    'remove_tags_from_soup',
 ]

@@ -32,17 +32,19 @@ def get_optional_class_init_params(cls) -> set[str]:
     """
     if is_dataclass(cls):
         return {
-            f.name for f in fields(cls)
+            f.name
+            for f in fields(cls)
             if f.default != MISSING or f.default_factory != MISSING
         }
     return {
-        name for name, param in inspect.signature(cls.__init__).parameters.items()
+        name
+        for name, param in inspect.signature(cls.__init__).parameters.items()
         if param.default != inspect.Parameter.empty
     }
 
 
 __all__ = [
-    "get_all_class_init_params",
-    "get_optional_class_init_params",
-    "get_required_class_init_params"
+    'get_all_class_init_params',
+    'get_optional_class_init_params',
+    'get_required_class_init_params',
 ]

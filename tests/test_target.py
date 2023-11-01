@@ -4,8 +4,16 @@ from dataclasses import dataclass
 from src.bluemoss.classes.dict import Jsonify
 from .constants import WITH_LINKS_HTML as HTML
 from src.bluemoss.utils import url as url_utils
-from src.bluemoss import (BlueMoss, Root, Node, Ex, extract, InvalidTargetTypeException,
-                          InvalidKeysForTargetException, MissingTargetKeysException)
+from src.bluemoss import (
+    BlueMoss,
+    Root,
+    Node,
+    Ex,
+    extract,
+    InvalidTargetTypeException,
+    InvalidKeysForTargetException,
+    MissingTargetKeysException,
+)
 
 
 @dataclass
@@ -32,10 +40,10 @@ class Link(Jsonify):
     @property
     def dict(self) -> dict:
         return {
-            "url": self.url,
-            "domain": self.domain,
-            "endpoint": self.endpoint,
-            "base_domain": self.base_domain
+            'url': self.url,
+            'domain': self.domain,
+            'endpoint': self.endpoint,
+            'base_domain': self.base_domain,
         }
 
 
@@ -43,48 +51,33 @@ MOSS_WITH_TARGET: BlueMoss = Root(
     target=Links,
     nodes=[
         Node(
-            xpath="a",
-            key="links",
+            xpath='a',
+            key='links',
             target=Link,
             filter=None,
-            nodes=[
-                Node(
-                    key="url",
-                    extract=Ex.HREF
-                )
-            ]
+            nodes=[Node(key='url', extract=Ex.HREF)],
         )
-    ]
+    ],
 )
 
 
 MOSS_WITHOUT_TARGET: BlueMoss = Root(
-    xpath="a",
-    key="links",
+    xpath='a',
+    key='links',
     filter=None,
     nodes=[
-        Node(
-            key="url",
-            extract=Ex.HREF
-        ),
-        Node(
-            key="domain",
-            extract=Ex.HREF_DOMAIN
-        ),
-        Node(
-            key="base_domain",
-            extract=Ex.HREF_BASE_DOMAIN
-        ),
-        Node(
-            key="endpoint",
-            extract=Ex.HREF_ENDPOINT
-        )
-    ]
+        Node(key='url', extract=Ex.HREF),
+        Node(key='domain', extract=Ex.HREF_DOMAIN),
+        Node(key='base_domain', extract=Ex.HREF_BASE_DOMAIN),
+        Node(key='endpoint', extract=Ex.HREF_ENDPOINT),
+    ],
 )
 
 
 def test_extract_equality():
-    assert extract(MOSS_WITH_TARGET, HTML).dict == extract(MOSS_WITHOUT_TARGET, HTML)
+    assert extract(MOSS_WITH_TARGET, HTML).dict == extract(
+        MOSS_WITHOUT_TARGET, HTML
+    )
 
 
 def test_invalid_target_type():
@@ -98,11 +91,13 @@ def test_invalid_target_type():
 
 def test_invalid_keys_for_target():
     with pytest.raises(InvalidKeysForTargetException):
-        Root(target=Link, nodes=[Node(key="domain")])
+        Root(target=Link, nodes=[Node(key='domain')])
 
 
 def test_missing_keys_for_target():
-    expected_message_ending: str = "Missing keys in nodes list for target 'Link': ['url']"
+    expected_message_ending: str = (
+        "Missing keys in nodes list for target 'Link': ['url']"
+    )
     with pytest.raises(MissingTargetKeysException) as exc_info:
         Root(target=Link)
         assert str(exc_info.value).endswith(expected_message_ending)

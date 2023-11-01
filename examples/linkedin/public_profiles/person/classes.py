@@ -10,6 +10,7 @@ class _JsonifyWithDateDurationDescription(Jsonify):
     The dataclasses which inherit from this abstract dataclass can now access these parameters through the
     .date, .duration and .description properties.
     """
+
     duration: str | None
     _description_more_text: str | None
     _description_less_text: str | None
@@ -26,17 +27,17 @@ class _JsonifyWithDateDurationDescription(Jsonify):
         if not self._date_and_duration_text:
             self.date = None
         elif self.duration:
-            self.date = self._date_and_duration_text[:-len(self.duration)]
+            self.date = self._date_and_duration_text[: -len(self.duration)]
         else:
             self.date = self._date_and_duration_text
         if not self.date:
             return
         self.date = (
             self.date.strip()
-                .replace("\u2013", "-")
-                .replace(" -", "-")
-                .replace("- ", "-")
-                .replace("-", " - ")
+            .replace('\u2013', '-')
+            .replace(' -', '-')
+            .replace('- ', '-')
+            .replace('-', ' - ')
         )
 
     def _set_description(self):
@@ -53,7 +54,7 @@ class _JsonifyWithDateDurationDescription(Jsonify):
         """
         if not self.date:
             return False
-        parts: list[str] = self.date.split(" - ")
+        parts: list[str] = self.date.split(' - ')
         if len(parts) != 2:
             return False
         for c in parts[1].strip():
@@ -68,6 +69,7 @@ class ProfileHeader(Jsonify):
     Stores the information of the title-tag of a public person-profile
     (name, current company/employer, current position).
     """
+
     name: str | None
     headline: str | None
     location: str | None
@@ -83,6 +85,7 @@ class ExperienceItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     Stores a simple experience-item. It is used for an entry in a persons experience section
     in case the person was working in ONE position at a company for certain time-period.
     """
+
     company_name: str
     position: str | None
     location: str | None
@@ -97,6 +100,7 @@ class ExperienceGroupItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
     """
     Stores an experience-item. It is used within an experience-group instance.
     """
+
     position: str | None
     location: str | None
 
@@ -110,6 +114,7 @@ class ExperienceGroup(JsonifyWithTag):
     Stores an experience-group. An experience-group is used instead of an experience-item in case a person
     was in multiple positions at the same company without any breaks between those positions.
     """
+
     duration: str
     company_name: str
     company_profile_endpoint: str
@@ -127,10 +132,13 @@ class ExperienceGroup(JsonifyWithTag):
 
 @dataclass
 class Experience(Jsonify):
-    """ Stores the entire experience-section of a public person-profile. """
+    """Stores the entire experience-section of a public person-profile."""
+
     _experience_items: list[ExperienceItem]
     _experience_groups: list[ExperienceGroup]
-    entries: list[ExperienceItem | ExperienceGroup] = field(default_factory=list, init=False)
+    entries: list[ExperienceItem | ExperienceGroup] = field(
+        default_factory=list, init=False
+    )
 
     def __post_init__(self):
         super().__post_init__()
@@ -147,12 +155,13 @@ class Experience(Jsonify):
 
     @property
     def dict(self) -> list[dict]:
-        return super().dict["entries"]
+        return super().dict['entries']
 
 
 @dataclass
 class EducationItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
-    """ Stores an entry in the education-section of a public person-profile. """
+    """Stores an entry in the education-section of a public person-profile."""
+
     degree_info: str | None
     institution: str | None
     school_profile_endpoint: str | None
@@ -166,7 +175,8 @@ class EducationItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
 
 @dataclass
 class VolunteerItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
-    """ Stores and entry in the 'Volunteer Experience' section of a public person-profile. """
+    """Stores and entry in the 'Volunteer Experience' section of a public person-profile."""
+
     position: str | None
     institution: str | None
 
@@ -176,7 +186,8 @@ class VolunteerItem(_JsonifyWithDateDurationDescription, JsonifyWithTag):
 
 @dataclass
 class Award(_JsonifyWithDateDurationDescription, JsonifyWithTag):
-    """ Stores an entry in the "Honors & Awards" section of a public person-profile. """
+    """Stores an entry in the "Honors & Awards" section of a public person-profile."""
+
     title: str
     institution: str | None
 
@@ -186,7 +197,8 @@ class Award(_JsonifyWithDateDurationDescription, JsonifyWithTag):
 
 @dataclass
 class Language(Jsonify):
-    """ Store an entry in the "Languages" section of a public person-profile. """
+    """Store an entry in the "Languages" section of a public person-profile."""
+
     lang: str
     level: str
 
@@ -196,7 +208,8 @@ class Language(Jsonify):
 
 @dataclass
 class Certification(Jsonify):
-    """ Store an entry in the "Licenses & Certifications" section of a public person-profile. """
+    """Store an entry in the "Licenses & Certifications" section of a public person-profile."""
+
     name: str
     institution: str
     date_issued: str | None
@@ -207,7 +220,8 @@ class Certification(Jsonify):
 
 @dataclass
 class PeopleAlsoViewedItem(Jsonify):
-    """ Stores an entry from the "People also viewed" section of a public person-profile.. """
+    """Stores an entry from the "People also viewed" section of a public person-profile.."""
+
     name: str
     headline: str | None
     location: str | None
@@ -220,7 +234,8 @@ class PeopleAlsoViewedItem(Jsonify):
 
 @dataclass
 class RecommendationItem(Jsonify):
-    """ Stores an entry from the "Recommendations received" section of a public person-profile. """
+    """Stores an entry from the "Recommendations received" section of a public person-profile."""
+
     text: str
     name: str
     profile_endpoint: str
@@ -231,7 +246,8 @@ class RecommendationItem(Jsonify):
 
 @dataclass
 class PublicationItem(Jsonify):
-    """ Stores an entry from the "Publications received" section of a public person-profile. """
+    """Stores an entry from the "Publications received" section of a public person-profile."""
+
     date: str | None
     journal: str | None
     headline: str | None
@@ -249,21 +265,24 @@ class Endorsements(Jsonify):
 
 @dataclass
 class PersonProfile(Jsonify):
-    """ Stores all the information scraped from a public person-profile. """
+    """Stores all the information scraped from a public person-profile."""
+
     profile_endpoint: str
     about: str | None
     header: ProfileHeader
-    experience: Experience 
-    languages: list[Language] 
-    education: list[EducationItem] 
-    volunteering: list[VolunteerItem] 
-    certifications: list[Certification] 
-    awards: list[Award] 
-    publications: list[PublicationItem] 
-    recommendations: list[RecommendationItem] 
-    people_also_viewed: list[PeopleAlsoViewedItem] 
+    experience: Experience
+    languages: list[Language]
+    education: list[EducationItem]
+    volunteering: list[VolunteerItem]
+    certifications: list[Certification]
+    awards: list[Award]
+    publications: list[PublicationItem]
+    recommendations: list[RecommendationItem]
+    people_also_viewed: list[PeopleAlsoViewedItem]
     company_name: str | None = field(default=None, init=False)
-    current_employers: list[tuple[str, str]] = field(default_factory=list, init=False)
+    current_employers: list[tuple[str, str]] = field(
+        default_factory=list, init=False
+    )
 
     def __post_init__(self):
         self._headline = self.header.headline
@@ -279,10 +298,9 @@ class PersonProfile(Jsonify):
             return
         for item in self.experience.entries:
             if item.company_profile_endpoint and item.is_current_position:
-                self.current_employers.append((
-                    item.company_profile_endpoint,
-                    item.company_name
-                ))
+                self.current_employers.append(
+                    (item.company_profile_endpoint, item.company_name)
+                )
 
     @property
     def dict(self) -> OrderedDict:
