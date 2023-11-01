@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bluemoss"
-version = "0.1.23"
+version = "0.1.25"
 description = "An easy way to scrape a website and capture the extracted data in Python dataclasses."
 authors = ["lunchquader <luca@tabone.io>"]
 license = "MIT"
@@ -10,10 +10,10 @@ readme = "README.md"
 python = "^3.9.0"
 beautifulsoup4 = "^4.12.2"
 lxml = [
-    { version = "4.9.1", python = "~3.9.*" },
-    { version = "4.9.2", python = "~3.10.*" },
-    { version = "4.9.3", python = "~3.11.*" },
-    { version = "4.9.3", python = "~3.12.*" }
+    { version = "4.9.1", python = "3.9.*" },
+    { version = "4.9.2", python = "3.10.*" },
+    { version = "4.9.3", python = "3.11.*" },
+    { version = "4.9.3", python = "3.12.*" }
 ]
 
 

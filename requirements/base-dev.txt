@@ -8,3 +8,4 @@ nox
 pre-commit
 pytest-cov
 types-beautifulsoup4
+setuptools
