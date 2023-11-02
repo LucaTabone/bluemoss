@@ -3,7 +3,7 @@ from . import utils
 from lxml.html import HtmlElement
 from typing import Type, Any, cast
 from lxml import html as lxml_html
-from .classes import Ex, BlueMoss, Range, JsonifyWithTag, PrettyDict
+from .classes import Ex, BlueMoss, Range, JsonifyWithTag
 
 
 def extract(moss: BlueMoss, html: str) -> Any:
@@ -46,11 +46,10 @@ def _extract(level: int, moss: BlueMoss, tag: HtmlElement) -> Any:
         # We either did not find any matching tags or we found matching tags but did not filter any of them.
         return moss.transform(None if moss.find_single_tag else [])
 
-    if moss.nodes:
-        # len(moss.nodes) > 0
+    if moss.target or moss.nodes:
         val = [_build_target(level, moss, tag) for tag in matched_tags]
     else:
-        # len(moss.nodes) == 0
+        # len(moss.nodes) == 0 and moss.target is None
         val = [_extract_from_leaf_node(moss, tag) for tag in matched_tags]
 
     if isinstance(moss.filter, int):
@@ -123,15 +122,12 @@ def _build_target(
         return None
 
     if moss.target is None:
-        # the target type will be derived by
         if moss.keys_in_nodes:
             # the target is a dict
-            return PrettyDict(
-                {
-                    node.key: _extract(level + 1, node, tag)
-                    for node in moss.nodes
-                }
-            )
+            return {
+                node.key: _extract(level + 1, node, tag)  # type: ignore
+                for node in moss.nodes
+            }
         # the target is a list
         return [_extract(level + 1, node, tag) for node in moss.nodes]
 
@@ -139,9 +135,8 @@ def _build_target(
 
     # :param values: dictionary to instantiate moss.target
     values: dict[str, Any] = {
-        node.key: _extract(level + 1, node, tag)
+        node.key: _extract(level + 1, node, tag)  # type: ignore
         for node in moss.nodes
-        if node.key is not None
     }
 
     if issubclass(moss.target, JsonifyWithTag):
