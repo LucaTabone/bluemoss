@@ -26,8 +26,10 @@ theme:
   features:
     - navigation.tabs
     - navigation.tabs.sticky
-  logo: "logo.png"
   favicon: "favicon.png"
+  logo:
+    icon: "logo.png"
+    height: 60
   font:
     text: Roboto
     code: Roboto Mono
