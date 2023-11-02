@@ -5,7 +5,6 @@ mkdocs
 mkdocs-material
 mypy
 nox
-pre-commit
 pytest-cov
 setuptools
 types-beautifulsoup4
