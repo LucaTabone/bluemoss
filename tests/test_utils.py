@@ -85,8 +85,8 @@ def test_get_optional_init_params():
     assert utils.get_optional_class_init_params(PersonClass) == {'address'}
 
 
-# text.py
 def test_clean_text():
+    # fmt: off
     text: str = """
         Hello world!
                         Here.
@@ -95,14 +95,15 @@ def test_clean_text():
 
 
 
-            Hello world!
-
+            Hello world! 
+ 
 
         Test.
             Hello world!
 
 
     """
+    # fmt: on
     assert (
         utils.clean_text(text)
         == 'Hello world!\nHere.\nThis is a test.\nHello world!\nTest.\nHello world!'

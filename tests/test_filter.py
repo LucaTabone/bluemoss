@@ -50,6 +50,20 @@ def test_find_with_list_of_ints():
     assert extract(moss, HTML) == ['Hello 2', 'Hello 3', None, 'Hello 2', None]
 
 
+def test_find_with_list_of_ints_and_dict_target():
+    moss = Root(
+        'div', filter=[0, 1, 2, 5, 1, 7], nodes=[Node('h1', key='caption')]
+    )
+    assert extract(moss, HTML) == [
+        {'caption': 'Hello 1'},
+        {'caption': None},
+        {'caption': None},
+        None,
+        {'caption': None},
+        None,
+    ]
+
+
 def test_find_range_with_dict_result():
     # first two
     moss = Root(
