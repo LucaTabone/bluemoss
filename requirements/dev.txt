@@ -1,11 +1,14 @@
 blue
 coverage
 lxml-stubs
+stubs-beautifulsoup4
 mkdocs
 mkdocs-material
 mypy
 nox
 pre-commit
 pytest-cov
-types-beautifulsoup4
 setuptools
+types-beautifulsoup4
+twine
+wheel
