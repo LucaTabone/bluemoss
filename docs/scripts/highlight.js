@@ -80,7 +80,7 @@ function isDarkTheme() {
   const data = JSON.parse(raw);
 
   if (data) {
-    return data.color.scheme == 'default';
+    return data.color.scheme == 'slate';
   }
 
   return false;
@@ -90,9 +90,9 @@ function isDarkTheme() {
 // elements will not be available at the same time
 document.body.addEventListener('click', (event) => {
   if (event.target.id == '__palette_1') {
-    highlightAll(false);
-  } else if (event.target.id == '__palette_2') {
     highlightAll(true);
+  } else if (event.target.id == '__palette_2') {
+    highlightAll(false);
   }
 });
 
