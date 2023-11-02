@@ -99,9 +99,7 @@ class BlueMoss:
 
     @cached_property
     def target_class_name(self) -> str | None:
-        if self.target is None:
-            return None
-        return self.target.__name__
+        return self.target.__name__ if self.target else None
 
     def __post_init__(self) -> None:
         if not (self.no_xpath or is_valid_xpath(self.full_xpath)):
@@ -125,7 +123,7 @@ class BlueMoss:
             """Early return in case no target was provided."""
             return
 
-        if not isclass(self.target) or self.target.__name__ in dir(builtins):
+        if self.target.__name__ in dir(builtins):
             """Make sure the value of the 'target' param references a class, which is not a builtin class."""
             raise InvalidTargetTypeException(self)
 
