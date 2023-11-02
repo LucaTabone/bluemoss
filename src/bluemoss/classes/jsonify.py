@@ -5,10 +5,10 @@ from typing import Any
 from json import dumps
 from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
-from dataclasses import dataclass
 from datetime import datetime, date
 from collections import OrderedDict
 from ..utils import lxml_etree_to_bs4
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -43,7 +43,7 @@ class Jsonify(abc.ABC):
         return OrderedDict(
             [
                 (key, self.dictify(d[key]))
-                for key in self.__dataclass_fields__  # type: ignore
+                for key in self.__dataclass_fields__
                 if key in d
             ]
         )
@@ -60,15 +60,18 @@ class Jsonify(abc.ABC):
         if isinstance(val, list):
             return [self.dictify(v) for v in val]
         if isinstance(val, set):
-            return [self.dictify(v) for v in val]
-        if isinstance(val, OrderedDict):
-            return OrderedDict(
-                [(self.dictify(k), self.dictify(v)) for (k, v) in val.items()]
-            )
+            return sorted([self.dictify(v) for v in val])
         if isinstance(val, dict):
-            return {self.dictify(k): self.dictify(v) for k, v in val.items()}
+            return OrderedDict(
+                [(self.dictify(k), self.dictify(v)) for k, v in val.items()]
+            )
         if hasattr(val, '__dict__'):
-            return val.__dict__
+            return OrderedDict(
+                [
+                    (self.dictify(k), self.dictify(v))
+                    for k, v in val.__dict__.items()
+                ]
+            )
         return val
 
 
