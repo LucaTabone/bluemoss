@@ -12,14 +12,14 @@ theme:
   name: material
   palette:
     - scheme: default
-      primary: red
-      accent: red
+      primary: blue
+      accent: amber
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - scheme: slate
-      primary: pink
-      accent: pink
+      primary: indigo
+      accent: deep orange
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -27,9 +27,6 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
   favicon: "favicon.png"
-  logo:
-    icon: "logo.png"
-    height: 60
   font:
     text: Roboto
     code: Roboto Mono
