@@ -1,3 +1,4 @@
+import pytest
 from lxml import etree
 from bs4 import BeautifulSoup
 from src.bluemoss import Root, Ex, extract
@@ -88,3 +89,14 @@ def test_href_endpoint_with_query_extraction():
 def test_href_query_params_extraction():
     moss = Root('a', filter=3, extract=Ex.HREF_QUERY_PARAMS)
     assert extract(moss, HTML) == {'p': ['4', '5'], 'q': ['4']}
+
+
+def test_extract_with_string_value():
+    moss = Root('a', filter=2, extract='href')
+    assert extract(moss, HTML) == 'https://www.nvidia.com/link3?p=3&q=3'
+
+
+def test_extract_with_invalid_extract_value():
+    moss = Root('a', extract=None)  # type: ignore
+    with pytest.raises(NotImplementedError):
+        extract(moss, HTML)

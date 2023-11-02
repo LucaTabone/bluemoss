@@ -24,8 +24,6 @@ def get_infix(text: str, prefix: str, suffix: str) -> str | None:
     if idx == -1:
         return None
     res: str = text[idx + len(prefix) :]
-    if not suffix:
-        return res
     idx = res.find(suffix)
     if idx == -1:
         return None

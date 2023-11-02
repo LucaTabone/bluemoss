@@ -1,9 +1,10 @@
 from __future__ import annotations
 import pytest
+from datetime import datetime
 from dataclasses import dataclass
-from src.bluemoss.classes.dict import Jsonify
 from .constants import WITH_LINKS_HTML as HTML
 from src.bluemoss.utils import url as url_utils
+from src.bluemoss.classes.jsonify import Jsonify
 from src.bluemoss import (
     BlueMoss,
     Root,
@@ -80,13 +81,25 @@ def test_extract_equality():
     )
 
 
+def test_target_is_list():
+    moss = Root('html', nodes=[Node('a', filter=None)])
+    assert extract(moss, HTML) == [['Link 1', 'Link 2', 'Link 3', 'Link 4']]
+
+
+def test_target_is_dict():
+    moss = Root('html', nodes=[Node('a', key='links', filter=None)])
+    assert extract(moss, HTML) == {
+        'links': ['Link 1', 'Link 2', 'Link 3', 'Link 4']
+    }
+
+
 def test_invalid_target_type():
     with pytest.raises(InvalidTargetTypeException):
-        Root(target=list)
+        Root(target=list, nodes=[Node(key='some_key')])
     with pytest.raises(InvalidTargetTypeException):
-        Root(target=dict)
+        Root(target=dict, nodes=[Node(key='some_key')])
     with pytest.raises(InvalidTargetTypeException):
-        Root(target=set)
+        Root(target=set, nodes=[Node(key='some_key')])
 
 
 def test_invalid_keys_for_target():
@@ -95,9 +108,16 @@ def test_invalid_keys_for_target():
 
 
 def test_missing_keys_for_target():
+    @dataclass
+    class _Link:
+        url: str
+        created_at: datetime
+
     expected_message_ending: str = (
-        "Missing keys in nodes list for target 'Link': ['url']"
+        "Missing keys in nodes list for target '_Link': ['created_at']"
     )
+
     with pytest.raises(MissingTargetKeysException) as exc_info:
-        Root(target=Link)
-        assert str(exc_info.value).endswith(expected_message_ending)
+        Root(target=_Link, nodes=[Node(key='url')])
+
+    assert str(exc_info.value).endswith(expected_message_ending)
