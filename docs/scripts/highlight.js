@@ -80,7 +80,7 @@ function isDarkTheme() {
   const data = JSON.parse(raw);
 
   if (data) {
-    return data.color.scheme == 'slate';
+    return data.color.scheme == 'default';
   }
 
   return false;
