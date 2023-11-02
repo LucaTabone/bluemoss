@@ -1,7 +1,6 @@
 blue
 coverage
 lxml-stubs
-stubs-beautifulsoup4
 mkdocs
 mkdocs-material
 mypy
