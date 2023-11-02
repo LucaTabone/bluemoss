@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bluemoss"
 version = "0.1.25"
-description = "An easy way to scrape a website and capture the extracted data in Python dataclasses."
+description = "An easy way to scrape the web."
 authors = ["lunchquader <luca@tabone.io>"]
 license = "MIT"
 readme = "README.md"
