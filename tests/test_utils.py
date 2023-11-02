@@ -24,24 +24,59 @@ class PersonClass:
         address: str | None = None,
     ):
         self.name = name
-        self.birthday = birthday
         self.address = address
         self.friends = friends
+        self.birthday = birthday
         self.last_updated = datetime.now()
 
 
-CLASS_INIT_PARAMS: set[str] = {'name', 'birthday', 'address', 'friends'}
+def test_person_class_instantiation():
+    PersonClass(
+        name='test_name',
+        birthday=date.today(),
+        address='test_address',
+        friends=[
+            PersonClass(name='test_name_2', birthday=date.today(), friends=[])
+        ],
+    )
+
+
+def test_person_data_class_instantiation():
+    PersonDataClass(
+        name='test_name',
+        birthday=date.today(),
+        address='test_address',
+        friends=[
+            PersonDataClass(
+                name='test_name_2', birthday=date.today(), friends=[]
+            )
+        ],
+    )
 
 
 # general.py
-def test_get_init_params():
-    assert (
-        utils.get_all_class_init_params(PersonDataClass) == CLASS_INIT_PARAMS
-    )
-    assert utils.get_all_class_init_params(PersonClass) == CLASS_INIT_PARAMS
+def test_get_required_init_params():
+    assert utils.get_required_class_init_params(None) == set()
+    assert utils.get_required_class_init_params(PersonDataClass) == {
+        'name',
+        'birthday',
+    }
+    assert utils.get_required_class_init_params(PersonClass) == {
+        'name',
+        'birthday',
+        'friends',
+    }
+
+
+def test_get_all_init_params():
+    assert utils.get_all_class_init_params(None) == set()
+    init_params: set[str] = {'name', 'birthday', 'address', 'friends'}
+    assert utils.get_all_class_init_params(PersonDataClass) == init_params
+    assert utils.get_all_class_init_params(PersonClass) == init_params
 
 
 def test_get_optional_init_params():
+    assert utils.get_optional_class_init_params(None) == set()
     assert utils.get_optional_class_init_params(PersonDataClass) == {
         'address',
         'friends',
@@ -77,6 +112,8 @@ def test_clean_text():
 
 def test_get_infix():
     text: str = '    Hello world!  '
+    assert utils.get_infix(text, 'Hello', '') == ''
+    assert utils.get_infix(text, 'Hello', 'Galaxy') is None
     assert utils.get_infix(text, 'He', 'orld!') == 'llo w'
     assert utils.get_infix('', 'He', 'orld!') is None
     assert (
@@ -87,7 +124,8 @@ def test_get_infix():
 # html.py
 def test_etree_to_bs4():
     html: str = '<html><body><p>Hello world!</p></body></html>'
-    soup: BeautifulSoup = utils.lxml_etree_to_bs4(lxml_html.fromstring(html))
+    assert utils.lxml_etree_to_bs4(html) is None
+    soup: BeautifulSoup = utils.lxml_etree_to_bs4(lxml_html.fromstring(html))  # type: ignore
     assert isinstance(soup, BeautifulSoup)
     assert str(soup) == html
 
@@ -114,7 +152,7 @@ def test_etree_to_string():
 # url.py
 
 URLS: list[str | None] = [
-    'https://example.com/path/to/resource',
+    'https://example.com/path/to/resource/',
     'https://sub1.example.net/resource',
     'https://sub1.sub2.example.org/path/to/resource2?query=val',
     'https://www.sub3.example.com?p=q',
