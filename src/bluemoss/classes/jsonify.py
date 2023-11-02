@@ -11,15 +11,6 @@ from collections import OrderedDict
 from ..utils import lxml_etree_to_bs4
 
 
-class PrettyDict(dict[Any, Any]):
-    def __str__(self) -> str:
-        return (
-            '{\n'
-            + ',\n'.join(f'    {repr(k)}: {repr(v)}' for k, v in self.items())
-            + '\n}'
-        )
-
-
 @dataclass
 class Jsonify(abc.ABC):
     """
@@ -33,9 +24,6 @@ class Jsonify(abc.ABC):
     If you now execute .dict on p, the method will not only dictify @param p.header,
     but also all Page instances within the nested list of lists of @param p.pages.
     """
-
-    def __init__(self) -> None:
-        self.__dataclass_fields__ = None
 
     def __post_init__(self) -> None:
         pass
@@ -55,7 +43,7 @@ class Jsonify(abc.ABC):
         return OrderedDict(
             [
                 (key, self.dictify(d[key]))
-                for key in self.__dataclass_fields__
+                for key in self.__dataclass_fields__  # type: ignore
                 if key in d
             ]
         )
@@ -72,7 +60,7 @@ class Jsonify(abc.ABC):
         if isinstance(val, list):
             return [self.dictify(v) for v in val]
         if isinstance(val, set):
-            return {self.dictify(v) for v in val}
+            return [self.dictify(v) for v in val]
         if isinstance(val, OrderedDict):
             return OrderedDict(
                 [(self.dictify(k), self.dictify(v)) for (k, v) in val.items()]
@@ -118,4 +106,4 @@ class JsonifyWithTag(Jsonify):
         )
 
 
-__all__ = ['PrettyDict', 'Jsonify', 'JsonifyWithTag']
+__all__ = ['Jsonify', 'JsonifyWithTag']
