@@ -25,8 +25,6 @@ def lxml_etree_to_bs4(tag: HtmlElement | str) -> BeautifulSoup | None:
     :rtype: BeautifulSoup | None
     :return: BeautifulSoup representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
-    if not isinstance(tag, HtmlElement):
-        return None
     tag_as_str: str | None = lxml_etree_to_string(tag)
     if tag_as_str is None:
         return None
