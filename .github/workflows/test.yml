@@ -3,7 +3,7 @@ name: Test and Coverage
 on:
   push:
     branches:
-      - main
+      - github-workflow-test-pipeline
   pull_request:
     branches:
       - main
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
