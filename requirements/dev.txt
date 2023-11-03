@@ -1,11 +1,15 @@
+-r base.txt
+
 blue
 coverage
+GitPython
 lxml-stubs
 mkdocs
 mkdocs-material
 mypy
 nox
 pytest-cov
+pytest-mypy-plugins
 setuptools
 types-beautifulsoup4
 twine
