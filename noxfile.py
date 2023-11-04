@@ -1,7 +1,7 @@
 import nox
 
 
-@nox.session(python=['3.9', '3.10', '3.11', '3.12'])
+@nox.session
 def tests(session):
     session.install('pytest')
     session.install('-r', 'requirements/base.txt')

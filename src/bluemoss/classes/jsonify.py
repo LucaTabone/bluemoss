@@ -82,7 +82,7 @@ class JsonifyWithTag(Jsonify):
     Those dataclasses can inherit from DictableWithTag and thus also get the benefits of the Dictable class.
     """
 
-    _tag: HtmlElement | str | None = field(default=None)
+    _tag: HtmlElement | str
 
     def __post_init__(self) -> None:
         super().__post_init__()

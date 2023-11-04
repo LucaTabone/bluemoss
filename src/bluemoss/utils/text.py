@@ -30,7 +30,7 @@ def get_infix(text: str, prefix: str, suffix: str) -> str | None:
     return res[:idx]
 
 
-def clean_text(text: str | None) -> str | None:
+def clean_text(text: str) -> str:
     """
     Edit the given @param text by
         - removing leading and trailing spaces
@@ -43,8 +43,8 @@ def clean_text(text: str | None) -> str | None:
     :rtype: str | None
     :return: The updated text.
     """
-    if text is None:
-        return None
+    if not text:
+        return ''
     text = text.strip()
     while '  ' in text:
         text = text.replace('  ', ' ')
@@ -54,6 +54,12 @@ def clean_text(text: str | None) -> str | None:
         text = text.strip().replace(' \n', '\n')
     while '\n\n' in text:
         text = text.strip().replace('\n\n', '\n')
+    while '\\n' in text:
+        text = text.strip().replace('\\n', '\n')
+    if text.startswith('\n'):
+        text = clean_text(text[2:])
+    if text.endswith('\n'):
+        text = clean_text(text[:-2])
     return text
 
 

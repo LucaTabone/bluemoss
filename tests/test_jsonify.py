@@ -9,7 +9,7 @@ from datetime import date, datetime
 from collections import OrderedDict
 from .constants import FOUR_DIVS_HTML as HTML
 from src.bluemoss.utils.html import lxml_etree_to_bs4
-from src.bluemoss import Jsonify, JsonifyWithTag, Root, Ex, extract
+from src.bluemoss import Jsonify, JsonifyWithTag, Node, Ex, extract
 
 
 class Job(Enum):
@@ -166,12 +166,12 @@ def test_jsonify_with_tag():
     class Tag(JsonifyWithTag):
         pass
 
-    tag_instance: Tag = extract(Root('div', target=Tag), HTML)
+    tag_instance: Tag = extract(Node('div', target=Tag), HTML)
     assert isinstance(tag_instance, Tag)
     assert isinstance(tag_instance.lxml_tag, HtmlElement)
     assert tag_instance.source_line == 4
 
-    bs4_tag: BeautifulSoup = extract(Root('div', extract=Ex.BS4_TAG), HTML)
+    bs4_tag: BeautifulSoup = extract(Node('div', extract=Ex.BS4_TAG), HTML)
     assert isinstance(bs4_tag, BeautifulSoup)
 
     assert tag_instance.bs4_tag == bs4_tag

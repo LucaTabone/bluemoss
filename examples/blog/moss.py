@@ -1,8 +1,8 @@
 from examples.blog.classes import BlogPost
-from bluemoss import BlueMoss, Root, Node, Range, extract
+from bluemoss import Node, Node, Range, extract
 
 
-BLOG_POSTS_MOSS: BlueMoss = Root(
+BLOG_POSTS_MOSS: Node = Node(
     filter=None,
     target=BlogPost,
     xpath="div[@class='post']",
