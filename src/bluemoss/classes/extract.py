@@ -5,9 +5,9 @@ from enum import unique, Enum
 class Ex(Enum):
     """
     The 'Ex' enum provides a variety of values that make it easy to extract specific data from a html-tag.
-    An 'Ex' enum value can be used to set 'extract' parameter of a 'BlueMoss' instance.
+    An 'Ex' enum value can be used to set 'extract' parameter of a 'Node' instance.
 
-    Note that setting the 'extract' parameter of a 'BlueMoss' instance only has an effect when the BlueMoss instance
+    Note that setting the 'extract' parameter of a 'Node' instance only has an effect when the Node instance
     is a leaf node, i.e. its 'nodes' parameter is an empty list.
 
     :param TEXT: Yields the text contained in a html-tag excluding the text contained in child html-tags.

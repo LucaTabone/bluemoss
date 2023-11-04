@@ -1,9 +1,9 @@
-from bluemoss import extract, Ex, Root, Node
+from bluemoss import extract, Ex, Node
 from bluemoss.utils import get_infix, get_endpoint
 from examples.linkedin.public_profiles.person.classes import *
 
 
-def date_duration_description_moss_list() -> list[Node]:
+def date_duration_description_nodes() -> list[Node]:
     return [
         Node(
             key='duration', xpath="span[contains(@class, 'date-range')]/span"
@@ -23,8 +23,7 @@ def date_duration_description_moss_list() -> list[Node]:
     ]
 
 
-LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
-    xpath='html',
+LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Node = Node(
     target=PersonProfile,
     nodes=[
         Node(
@@ -112,7 +111,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                     key='school_profile_endpoint',
                 ),
             ]
-            + date_duration_description_moss_list(),
+            + date_duration_description_nodes(),
         ),
         Node(
             key='volunteering',
@@ -123,7 +122,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Node(key='position', xpath='h3'),
                 Node(key='institution', xpath='h4'),
             ]
-            + date_duration_description_moss_list(),
+            + date_duration_description_nodes(),
         ),
         Node(
             key='awards',
@@ -134,7 +133,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                 Node(key='title', xpath='h3'),
                 Node(key='institution', xpath='h4'),
             ]
-            + date_duration_description_moss_list(),
+            + date_duration_description_nodes(),
         ),
         Node(
             key='certifications',
@@ -193,7 +192,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                                     xpath="p[contains(@class, 'experience-group-position__location')]",
                                 ),
                             ]
-                            + date_duration_description_moss_list(),
+                            + date_duration_description_nodes(),
                         ),
                     ],
                 ),
@@ -215,7 +214,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Root = Root(
                             xpath='a',
                         ),
                     ]
-                    + date_duration_description_moss_list(),
+                    + date_duration_description_nodes(),
                 ),
             ],
         ),

@@ -1,8 +1,8 @@
 from examples.zalando.classes import Article
-from bluemoss import extract, Ex, Root, Node
+from bluemoss import extract, Ex, Node
 
 
-ZALANDO_ARTICLES_MOSS: Root = Root(
+ZALANDO_ARTICLES_MOSS: Node = Node(
     filter=None,
     target=Article,
     xpath="article[contains(@class, 'z5x6ht')]",

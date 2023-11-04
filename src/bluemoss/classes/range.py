@@ -6,9 +6,9 @@ from dataclasses import dataclass, field
 @dataclass(frozen=True)
 class Range:
     """
-    A Range instance can be provided to the 'filter' parameter of a 'BlueMoss' instance.
+    A Range instance can be provided to the 'filter' parameter of a 'Node' instance.
     It basically tells the 'extract' function to filter out a sequence of subsequent html-tags
-    that where matched against the 'full_xpath' parameter of the 'BlueMoss' instance.
+    that where matched against the 'xpath' parameter of the 'Node' instance.
 
     Example. Let's assume we have matched the following html-tags against our xpath: [tag_1, tag_2, tag_3]
         1) Range(1) would filter for all tags from index 1 and onwards: [tag_2, tag_3],

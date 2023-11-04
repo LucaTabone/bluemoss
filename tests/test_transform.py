@@ -2,30 +2,30 @@ from __future__ import annotations
 import pytest
 from dataclasses import dataclass
 from .constants import HIGH_NESTING_LEVEL_HTML as HTML
-from src.bluemoss import Root, Node, Range, Ex, extract
+from src.bluemoss import Node, Range, Ex, extract
 
 
 def test_domain_extract_via_transform():
-    moss = Root(
+    node = Node(
         "footer//li[contains(text(), 'mail')]/a",
         extract=Ex.HREF,
         transform=lambda mail: mail.split('@')[-1] if mail else None,
     )
-    assert extract(moss, HTML) == 'example.com'
+    assert extract(node, HTML) == 'example.com'
 
 
 def test_zip_code_extract_via_transform():
-    moss = Root(
+    node = Node(
         "address//div[contains(@class, 'contact-cell')]/p[2]",
         transform=lambda address: int(address.split(' ')[-1]),
     )
-    assert extract(moss, HTML) == 12345
+    assert extract(node, HTML) == 12345
 
 
 def test_attempt_transform_on_none():
-    moss = Root('h4', transform=lambda none_val: none_val.split())
+    node = Node('h4', transform=lambda none_val: none_val.split())
     with pytest.raises(AttributeError):
-        extract(moss, HTML)
+        extract(node, HTML)
 
 
 def test_usage_and_non_usage_of_transform_param():
@@ -37,13 +37,13 @@ def test_usage_and_non_usage_of_transform_param():
     expected: Address = Address(
         line_1='123 Main Street', line_2='City, State 12345'
     )
-    for moss in [
-        Root(
+    for node in [
+        Node(
             'address//p',
             filter=Range(1),
             transform=lambda lines: Address(lines[0], lines[1]),
         ),
-        Root(
+        Node(
             'address',
             target=Address,
             nodes=[
@@ -52,4 +52,4 @@ def test_usage_and_non_usage_of_transform_param():
             ],
         ),
     ]:
-        assert extract(moss, HTML) == expected
+        assert extract(node, HTML) == expected

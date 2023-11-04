@@ -1,8 +1,8 @@
 from examples.reuters.classes import Article
-from bluemoss import Ex, Root, Node, extract
+from bluemoss import Ex, Node, extract
 
 
-REUTERS_WORLD_NEWS_ARTICLES_MOSS: Root = Root(
+REUTERS_WORLD_NEWS_ARTICLES_MOSS: Node = Node(
     filter=None,
     xpath="li[contains(@class, 'story-collection')]/div[contains(@class, 'media-story-card')]",
     target=Article,

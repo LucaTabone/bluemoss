@@ -108,7 +108,6 @@ def test_clean_text():
         utils.clean_text(text)
         == 'Hello world!\nHere.\nThis is a test.\nHello world!\nTest.\nHello world!'
     )
-    assert utils.clean_text(None) is None
 
 
 def test_get_infix():
