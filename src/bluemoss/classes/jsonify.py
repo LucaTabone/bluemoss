@@ -4,11 +4,11 @@ from enum import Enum
 from typing import Any
 from json import dumps
 from bs4 import BeautifulSoup
+from dataclasses import dataclass
 from lxml.html import HtmlElement
 from datetime import datetime, date
 from collections import OrderedDict
 from ..utils import lxml_etree_to_bs4
-from dataclasses import dataclass, field
 
 
 @dataclass
@@ -67,10 +67,7 @@ class Jsonify(abc.ABC):
             )
         if hasattr(val, '__dict__'):
             return OrderedDict(
-                [
-                    (self.dictify(k), self.dictify(v))
-                    for k, v in val.__dict__.items()
-                ]
+                [(self.dictify(k), self.dictify(v)) for k, v in val.__dict__.items()]
             )
         return val
 
@@ -94,19 +91,13 @@ class JsonifyWithTag(Jsonify):
     @property
     def bs4_tag(self) -> BeautifulSoup | None:
         return (
-            lxml_etree_to_bs4(self._tag)
-            if isinstance(self._tag, HtmlElement)
-            else None
+            lxml_etree_to_bs4(self._tag) if isinstance(self._tag, HtmlElement) else None
         )
 
     @property
     def source_line(self) -> int | None:
         """The line within the source-html-doc in which @param self._tag was found."""
-        return (
-            self._tag.sourceline
-            if isinstance(self._tag, HtmlElement)
-            else None
-        )
+        return self._tag.sourceline if isinstance(self._tag, HtmlElement) else None
 
 
 __all__ = ['Jsonify', 'JsonifyWithTag']

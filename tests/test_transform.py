@@ -34,9 +34,7 @@ def test_usage_and_non_usage_of_transform_param():
         line_1: str
         line_2: str
 
-    expected: Address = Address(
-        line_1='123 Main Street', line_2='City, State 12345'
-    )
+    expected: Address = Address(line_1='123 Main Street', line_2='City, State 12345')
     for node in [
         Node(
             'address//p',

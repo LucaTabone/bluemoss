@@ -51,9 +51,7 @@ def test_find_with_list_of_ints():
 
 
 def test_find_with_list_of_ints_and_dict_target():
-    node = Node(
-        'div', filter=[0, 1, 2, 5, 1, 7], nodes=[Node('h1', key='caption')]
-    )
+    node = Node('div', filter=[0, 1, 2, 5, 1, 7], nodes=[Node('h1', key='caption')])
     assert extract(node, HTML) == [
         {'caption': 'Hello 1'},
         {'caption': None},
@@ -66,9 +64,7 @@ def test_find_with_list_of_ints_and_dict_target():
 
 def test_find_range_with_dict_result():
     # first two
-    node = Node(
-        xpath='html', nodes=[Node('div', key='1'), Node('div[2]', key='2')]
-    )
+    node = Node(xpath='html', nodes=[Node('div', key='1'), Node('div[2]', key='2')])
     assert extract(node, HTML) == {'1': 'Hello 1', '2': 'Hello 2'}
 
     # middle two

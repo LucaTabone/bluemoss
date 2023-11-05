@@ -58,6 +58,4 @@ def test_nested_path_with_tag_attribute_search():
 def test_nested_path_with_text_search():
     xpath: str = "html//section/ul//h3[text()='Service 1']/../a"
     assert extract(Node(xpath), HTML) == 'Learn More'
-    assert (
-        extract(Node(xpath, extract=Ex.HREF_ENDPOINT), HTML) == '/learn-more'
-    )
+    assert extract(Node(xpath, extract=Ex.HREF_ENDPOINT), HTML) == '/learn-more'

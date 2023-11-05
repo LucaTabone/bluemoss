@@ -17,11 +17,11 @@ from ..utils import (
 @dataclass(frozen=True)
 class Node:
     """
-    A Node object is a recipe that describes:
+    A Node object is like a recipe that describes:
 
-    1. What data to extract from which tags.
-    2. How to further transform the extracted data.
-    3. Where to place the transformed data, e.g. in a class, dataclass, dict, or list.
+    1. What data to extract from which HTML tags.
+    2. How to transform the extracted data.
+    3. Where to place the scraped data, e.g. in a class, dict, or list.
 
     :param xpath:
         The xpath used to find e.g. a single tag, multiple tags, a tag-attribute value, etc.
@@ -121,18 +121,16 @@ class Node:
             """Make sure the value of the 'target' param references a class, which is not a builtin class."""
             raise InvalidTargetTypeException(self)
 
-        if not self.keys_in_nodes.issubset(
-            get_all_class_init_params(self.target)
-        ):
+        if not self.keys_in_nodes.issubset(get_all_class_init_params(self.target)):
             """
             Make sure that all keys provided in the instances of the 'nodes'
             param are valid init params for the target class.
             """
             raise InvalidKeysForTargetException(self)
 
-        if not (
-            get_required_class_init_params(self.target) - {'_tag'}
-        ).issubset(self.keys_in_nodes):
+        if not (get_required_class_init_params(self.target) - {'_tag'}).issubset(
+            self.keys_in_nodes
+        ):
             """
             Make sure that the instances in the 'nodes' param cover all mandatory
             initialization parameters of the target class.
@@ -192,12 +190,7 @@ class InvalidKeysForTargetException(Exception):
 class MissingTargetKeysException(Exception):
     def __init__(self, node: Node):
         missing_keys: list[str] = sorted(
-            list(
-                (
-                    get_required_class_init_params(node.target)
-                    - node.keys_in_nodes
-                )
-            )
+            list((get_required_class_init_params(node.target) - node.keys_in_nodes))
         )
         message: str = f"\n\nMissing keys in nodes list for target '{node.target_class_name}': {missing_keys}"
         super().__init__(message)

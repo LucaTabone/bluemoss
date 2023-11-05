@@ -74,9 +74,7 @@ MOSS_WITHOUT_TARGET: Node = Node(
 
 
 def test_extract_equality():
-    assert extract(MOSS_WITH_TARGET, HTML).dict == extract(
-        MOSS_WITHOUT_TARGET, HTML
-    )
+    assert extract(MOSS_WITH_TARGET, HTML).dict == extract(MOSS_WITHOUT_TARGET, HTML)
 
 
 def test_target_is_list():
@@ -86,9 +84,7 @@ def test_target_is_list():
 
 def test_target_is_dict():
     node = Node('html', nodes=[Node('a', key='links', filter=None)])
-    assert extract(node, HTML) == {
-        'links': ['Link 1', 'Link 2', 'Link 3', 'Link 4']
-    }
+    assert extract(node, HTML) == {'links': ['Link 1', 'Link 2', 'Link 3', 'Link 4']}
 
 
 def test_invalid_target_type():

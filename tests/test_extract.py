@@ -25,7 +25,7 @@ def test_bs4_tag_extraction():
     assert isinstance(tag, BeautifulSoup)
 
     node = Node('div')
-    assert extract(node, str(tag.prettify())) == 'Ipsum 2\nLorem 2\nLink 2'
+    assert extract(node, str(tag.prettify())) == 'Ipsum 2\n\nLorem 2\n\nLink 2'
 
 
 def test_etree_extraction():
@@ -44,7 +44,7 @@ def test_tag_as_string_extraction():
     html: str = extract(node, HTML)
     assert isinstance(html, str)
     node = Node('div')
-    assert extract(node, html) == 'Ipsum 2\nLorem 2\nLink 2'
+    assert extract(node, html) == 'Ipsum 2\n\nLorem 2\n\nLink 2'
 
 
 def test_href_extraction():

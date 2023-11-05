@@ -5,9 +5,7 @@ from examples.linkedin.public_profiles.person.classes import *
 
 def date_duration_description_nodes() -> list[Node]:
     return [
-        Node(
-            key='duration', xpath="span[contains(@class, 'date-range')]/span"
-        ),
+        Node(key='duration', xpath="span[contains(@class, 'date-range')]/span"),
         Node(
             key='_date_and_duration_text',
             xpath="span[contains(@class, 'date-range')]",
@@ -227,9 +225,7 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Node = Node(
                 Node(key='name', xpath='h3'),
                 Node(key='headline', xpath='p'),
                 Node(key='location', xpath="div[contains(@class, 'text-sm')]"),
-                Node(
-                    key='profile_endpoint', extract=Ex.HREF_ENDPOINT, xpath='a'
-                ),
+                Node(key='profile_endpoint', extract=Ex.HREF_ENDPOINT, xpath='a'),
             ],
         ),
     ],

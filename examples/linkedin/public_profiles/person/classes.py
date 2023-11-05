@@ -280,9 +280,7 @@ class PersonProfile(Jsonify):
     recommendations: list[RecommendationItem]
     people_also_viewed: list[PeopleAlsoViewedItem]
     company_name: str | None = field(default=None, init=False)
-    current_employers: list[tuple[str, str]] = field(
-        default_factory=list, init=False
-    )
+    current_employers: list[tuple[str, str]] = field(default_factory=list, init=False)
 
     def __post_init__(self):
         self._headline = self.header.headline

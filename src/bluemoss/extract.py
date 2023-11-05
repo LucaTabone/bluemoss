@@ -136,8 +136,7 @@ def _build_target(
 
     # :param values: dictionary to instantiate node.target
     values: dict[str, Any] = {
-        _node.key: _extract(_node, tag, level + 1)  # type: ignore
-        for _node in node.nodes
+        _node.key: _extract(_node, tag, level + 1) for _node in node.nodes  # type: ignore
     }
 
     if issubclass(node.target, JsonifyWithTag):

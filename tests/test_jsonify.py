@@ -124,9 +124,7 @@ def test_person_dict():
                         ('website', 'https://company.com'),
                         (
                             'headquarters',
-                            OrderedDict(
-                                [('USA', 'New York'), ('UK', 'London')]
-                            ),
+                            OrderedDict([('USA', 'New York'), ('UK', 'London')]),
                         ),
                     ]
                 ),
