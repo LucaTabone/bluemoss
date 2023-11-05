@@ -35,9 +35,7 @@ def test_person_class_instantiation():
         name='test_name',
         birthday=date.today(),
         address='test_address',
-        friends=[
-            PersonClass(name='test_name_2', birthday=date.today(), friends=[])
-        ],
+        friends=[PersonClass(name='test_name_2', birthday=date.today(), friends=[])],
     )
 
 
@@ -47,9 +45,7 @@ def test_person_data_class_instantiation():
         birthday=date.today(),
         address='test_address',
         friends=[
-            PersonDataClass(
-                name='test_name_2', birthday=date.today(), friends=[]
-            )
+            PersonDataClass(name='test_name_2', birthday=date.today(), friends=[])
         ],
     )
 
@@ -88,8 +84,9 @@ def test_get_optional_init_params():
 def test_clean_text():
     # fmt: off
     text: str = """
+      
         Hello world!
-                        Here.
+                        Here.  
 
         This is a test.
 
@@ -101,13 +98,14 @@ def test_clean_text():
         Test.
             Hello world!
 
-
     """
     # fmt: on
     assert (
         utils.clean_text(text)
-        == 'Hello world!\nHere.\nThis is a test.\nHello world!\nTest.\nHello world!'
+        == 'Hello world!\nHere.\n\nThis is a test.\n\nHello world!\n\nTest.\nHello world!'
     )
+    assert utils.clean_text('') == ''
+    assert utils.clean_text('Hello \n') == 'Hello'
 
 
 def test_get_infix():
@@ -116,9 +114,7 @@ def test_get_infix():
     assert utils.get_infix(text, 'Hello', 'Galaxy') is None
     assert utils.get_infix(text, 'He', 'orld!') == 'llo w'
     assert utils.get_infix('', 'He', 'orld!') is None
-    assert (
-        utils.get_infix(text, 'NonExistentPrefix', 'NonExistentSuffix') is None
-    )
+    assert utils.get_infix(text, 'NonExistentPrefix', 'NonExistentSuffix') is None
 
 
 # html.py

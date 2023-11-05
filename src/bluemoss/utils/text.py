@@ -52,14 +52,8 @@ def clean_text(text: str) -> str:
         text = text.strip().replace('\n ', '\n')
     while ' \n' in text:
         text = text.strip().replace(' \n', '\n')
-    while '\n\n' in text:
-        text = text.strip().replace('\n\n', '\n')
-    while '\\n' in text:
-        text = text.strip().replace('\\n', '\n')
-    if text.startswith('\n'):
-        text = clean_text(text[2:])
-    if text.endswith('\n'):
-        text = clean_text(text[:-2])
+    while '\n\n\n' in text:
+        text = text.strip().replace('\n\n\n', '\n\n')
     return text
 
 
