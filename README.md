@@ -73,7 +73,6 @@
 ```
 
 <br/>
-<br/>
 
 <h3>Example 1</h3>
 ```python
