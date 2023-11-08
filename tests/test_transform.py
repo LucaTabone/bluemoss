@@ -2,7 +2,7 @@ from __future__ import annotations
 import pytest
 from dataclasses import dataclass
 from .constants import HIGH_NESTING_LEVEL_HTML as HTML
-from src.bluemoss import Node, Range, Ex, extract
+from src.bluemoss import Node, Range, Ex, scrape
 
 
 def test_domain_extract_via_transform():
@@ -11,7 +11,7 @@ def test_domain_extract_via_transform():
         extract=Ex.HREF,
         transform=lambda mail: mail.split('@')[-1] if mail else None,
     )
-    assert extract(node, HTML) == 'example.com'
+    assert scrape(node, HTML) == 'example.com'
 
 
 def test_zip_code_extract_via_transform():
@@ -19,13 +19,13 @@ def test_zip_code_extract_via_transform():
         "address//div[contains(@class, 'contact-cell')]/p[2]",
         transform=lambda address: int(address.split(' ')[-1]),
     )
-    assert extract(node, HTML) == 12345
+    assert scrape(node, HTML) == 12345
 
 
 def test_attempt_transform_on_none():
     node = Node('h4', transform=lambda none_val: none_val.split())
     with pytest.raises(AttributeError):
-        extract(node, HTML)
+        scrape(node, HTML)
 
 
 def test_usage_and_non_usage_of_transform_param():
@@ -50,4 +50,4 @@ def test_usage_and_non_usage_of_transform_param():
             ],
         ),
     ]:
-        assert extract(node, HTML) == expected
+        assert scrape(node, HTML) == expected

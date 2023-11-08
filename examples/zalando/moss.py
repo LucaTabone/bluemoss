@@ -1,5 +1,5 @@
 from examples.zalando.classes import Article
-from bluemoss import extract, Ex, Node
+from bluemoss import scrape, Ex, Node
 
 
 ZALANDO_ARTICLES_MOSS: Node = Node(
@@ -31,5 +31,5 @@ ZALANDO_ARTICLES_MOSS: Node = Node(
 
 if __name__ == '__main__':
     with open('./static/shoes.html', 'r') as f:
-        for article in extract(ZALANDO_ARTICLES_MOSS, f.read()):
+        for article in scrape(ZALANDO_ARTICLES_MOSS, f.read()):
             print(article)

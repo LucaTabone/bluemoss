@@ -1,20 +1,15 @@
 from __future__ import annotations
-import re
 import builtins
 from .extract import Ex
 from .range import Range
 from inspect import isclass
-from functools import cached_property
 from typing import Callable, Type, Any
 from dataclasses import dataclass, field
-from ..utils import (
-    is_valid_xpath,
-    get_all_class_init_params,
-    get_required_class_init_params,
-)
+from ..utils.xpath import xpath_is_valid, xpath_is_function_call
+from ..utils import get_all_class_init_params, get_required_class_init_params
 
 
-@dataclass(frozen=True)
+@dataclass
 class Node:
     """
     A Node object is like a recipe that describes:
@@ -46,6 +41,16 @@ class Node:
         2. list[int]: A list of ints representing indices of matched tags of interest.
         3. Range: A Range object (see ./range.py for documentation).
         4. None: No filtering is applied; data is extracted from all matched tags.
+    :param add_descendant_axis_to_xpath:
+         If True, then the scrape() function will add, depending on the node-level, './/' or '//' as a prefix to
+         the xpath before executing the xpath query to the current tag.
+         The default value of this parameter is True, out of convenience, given that in most cases we would write
+         xpaths with './/' or '//' prefixes.
+         This convenience is met with the default value of the 'filter' parameter to be 0
+         (extract the first tag that was matched against the xpath).
+
+         If :param: xpath already has '.' or '/' as a prefix, then :param: add_descendant_axis_to_xpath
+         will be set to False in the __post_init__ method.
     """
 
     xpath: str = ''
@@ -55,6 +60,7 @@ class Node:
     filter: int | list[int] | Range | None = 0
     transform: Callable[[Any], Any] = lambda x: x
     nodes: list[Node] = field(default_factory=list)
+    add_descendant_axis_to_xpath: bool = field(default=True)
 
     @property
     def no_xpath(self) -> bool:
@@ -72,7 +78,7 @@ class Node:
         """
         return isinstance(self.filter, int)
 
-    @cached_property
+    @property
     def keys_in_nodes(self) -> set[str]:
         """
         If this set is not empty, then we use these keys in the dictionary that instantiates a target object:
@@ -85,17 +91,21 @@ class Node:
         """
         return {c.key for c in self.nodes if c.key is not None}
 
-    @cached_property
+    @property
     def target_class_name(self) -> str | None:
         return self.target.__name__ if self.target else None
 
     def _check_xpath(self) -> None:
         if self.no_xpath:
-            pass
-        elif not is_valid_xpath(self.xpath):
-            raise InvalidXpathException(self)
-        elif not re.match(r'^[a-zA-Z]', self.xpath):
-            raise InvalidXpathException(self)
+            return
+        if not xpath_is_valid(self.xpath):
+            raise InvalidXpathException(self.xpath)
+        if (
+            self.xpath.startswith('.')
+            or self.xpath.startswith('/')
+            or xpath_is_function_call(self.xpath)
+        ):
+            self.add_descendant_axis_to_xpath = False
 
     def __post_init__(self) -> None:
         self._check_xpath()
@@ -139,9 +149,9 @@ class Node:
 
 
 class InvalidXpathException(Exception):
-    def __init__(self, node: Node):
+    def __init__(self, xpath: str):
         message: str = (
-            f'\n{node.xpath} seems to be an invalid xpath. '
+            f'\n{xpath} seems to be an invalid xpath. '
             f'\nFeel free to use ChatGPT to check if your path is compatible with the XPath 1.0 syntax.'
             f'\nNote that xpath queries using XPath syntax of any version higher than 1.0 are not supported.'
         )
@@ -197,8 +207,6 @@ class MissingTargetKeysException(Exception):
 
 
 __all__ = [
-    'Node',
-    'Node',
     'Node',
     'InvalidXpathException',
     'PartialKeysException',

@@ -8,7 +8,7 @@ from src.bluemoss.classes.jsonify import Jsonify
 from src.bluemoss import (
     Node,
     Ex,
-    extract,
+    scrape,
     InvalidTargetTypeException,
     InvalidKeysForTargetException,
     MissingTargetKeysException,
@@ -74,17 +74,17 @@ MOSS_WITHOUT_TARGET: Node = Node(
 
 
 def test_extract_equality():
-    assert extract(MOSS_WITH_TARGET, HTML).dict == extract(MOSS_WITHOUT_TARGET, HTML)
+    assert scrape(MOSS_WITH_TARGET, HTML).dict == scrape(MOSS_WITHOUT_TARGET, HTML)
 
 
 def test_target_is_list():
     node = Node('html', nodes=[Node('a', filter=None)])
-    assert extract(node, HTML) == [['Link 1', 'Link 2', 'Link 3', 'Link 4']]
+    assert scrape(node, HTML) == [['Link 1', 'Link 2', 'Link 3', 'Link 4']]
 
 
 def test_target_is_dict():
     node = Node('html', nodes=[Node('a', key='links', filter=None)])
-    assert extract(node, HTML) == {'links': ['Link 1', 'Link 2', 'Link 3', 'Link 4']}
+    assert scrape(node, HTML) == {'links': ['Link 1', 'Link 2', 'Link 3', 'Link 4']}
 
 
 def test_invalid_target_type():

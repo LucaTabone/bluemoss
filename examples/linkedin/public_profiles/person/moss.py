@@ -1,4 +1,4 @@
-from bluemoss import extract, Ex, Node
+from bluemoss import scrape, Ex, Node
 from bluemoss.utils import get_infix, get_endpoint
 from examples.linkedin.public_profiles.person.classes import *
 
@@ -234,5 +234,5 @@ LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS: Node = Node(
 
 if __name__ == '__main__':
     with open('./static/alex.html', 'r') as f:
-        profile = extract(LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS, f.read())
+        profile = scrape(LINKEDIN_PUBLIC_PERSON_PROFILE_MOSS, f.read())
         print(profile)

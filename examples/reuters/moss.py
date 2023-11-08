@@ -1,5 +1,5 @@
 from examples.reuters.classes import Article
-from bluemoss import Ex, Node, extract
+from bluemoss import Ex, Node, scrape
 
 
 REUTERS_WORLD_NEWS_ARTICLES_MOSS: Node = Node(
@@ -23,5 +23,5 @@ REUTERS_WORLD_NEWS_ARTICLES_MOSS: Node = Node(
 
 if __name__ == '__main__':
     with open('./static/news.html', 'r') as f:
-        for article in extract(REUTERS_WORLD_NEWS_ARTICLES_MOSS, f.read()):
+        for article in scrape(REUTERS_WORLD_NEWS_ARTICLES_MOSS, f.read()):
             print(article)

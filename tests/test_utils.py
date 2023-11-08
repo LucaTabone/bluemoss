@@ -247,3 +247,18 @@ def test_get_url_query_params():
     ]
     for i, url in enumerate(URLS):
         assert query_params[i] == utils.get_url_query_params(url)
+
+
+def test_xpath_is_function_call():
+    for xpath in [
+        'div',
+        './/div',
+        "div//a[contains(@class, 'id')]/@src"
+        "//div/div[contains(@class, 'id') and contains(text(), 'hello')]/a",
+    ]:
+        assert utils.xpath_is_valid(xpath)
+        assert utils.xpath_is_function_call(xpath) is False
+        for xpath_function in ['count', 'string', 'normalize-space']:
+            _xpath = f'{xpath_function}({xpath})'
+            assert utils.xpath_is_valid(_xpath)
+            assert utils.xpath_is_function_call(_xpath) is True

@@ -7,4 +7,4 @@ __author__ = 'LucaTabone'
 __copyright__ = 'Copyright 2023-2023 LucaTabone'
 
 from .classes import *
-from .extract import *
+from .scrape import *

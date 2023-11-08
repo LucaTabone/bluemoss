@@ -4,21 +4,6 @@ from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
 
 
-def is_valid_xpath(xpath_query: str) -> bool:
-    """
-    Checks if the given @param xpath_query is a valid XPath expression.
-    :rtype: bool
-    :return: True if @param xpath_query is a valid XPath expression, False otherwise.
-    """
-    root = etree.Element('root')
-    doc = etree.ElementTree(root)
-    try:
-        doc.xpath(xpath_query)
-        return True
-    except etree.XPathEvalError:
-        return False
-
-
 def lxml_etree_to_bs4(tag: HtmlElement | str) -> BeautifulSoup | None:
     """
     Transforms a lxml.html.HtmlElement object to a BeautifulSoup object.
@@ -55,9 +40,4 @@ def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> None:
         data.decompose()
 
 
-__all__ = [
-    'is_valid_xpath',
-    'lxml_etree_to_bs4',
-    'lxml_etree_to_string',
-    'remove_tags_from_soup',
-]
+__all__ = ['lxml_etree_to_bs4', 'lxml_etree_to_string', 'remove_tags_from_soup']

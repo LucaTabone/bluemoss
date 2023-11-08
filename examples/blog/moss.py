@@ -1,5 +1,5 @@
 from examples.blog.classes import BlogPost
-from bluemoss import Node, Node, Range, extract
+from bluemoss import Node, Node, Range, scrape
 
 
 BLOG_POSTS_MOSS: Node = Node(
@@ -17,5 +17,5 @@ BLOG_POSTS_MOSS: Node = Node(
 
 if __name__ == '__main__':
     with open('./static/blog.html', 'r') as f:
-        for article in extract(BLOG_POSTS_MOSS, f.read()):
+        for article in scrape(BLOG_POSTS_MOSS, f.read()):
             print(article)
