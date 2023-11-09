@@ -8,7 +8,7 @@ nodes: list[Node] = [
     Node('div/a'),
     Node('body//a'),
     Node('body//div/a'),
-    Node('a', filter=0)
+    Node('a', filter=0),
 ]
 
 for node in nodes:

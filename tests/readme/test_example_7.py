@@ -24,12 +24,12 @@ node = Node(
         Node(
             "count(//div[@class='location_uk'])",
             key='amount_uk_companies',
-            transform=lambda count: int(count) if count else None
+            transform=lambda count: int(count) if count else None,
         ),
         Node(
             "count(//div[@class='location_us'])",
             key='amount_us_companies',
-            transform=lambda count: int(count) if count else None
+            transform=lambda count: int(count) if count else None,
         ),
         Node(
             'li',
@@ -42,12 +42,12 @@ node = Node(
                 Node(
                     'a',
                     key='id',
-                    extract="href",
-                    transform=lambda href: href.split("=")[1]
-                )
-            ]
-        )
-    ]
+                    extract='href',
+                    transform=lambda href: href.split('=')[1],
+                ),
+            ],
+        ),
+    ],
 )
 
 companies: Companies = scrape(node, HTML)
@@ -55,33 +55,19 @@ companies: Companies = scrape(node, HTML)
 assert isinstance(companies, Companies)
 
 assert companies.dict == {
-    "companies": [
-        {
-            "id": "apple",
-            "name": "Apple",
-            "location": "Cupertino, California"
-        },
-        {
-            "id": "google",
-            "name": "Google",
-            "location": "Mountain View, California"
-        },
-        {
-            "id": "tesla",
-            "name": "Tesla",
-            "location": "Austin, Texas"
-        },
-        {
-            "id": "deepmind",
-            "name": "DeepMind",
-            "location": "London, United Kingdom"
-        }
+    'companies': [
+        {'id': 'apple', 'name': 'Apple', 'location': 'Cupertino, California'},
+        {'id': 'google', 'name': 'Google', 'location': 'Mountain View, California'},
+        {'id': 'tesla', 'name': 'Tesla', 'location': 'Austin, Texas'},
+        {'id': 'deepmind', 'name': 'DeepMind', 'location': 'London, United Kingdom'},
     ],
-    "amount_uk_companies": 1,
-    "amount_us_companies": 3
+    'amount_uk_companies': 1,
+    'amount_us_companies': 3,
 }
 
-assert companies.json == """{
+assert (
+    companies.json
+    == """{
     "companies": [
         {
             "id": "apple",
@@ -107,3 +93,4 @@ assert companies.json == """{
     "amount_uk_companies": 1,
     "amount_us_companies": 3
 }"""
+)

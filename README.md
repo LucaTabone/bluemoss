@@ -90,7 +90,7 @@ nodes: list[Node] = [
     Node('div/a'),
     Node('body//a'),
     Node('body//div/a'),
-    Node('a', filter=0)
+    Node('a', filter=0),
 ]
 
 for node in nodes:
@@ -107,12 +107,12 @@ from ..constants import README_EXAMPLE_HTML as HTML
 
 
 nodes: list[Node] = [
-    Node('p') ,
+    Node('p'),
     Node('li//p'),
     Node('div/p'),
     Node('div//p'),
     Node('div[contains(@class, "location_")]'),
-    Node('body//div[contains(@class, "location_")]')
+    Node('body//div[contains(@class, "location_")]'),
 ]
 
 for node in nodes:
@@ -161,23 +161,9 @@ def get_company_id(hrefs: list[str]) -> list[str]:
 
 
 for node in [
-    Node(
-        'a',
-        filter=Range(1),
-        extract=Ex.HREF,
-        transform=get_company_id
-    ),
-    Node(
-        'a',
-        filter=Range(1),
-        extract="href",
-        transform=get_company_id
-    ),
-    Node(
-        'a/@href',
-        filter=Range(1),
-        transform=get_company_id
-    )
+    Node('a', filter=Range(1), extract=Ex.HREF, transform=get_company_id),
+    Node('a', filter=Range(1), extract='href', transform=get_company_id),
+    Node('a/@href', filter=Range(1), transform=get_company_id),
 ]:
     assert scrape(node, HTML) == ['google', 'tesla', 'deepmind']
 ```
@@ -197,36 +183,16 @@ node = Node(
     nodes=[
         Node('a', key='name'),
         Node('p', key='headquarters'),
-        Node(
-            'a/@href',
-            key='id',
-            transform=lambda href: href.split("=")[1]
-        )
-    ]
+        Node('a/@href', key='id', transform=lambda href: href.split('=')[1]),
+    ],
 )
 
 
 assert scrape(node, HTML) == [
-    {
-        'id': 'apple',
-        'name': 'Apple',
-        'headquarters': 'Cupertino, California'
-    },
-    {
-        'id': 'google',
-        'name': 'Google',
-        'headquarters': 'Mountain View, California'
-    },
-    {
-        'id': 'tesla',
-        'name': 'Tesla',
-        'headquarters': 'Austin, Texas'
-    },
-    {
-        'id': 'deepmind',
-        'name': 'DeepMind',
-        'headquarters': 'London, United Kingdom'
-    }
+    {'id': 'apple', 'name': 'Apple', 'headquarters': 'Cupertino, California'},
+    {'id': 'google', 'name': 'Google', 'headquarters': 'Mountain View, California'},
+    {'id': 'tesla', 'name': 'Tesla', 'headquarters': 'Austin, Texas'},
+    {'id': 'deepmind', 'name': 'DeepMind', 'headquarters': 'London, United Kingdom'},
 ]
 ```
 
@@ -246,36 +212,20 @@ node = Node(
     nodes=[
         Node('a', key='name'),
         Node('p', key='headquarters'),
-        Node(
-            'a/@href',
-            key='id',
-            transform=lambda href: href.split("=")[1]
-        )
-    ]
+        Node('a/@href', key='id', transform=lambda href: href.split('=')[1]),
+    ],
 )
 
 assert scrape(node, HTML) == {
     'companies': [
-        {
-            'id': 'apple',
-            'name': 'Apple',
-            'headquarters': 'Cupertino, California'
-        },
-        {
-            'id': 'google',
-            'name': 'Google',
-            'headquarters': 'Mountain View, California'
-        },
-        {
-            'id': 'tesla',
-            'name': 'Tesla',
-            'headquarters': 'Austin, Texas'
-        },
+        {'id': 'apple', 'name': 'Apple', 'headquarters': 'Cupertino, California'},
+        {'id': 'google', 'name': 'Google', 'headquarters': 'Mountain View, California'},
+        {'id': 'tesla', 'name': 'Tesla', 'headquarters': 'Austin, Texas'},
         {
             'id': 'deepmind',
             'name': 'DeepMind',
-            'headquarters': 'London, United Kingdom'
-        }
+            'headquarters': 'London, United Kingdom',
+        },
     ]
 }
 ```
@@ -311,12 +261,12 @@ node = Node(
         Node(
             "count(//div[@class='location_uk'])",
             key='amount_uk_companies',
-            transform=lambda count: int(count) if count else None
+            transform=lambda count: int(count) if count else None,
         ),
         Node(
             "count(//div[@class='location_us'])",
             key='amount_us_companies',
-            transform=lambda count: int(count) if count else None
+            transform=lambda count: int(count) if count else None,
         ),
         Node(
             'li',
@@ -329,12 +279,12 @@ node = Node(
                 Node(
                     'a',
                     key='id',
-                    extract="href",
-                    transform=lambda href: href.split("=")[1]
-                )
-            ]
-        )
-    ]
+                    extract='href',
+                    transform=lambda href: href.split('=')[1],
+                ),
+            ],
+        ),
+    ],
 )
 
 companies: Companies = scrape(node, HTML)
@@ -342,33 +292,19 @@ companies: Companies = scrape(node, HTML)
 assert isinstance(companies, Companies)
 
 assert companies.dict == {
-    "companies": [
-        {
-            "id": "apple",
-            "name": "Apple",
-            "location": "Cupertino, California"
-        },
-        {
-            "id": "google",
-            "name": "Google",
-            "location": "Mountain View, California"
-        },
-        {
-            "id": "tesla",
-            "name": "Tesla",
-            "location": "Austin, Texas"
-        },
-        {
-            "id": "deepmind",
-            "name": "DeepMind",
-            "location": "London, United Kingdom"
-        }
+    'companies': [
+        {'id': 'apple', 'name': 'Apple', 'location': 'Cupertino, California'},
+        {'id': 'google', 'name': 'Google', 'location': 'Mountain View, California'},
+        {'id': 'tesla', 'name': 'Tesla', 'location': 'Austin, Texas'},
+        {'id': 'deepmind', 'name': 'DeepMind', 'location': 'London, United Kingdom'},
     ],
-    "amount_uk_companies": 1,
-    "amount_us_companies": 3
+    'amount_uk_companies': 1,
+    'amount_us_companies': 3,
 }
 
-assert companies.json == """{
+assert (
+    companies.json
+    == """{
     "companies": [
         {
             "id": "apple",
@@ -394,6 +330,7 @@ assert companies.json == """{
     "amount_uk_companies": 1,
     "amount_us_companies": 3
 }"""
+)
 ```
 
 <br>
