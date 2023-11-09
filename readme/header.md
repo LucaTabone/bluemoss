@@ -15,3 +15,64 @@
     <img src="https://img.shields.io/pypi/v/bluemoss" alt="Latest package version"/>
   </p>
 </p>
+
+<br>
+<hr>
+
+## Getting Started
+
+```bash
+pip install bluemoss
+```
+
+<br>
+<hr>
+
+
+## What is bluemoss?
+
+Step into the world of web scraping with **bluemoss**, where you get the precision of XPath 1.0 without the steep learning
+curve. Our `Node` class acts as the blueprint for scraping any website, turning complex HTML into neatly 
+organized data-structures like JSON, class instances, and more.
+<br>
+<br>
+Forget about piecing together an array of functions for each HTML tag you want to scrape
+— Bluemoss lets you craft a single `Node` object that does it all: 
+scraping, transforming, and structuring website data seamlessly, into the data format you need.
+<br>
+<br>
+And if you are new to XPath, no problem — ChatGPT has got your back to help kick off those initial queries.
+<br>
+<br>
+
+<hr>
+
+
+## Why should I use bluemoss?
+
+<br>
+<hr>
+
+
+## How does it work?
+
+<br>
+<hr>
+
+
+### Supported Platforms
+
+<br>
+<hr>
+
+
+### Supported Python Versions
+
+<br>
+<hr>
+
+
+### License
+
+<br>
+<hr>

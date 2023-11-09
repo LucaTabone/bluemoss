@@ -1,14 +1,6 @@
-from __future__ import annotations
 from dataclasses import dataclass
 from src.bluemoss import Node, scrape, Jsonify
 from ..constants import README_EXAMPLE_HTML as HTML
-
-
-@dataclass
-class Companies(Jsonify):
-    companies: list[Company]
-    amount_uk_companies: int
-    amount_us_companies: int
 
 
 @dataclass
@@ -16,6 +8,13 @@ class Company(Jsonify):
     id: str
     name: str
     location: str
+
+
+@dataclass
+class Companies(Jsonify):
+    companies: list[Company]
+    amount_uk_companies: int
+    amount_us_companies: int
 
 
 node = Node(
