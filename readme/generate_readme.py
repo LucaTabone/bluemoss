@@ -25,13 +25,16 @@ def _get_readme_header() -> str:
 
 def _get_python_examples_code() -> list[str]:
     directory: Path = Path(__file__).parent.parent / 'tests' / 'readme'
-    file_paths: list[Path] = sorted([
-        directory / file for file in listdir(directory)
-        if file.startswith('test_example_') and file.endswith('.py')
-    ])
+    file_paths: list[Path] = sorted(
+        [
+            directory / file
+            for file in listdir(directory)
+            if file.startswith('test_example_') and file.endswith('.py')
+        ]
+    )
     res: list[str] = []
     for path in file_paths:
-        with open(path, "r") as f:
+        with open(path, 'r') as f:
             res.append(f.read())
     return res
 
