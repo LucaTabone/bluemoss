@@ -1,7 +1,7 @@
 from __future__ import annotations
-from constants import HTML
 from dataclasses import dataclass
 from src.bluemoss import Node, scrape, Jsonify
+from ..constants import README_EXAMPLE_HTML as HTML
 
 
 @dataclass
@@ -80,3 +80,30 @@ assert companies.dict == {
     "amount_uk_companies": 1,
     "amount_us_companies": 3
 }
+
+assert companies.json == """{
+    "companies": [
+        {
+            "id": "apple",
+            "name": "Apple",
+            "location": "Cupertino, California"
+        },
+        {
+            "id": "google",
+            "name": "Google",
+            "location": "Mountain View, California"
+        },
+        {
+            "id": "tesla",
+            "name": "Tesla",
+            "location": "Austin, Texas"
+        },
+        {
+            "id": "deepmind",
+            "name": "DeepMind",
+            "location": "London, United Kingdom"
+        }
+    ],
+    "amount_uk_companies": 1,
+    "amount_us_companies": 3
+}"""

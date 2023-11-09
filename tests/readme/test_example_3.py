@@ -1,5 +1,5 @@
-from constants import HTML
 from src.bluemoss import Node, Range, scrape
+from ..constants import README_EXAMPLE_HTML as HTML
 
 
 node = Node('a', filter=3)

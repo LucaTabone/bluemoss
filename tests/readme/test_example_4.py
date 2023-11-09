@@ -1,5 +1,5 @@
-from constants import HTML
 from src.bluemoss import Node, Range, Ex, scrape
+from ..constants import README_EXAMPLE_HTML as HTML
 
 
 def get_company_id(hrefs: list[str]) -> list[str]:
