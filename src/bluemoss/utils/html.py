@@ -24,7 +24,7 @@ def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
     """
     if not isinstance(tag, HtmlElement):
         return None
-    return etree.tostring(tag, method='html').decode('utf-8')
+    return etree.tostring(tag, method='html').decode('utf-8').strip()
 
 
 def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> None:
