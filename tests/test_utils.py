@@ -1,9 +1,10 @@
 from __future__ import annotations
 from bs4 import BeautifulSoup
 from src.bluemoss import utils
+from lxml.html import HtmlElement
+from lxml import html as lxml_html
 from datetime import date, datetime
 from dataclasses import dataclass, field
-from lxml import html as lxml_html, etree
 
 
 @dataclass
@@ -120,7 +121,6 @@ def test_get_infix():
 # html.py
 def test_etree_to_bs4():
     html: str = '<html><body><p>Hello world!</p></body></html>'
-    assert utils.lxml_etree_to_bs4(html) is None
     soup: BeautifulSoup = utils.lxml_etree_to_bs4(lxml_html.fromstring(html))  # type: ignore
     assert isinstance(soup, BeautifulSoup)
     assert str(soup) == html
@@ -141,7 +141,7 @@ def test_remove_tags():
 
 def test_etree_to_string():
     html: str = '<html><body><p>Hello world!</p></body></html>'
-    elem: etree.Element = lxml_html.fromstring(html)
+    elem: HtmlElement = lxml_html.fromstring(html)  # type: ignore
     assert utils.lxml_etree_to_string(elem) == html
 
 

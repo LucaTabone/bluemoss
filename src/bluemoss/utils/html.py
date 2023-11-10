@@ -1,30 +1,31 @@
 from __future__ import annotations
+import io
 from lxml import etree
 from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
+from src.bluemoss.utils.text import clean_text
 
 
-def lxml_etree_to_bs4(tag: HtmlElement | str) -> BeautifulSoup | None:
+def lxml_etree_text_content(tag: HtmlElement) -> str:
+    return clean_text(tag.xpath('string(.)'))
+
+
+def lxml_etree_to_bs4(tag: HtmlElement) -> BeautifulSoup:
     """
     Transforms a lxml.html.HtmlElement object to a BeautifulSoup object.
     :rtype: BeautifulSoup | None
     :return: BeautifulSoup representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
-    tag_as_str: str | None = lxml_etree_to_string(tag)
-    if tag_as_str is None:
-        return None
-    return BeautifulSoup(tag_as_str, 'html.parser')
+    return BeautifulSoup(lxml_etree_to_string(tag), 'html.parser')
 
 
-def lxml_etree_to_string(tag: HtmlElement | str) -> str | None:
+def lxml_etree_to_string(tag: HtmlElement) -> str:
     """
     Transforms a lxml.html.HtmlElement object to a string.
     :rtype: str | None
     :return: String representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
-    if not isinstance(tag, HtmlElement):
-        return None
-    return etree.tostring(tag, method='html').decode('utf-8').strip()
+    return etree.tostring(tag).decode('utf-8').strip()  # type: ignore
 
 
 def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> None:

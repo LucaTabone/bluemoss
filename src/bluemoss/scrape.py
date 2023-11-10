@@ -183,7 +183,6 @@ def _scrape_leaf_node(node: Node, tag: Any) -> Any:
     elif node.extract == Ex.TEXT:
         return tag.text.strip()
     elif node.extract == Ex.BS4_TAG:
-        from lxml import etree
         return utils.lxml_etree_to_bs4(tag)
     elif node.extract == Ex.TAG_AS_STRING:
         return cast(Any, utils.lxml_etree_to_bs4(tag)).prettify()

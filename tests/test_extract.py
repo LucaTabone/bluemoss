@@ -1,7 +1,7 @@
 import pytest
-from lxml import etree
 from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
+from src.bluemoss.utils import clean_text
 from src.bluemoss import Node, Ex, scrape
 from .constants import WITH_LINKS_HTML as HTML
 
@@ -23,20 +23,14 @@ def test_bs4_tag_extraction():
     node = Node('div', extract=Ex.BS4_TAG)
     tag: BeautifulSoup = scrape(node, HTML)
     assert isinstance(tag, BeautifulSoup)
-
-    node = Node('div')
-    assert scrape(node, str(tag.prettify())) == 'Ipsum 2\n\nLorem 2\n\nLink 2'
+    assert scrape(Node('div'), str(tag.prettify())) == 'Ipsum 2\n\nLorem 2\n\nLink 2'
 
 
 def test_etree_extraction():
-    # 1) extract the found tag as an etree._Element instance
     node = Node('div', extract=Ex.LXML_HTML_ELEMENT)
     elem: HtmlElement = scrape(node, HTML)
     assert isinstance(elem, HtmlElement)
-
-    # 2) transform the etree._Element into a html string and test the full-text-extraction on it
-    html: str = etree.tostring(elem, method='html')  # type: ignore
-    assert scrape(Node('div'), html) == 'Ipsum 2\nLorem 2\nLink 2'
+    assert clean_text(elem.xpath('string(.)')) == 'Ipsum 2\nLorem 2\nLink 2'
 
 
 def test_tag_as_string_extraction():
