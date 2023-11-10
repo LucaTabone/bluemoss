@@ -12,6 +12,10 @@ format:
 mypy:
 	mypy src/bluemoss
 
+.PHONY: install
+install:
+	pip install -r requirements/dev.txt
+
 .PHONY: clean
 clean:
 	rm -rf .nox
