@@ -98,20 +98,20 @@ def _filter_tags(node: Node, tags: list[Any]) -> list[Any]:
 
     if isinstance(node.filter, list):
         # node.filter is a list of integers => filter for the matches whose index is contained in node.filter
-        _matches: list[Any] = []
+        _tags: list[Any] = []
         for idx in node.filter:
             try:
-                _matches.append(tags[idx])
+                _tags.append(tags[idx])
             except IndexError:
-                _matches.append(None)
-        return _matches
+                _tags.append(None)
+        return _tags
 
     # node.filter is None
     return tags
 
 
 def _build_target(
-    node: Node, tag: HtmlElement | str | None, level: int
+    node: Node, tag: Any, level: int
 ) -> list[Any] | dict[str, Any] | Type[Any] | None:
     """
     Builds the target instance (list, dict or class/dataclass instance) of :param node.
@@ -154,7 +154,7 @@ def _build_target(
     return node.target(**values)  # type: ignore
 
 
-def _scrape_leaf_node(node: Node, match: Any) -> Any:
+def _scrape_leaf_node(node: Node, tag: Any) -> Any:
     """
     Extracts data from a leaf node.
     A leaf node is a Node object with an empty 'nodes' list (node.nodes == []).
@@ -163,43 +163,44 @@ def _scrape_leaf_node(node: Node, match: Any) -> Any:
     :return: data extracted from :param node.
     """
 
-    if match is None:
+    if tag is None:
         return None
 
-    if not isinstance(match, HtmlElement):
+    if not isinstance(tag, HtmlElement):
         # @param tag is a string if node.xpath endswith with e.g. /@href,  /@class or /text(),
         # i.e. when we do not select for a tag but for a tag-property, like text or an attribute.
-        return match
+        return tag
 
     if isinstance(node.extract, str):
         # extract the value of the tag-attribute defined by node.extract
-        return match.get(node.extract)
+        return tag.get(node.extract)
 
     # extract data from @param tag by match-casing node.extract
     if node.extract == Ex.FULL_TEXT:
-        return utils.clean_text(match.text_content().strip())
+        return utils.clean_text(tag.xpath('string(.)'))
     elif node.extract == Ex.LXML_HTML_ELEMENT:
-        return match
+        return tag
     elif node.extract == Ex.TEXT:
-        return match.text.strip()
+        return tag.text.strip()
     elif node.extract == Ex.BS4_TAG:
-        return utils.lxml_etree_to_bs4(match)
+        from lxml import etree
+        return utils.lxml_etree_to_bs4(tag)
     elif node.extract == Ex.TAG_AS_STRING:
-        return cast(Any, utils.lxml_etree_to_bs4(match)).prettify()
+        return cast(Any, utils.lxml_etree_to_bs4(tag)).prettify()
     elif node.extract == Ex.HREF:
-        return match.get('href')
+        return tag.get('href')
     elif node.extract == Ex.HREF_QUERY:
-        return utils.get_url_query(match.get('href'))
+        return utils.get_url_query(tag.get('href'))
     elif node.extract == Ex.HREF_DOMAIN:
-        return utils.get_domain(match.get('href'))
+        return utils.get_domain(tag.get('href'))
     elif node.extract == Ex.HREF_ENDPOINT:
-        return utils.get_endpoint(match.get('href'))
+        return utils.get_endpoint(tag.get('href'))
     elif node.extract == Ex.HREF_BASE_DOMAIN:
-        return utils.get_base_domain(match.get('href'))
+        return utils.get_base_domain(tag.get('href'))
     elif node.extract == Ex.HREF_QUERY_PARAMS:
-        return utils.get_url_query_params(match.get('href'))
+        return utils.get_url_query_params(tag.get('href'))
     elif node.extract == Ex.HREF_ENDPOINT_WITH_QUERY:
-        return utils.get_endpoint_with_query(match.get('href'))
+        return utils.get_endpoint_with_query(tag.get('href'))
     else:
         raise NotImplementedError
 
