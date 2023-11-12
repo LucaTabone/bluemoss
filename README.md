@@ -318,6 +318,163 @@ Node('a', extract='href', transform=get_company_id)
 Node('a/@href', transform=get_company_id)  # use xpath to extract the href property value
 ```
 
+<br>
+
+### Example 11 - Scraping multiple tags
+
+**Goal** - Scrape the name and headquarters of every company.
+
+The expected result:
+```python
+[
+    ['Apple', 'Cupertino, California'],
+    ['Google', 'Mountain View, California'],
+    ['Tesla', 'Austin, Texas'],
+    ['DeepMind', 'London, United Kingdom']
+]
+```
+
+
+Solution
+```python
+Node(
+    'li',  # match 'li' tags
+    filter=None,  # scrape all the matched 'li' tags
+    nodes=[
+        Node('a'),  # within the 'li' tag, match the first 'a' tag and extract the text
+        Node('p')  # within the 'li' tag, match the first 'p' tag and extract the text
+    ]
+)
+```
+
+`Pro Tip: The **nodes** arg let's you scrape multiple tags within a tag.`
+
+<br>
+
+
+### Example 12
+
+**Goal** - Scrape the name and headquarters of every company, where each item in the result list is a dict.
+
+
+The expected result:
+```python
+[
+    {'name': 'Apple', 'location': 'Cupertino, California'},
+    {'name': 'Google', 'location':  'Mountain View, California'},
+    {'name': 'Tesla', 'location':  'Austin, Texas'},
+    {'name': 'DeepMind', 'location':  'London, United Kingdom'}
+]
+```
+
+
+Solution
+```python
+Node(
+    'li', 
+    filter=None,
+    nodes=[
+        Node('a', key='name'),
+        Node('p', key='location')
+    ]
+)
+```
+
+`Pro Tip: All Nodes in a nodes list either define the 'key' arg or none of them do.`
+
+<br>
+
+### Example 13 - Building class instances
+
+```python
+# expected result
+
+companies: Companies = scrape(node, HTML)
+
+companies.dict == {
+    'companies': [
+        {'name': 'Apple', 'location': 'Cupertino, California'},
+        {'name': 'Google', 'location': 'Mountain View, California'},
+        {'name': 'Tesla', 'location': 'Austin, Texas'},
+        {'name': 'DeepMind', 'location': 'London, United Kingdom'},
+    ],
+    'amount_uk_companies': 1,
+    'amount_us_companies': 3,
+}
+
+companies.json == """{
+    "companies": [
+        {
+            "name": "Apple",
+            "location": "Cupertino, California"
+        },
+        {
+            "name": "Google",
+            "location": "Mountain View, California"
+        },
+        {
+            "name": "Tesla",
+            "location": "Austin, Texas"
+        },
+        {
+            "name": "DeepMind",
+            "location": "London, United Kingdom"
+        }
+    ],
+    "amount_uk_companies": 1,
+    "amount_us_companies": 3
+}"""
+```
+
+```python
+# solution
+
+from dataclasses import dataclass
+from bluemoss import Node, Jsonify
+
+
+@dataclass
+class Company(Jsonify):
+    name: str
+    location: str
+
+
+@dataclass
+class Companies(Jsonify):
+    companies: list[Company]
+    amount_uk_companies: int
+    amount_us_companies: int
+
+
+Node(
+    target=Companies,
+    nodes=[
+        Node(
+            "count(//div[@class='location_uk'])",
+            key='amount_uk_companies',
+            transform=lambda count: int(count) if count else None,
+        ),
+        Node(
+            "count(//div[@class='location_us'])",
+            key='amount_us_companies',
+            transform=lambda count: int(count) if count else None,
+        ),
+        Node(
+            'li',
+            filter=None,
+            key='companies',
+            target=Company,
+            nodes=[
+                Node('a', key='name'),
+                Node('p', key='location'),
+            ]
+        ),
+    ],
+)
+```
+
+
+<br>
 <hr>
 
 
