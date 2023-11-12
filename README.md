@@ -53,6 +53,7 @@ And if you are new to XPath, no problem — ChatGPT has got your back to help ki
 This section will show you how you can use bluemoss to scrape websites.
 For all examples that follow, let's consider the following html as the document we want to scrape.
 
+
 ```html
 <html>
     <head>
@@ -107,6 +108,7 @@ For all examples that follow, let's consider the following html as the document 
 ```
 
 <br>
+<br>
 
 ### Example 1
 
@@ -124,7 +126,7 @@ node = Node('a')
 scrape(node, HTML) == 'Apple'
 ```
 
-
+<br>
 <br>
 
 ### Example 2
@@ -139,6 +141,7 @@ scrape(node, HTML) == 'Cupertino, California'
 
 `Pro Tip: Good Node objects have a short xpath argument.`
 
+<br>
 <br>
 
 ### Example 3
@@ -159,8 +162,24 @@ tag that matches the given xpath. Our goal for this example was to extract the t
 that matches our xpath, therefor we set **filter = 1**.
 
 <br>
+<br>
 
 ### Example 4
+
+**Goal** - Scrape **ALL** company headquarters which are located in the US
+
+```python
+node = Node('div[contains(@class, "location_")]', filter=None)
+
+scrape(node, HTML) == ['Cupertiino, California', 'Mountain View, California', 'Austin, Texas']
+```
+
+Setting **filter=None** will filter for all tags matched against the given xpath.
+
+<br>
+<br>
+
+### Example 5
 
 **Goal** - Scrape the first and third company names.
 
@@ -173,8 +192,9 @@ scrape(node, HTML) == ['Apple', 'Google']
 In this example we set the **filter** arg a list of ints. Those int values refer to the first and third index (0 and 2).
 
 <br>
+<br>
 
-### Example 5
+### Example 6
 
 **Goal** - Scrape all company names from index 1 onwards in multiple different ways
 
@@ -202,6 +222,102 @@ Node('a', filter=Range(1, 4))  # the Range class accepts a second int argument (
 ```
 
 <br>
+<br>
+
+### Example 7
+
+**Goal** - Scrape all company names from index 1 onwards in reverse order, and do it in 3 different ways.
+
+The expected scrape result is
+
+```python
+['DeepMind', 'Tesla', 'Google']
+```
+
+<br>
+
+```python
+Node('a', filter=Range(1, reverse=True))  # set reverse to True
+
+Node('a', filter=Range(1, 4, reverse=True)) # set reverse to True
+
+Node('a', filter=Range(1), transform=lambda res: res[::-1])  # use the transform arg
+```
+
+The first two examples simply set the **reverse** arg of the Range object to True.
+The last example uses a different approach. It introduces the **transform** arg of the Node class.
+
+The transform function is the function being executed once
+-  the tags were matched with the given xpath
+-  the matched tags were further filtered
+
+`Pro Tip: The transform function defines the last step in scraping.`
+
+<br>
+<br>
+
+### Example 8
+
+**Goal** - Scrape the last two company names and store the result in a dict under the key 'companies'
+
+```python
+Node('a', filter=[-2, -1], key='companies')
+
+scrape(node, HTML) == {'companies': ['Tesla', 'DeepMind']}
+```
+
+<br>
+
+### Example 9
+
+**Goal** - Scrape the first company name and store the result in a dict under the key 'companies'
+
+```python
+Node('a', key='companies')
+
+scrape(node, HTML) == {'companies': 'Tesla'}
+```
+
+<br>
+
+### Example 10
+
+**Goal** - Scrape the first company id in 3 different ways. 
+<br>
+<br>What is the company id? Every a-tag in our html doc defines an href property.
+The first a-tag declares the href */portfolio?company=apple*, and we regard the company-id to be the value of the **company** 
+key extracted from the href-query-string. Therefor, in our html doc, the first company-id is **apple**, which is the value we expect to extract.
+
+
+Let us first define a helper function that will receive the href-value as an argument and return the company id:
+```python
+def get_company_id(href: str) -> str:
+    return href.split('=')[-1]
+```
+
+#### Solution 10.1
+```python
+from src.bluemoss import Node, Ex
+
+
+# Declare the tag-property to be extracted by using the 'extract' arg.
+# Introducing the 'Ex' Enum which provides handy types of extraction.
+
+Node('a', extract=Ex.HREF, transform=get_company_id)
+```
+
+#### Solution 10.2
+```python
+# The 'extract' arg also accept string values.
+
+Node('a', extract='href', transform=get_company_id)
+```
+
+#### Solution 10.3
+```python
+Node('a/@href', transform=get_company_id)  # use xpath to extract the href property value
+```
+
 <hr>
 
 
