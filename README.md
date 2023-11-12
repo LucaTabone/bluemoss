@@ -17,10 +17,41 @@
 </p>
 
 <br>
+<hr>
+
+## Getting Started
+
+```bash
+pip install bluemoss
+```
+
+<br>
+<hr>
+
+
+## What is bluemoss?
+
+Step into the world of web scraping with **bluemoss**, where you get the precision of XPath 1.0 without the steep learning
+curve. Our `Node` class acts as the blueprint for scraping any website, turning complex HTML into neatly 
+organized data-structures like JSON, class instances, and more.
+<br>
+<br>
+Forget about piecing together an array of functions for each HTML tag you want to scrape
+— Bluemoss lets you craft a single `Node` object that does it all: 
+scraping, transforming, and structuring website data seamlessly, into the data format you need.
+<br>
+<br>
+And if you are new to XPath, no problem — ChatGPT has got your back to help kick off those initial queries.
 <br>
 <br>
 
-## example html
+<hr>
+
+
+## How does it work?
+
+This section will show you how you can use bluemoss to scrape websites.
+For all examples that follow, let's consider the following html as the document we want to scrape.
 
 ```html
 <html>
@@ -76,263 +107,128 @@
 ```
 
 <br>
+
+### Example 1
+
+**Goal** - Scrape the text within the first a-tag: "Apple"
+
+The Node object defined below tells the scrape function to find the first a-tag and extract the text it contains.
+
+```python
+from .constants import HTML
+from bluemoss import Node, scrape
+
+
+node = Node('a')
+
+scrape(node, HTML) == 'Apple'
+```
+
+
 <br>
 
-## scraping example 1
+### Example 2
+
+**Goal** - Scrape the very first company headquarters: "Cupertino, California"
+
 ```python
-from src.bluemoss import Node, scrape
-from ..constants import README_EXAMPLE_HTML as HTML
+node = Node('p')
 
+scrape(node, HTML) == 'Cupertino, California'
+```
 
-nodes: list[Node] = [
-    Node('a'),
-    Node('div/a'),
-    Node('div/a'),
-    Node('body//a'),
-    Node('body//div/a'),
-    Node('a', filter=0),
-]
+`Pro Tip: Good Node objects have a short xpath argument.`
 
-for node in nodes:
-    assert scrape(node, HTML) == 'Apple'
+<br>
+
+### Example 3
+
+**Goal** - Scrape the second company headquarters which are located in the US
+
+```python
+node = Node('div[contains(@class, "location_")]', filter=1)
+
+scrape(node, HTML) == 'Mountain View, California'
+```
+
+`Pro Tip: Learning XPath is easy and fast with ChatGPT. Bluemoss supports XPath 1.0.`
+
+This example introduces the **filter** argument which determines which of those tag(s) that match the xpath locator
+will be scraped. The default value for the **filter** arg is 0 (index 0), which will scrape the very first (index 0)
+tag that matches the given xpath. Our goal for this example was to extract the text of the second tag (index 1) 
+that matches our xpath, therefor we set **filter = 1**.
+
+<br>
+
+### Example 4
+
+**Goal** - Scrape the first and third company names.
+
+```python
+Node('a', filter=[0, 2])
+
+scrape(node, HTML) == ['Apple', 'Google']
+```
+
+In this example we set the **filter** arg a list of ints. Those int values refer to the first and third index (0 and 2).
+
+<br>
+
+### Example 5
+
+**Goal** - Scrape all company names from index 1 onwards in multiple different ways
+
+The expected scrape result is
+
+```python
+['Google', 'Tesla', 'DeepMind']
 ```
 
 <br>
-<br>
 
-## scraping example 2
 ```python
-from src.bluemoss import Node, scrape
-from ..constants import README_EXAMPLE_HTML as HTML
+from bluemoss import Node, Range
 
 
-nodes: list[Node] = [
-    Node('p'),
-    Node('li//p'),
-    Node('div/p'),
-    Node('div//p'),
-    Node('div[contains(@class, "location_")]'),
-    Node('body//div[contains(@class, "location_")]'),
-]
+Node('a', filter=Range(1))  # match all a-tags from index 1 onwards
 
-for node in nodes:
-    assert scrape(node, HTML) == 'Cupertino, California'
+Node('li//a', filter=Range(1)) # The xpaths 'a' and 'li//a' match the same tags in our html doc
+
+Node('li/div/a', filter=Range(1))  # 'li/div/a' is just another xpath matching the same tags in our html doc
+
+Node('a', filter=[1, 2, 3])  # the index list [1, 2, 3] will achieve the same result as Range(1)
+
+Node('a', filter=Range(1, 4))  # the Range class accepts a second int argument (the stop index)
 ```
 
 <br>
-<br>
-
-## scraping example 3
-```python
-from src.bluemoss import Node, Range, scrape
-from ..constants import README_EXAMPLE_HTML as HTML
+<hr>
 
 
-node = Node('a', filter=3)
-assert scrape(node, HTML) == 'DeepMind'
+### Supported Platforms
 
-node = Node('a', filter=[0, 2])
-assert scrape(node, HTML) == ['Apple', 'Tesla']
-
-node = Node('a', filter=Range(2))
-assert scrape(node, HTML) == ['Tesla', 'DeepMind']
-
-node = Node('a', filter=Range(2, 4))
-assert scrape(node, HTML) == ['Tesla', 'DeepMind']
-
-node = Node('a', filter=Range(2, 3))
-assert scrape(node, HTML) == ['Tesla']
-
-node = Node('a', filter=None)
-assert scrape(node, HTML) == ['Apple', 'Google', 'Tesla', 'DeepMind']
-```
+- Linux
+- MacOS
+- Windows
 
 <br>
-<br>
-
-## scraping example 4
-```python
-from src.bluemoss import Node, Range, Ex, scrape
-from ..constants import README_EXAMPLE_HTML as HTML
+<hr>
 
 
-def get_company_id(hrefs: list[str]) -> list[str]:
-    return [href.split('=')[-1] for href in hrefs]
+### Supported Python Versions
 
-
-for node in [
-    Node('a', filter=Range(1), extract=Ex.HREF, transform=get_company_id),
-    Node('a', filter=Range(1), extract='href', transform=get_company_id),
-    Node('a/@href', filter=Range(1), transform=get_company_id),
-]:
-    assert scrape(node, HTML) == ['google', 'tesla', 'deepmind']
-```
+- 3.9
+- 3.10
+- 3.11
+- 3.12
 
 <br>
-<br>
-
-## scraping example 5
-```python
-from src.bluemoss import Node, scrape
-from ..constants import README_EXAMPLE_HTML as HTML
+<hr>
 
 
-node = Node(
-    'li',
-    filter=None,
-    nodes=[
-        Node('a', key='name'),
-        Node('p', key='headquarters'),
-        Node('a/@href', key='id', transform=lambda href: href.split('=')[1]),
-    ],
-)
+### License
 
-
-assert scrape(node, HTML) == [
-    {'id': 'apple', 'name': 'Apple', 'headquarters': 'Cupertino, California'},
-    {'id': 'google', 'name': 'Google', 'headquarters': 'Mountain View, California'},
-    {'id': 'tesla', 'name': 'Tesla', 'headquarters': 'Austin, Texas'},
-    {'id': 'deepmind', 'name': 'DeepMind', 'headquarters': 'London, United Kingdom'},
-]
-```
+- Apache 2.0
 
 <br>
-<br>
-
-## scraping example 6
-```python
-from src.bluemoss import Node, scrape
-from ..constants import README_EXAMPLE_HTML as HTML
-
-
-node = Node(
-    'li',
-    filter=None,
-    key='companies',
-    nodes=[
-        Node('a', key='name'),
-        Node('p', key='headquarters'),
-        Node('a/@href', key='id', transform=lambda href: href.split('=')[1]),
-    ],
-)
-
-assert scrape(node, HTML) == {
-    'companies': [
-        {'id': 'apple', 'name': 'Apple', 'headquarters': 'Cupertino, California'},
-        {'id': 'google', 'name': 'Google', 'headquarters': 'Mountain View, California'},
-        {'id': 'tesla', 'name': 'Tesla', 'headquarters': 'Austin, Texas'},
-        {
-            'id': 'deepmind',
-            'name': 'DeepMind',
-            'headquarters': 'London, United Kingdom',
-        },
-    ]
-}
-```
-
-<br>
-<br>
-
-## scraping example 7
-```python
-from __future__ import annotations
-from dataclasses import dataclass
-from src.bluemoss import Node, scrape, Jsonify
-from ..constants import README_EXAMPLE_HTML as HTML
-
-
-@dataclass
-class Companies(Jsonify):
-    companies: list[Company]
-    amount_uk_companies: int
-    amount_us_companies: int
-
-
-@dataclass
-class Company(Jsonify):
-    id: str
-    name: str
-    location: str
-
-
-node = Node(
-    target=Companies,
-    nodes=[
-        Node(
-            "count(//div[@class='location_uk'])",
-            key='amount_uk_companies',
-            transform=lambda count: int(count) if count else None,
-        ),
-        Node(
-            "count(//div[@class='location_us'])",
-            key='amount_us_companies',
-            transform=lambda count: int(count) if count else None,
-        ),
-        Node(
-            'li',
-            filter=None,
-            key='companies',
-            target=Company,
-            nodes=[
-                Node('a', key='name'),
-                Node('p', key='location'),
-                Node(
-                    'a',
-                    key='id',
-                    extract='href',
-                    transform=lambda href: href.split('=')[1],
-                ),
-            ],
-        ),
-    ],
-)
-
-companies: Companies = scrape(node, HTML)
-
-assert isinstance(companies, Companies)
-
-assert companies.dict == {
-    'companies': [
-        {'id': 'apple', 'name': 'Apple', 'location': 'Cupertino, California'},
-        {'id': 'google', 'name': 'Google', 'location': 'Mountain View, California'},
-        {'id': 'tesla', 'name': 'Tesla', 'location': 'Austin, Texas'},
-        {'id': 'deepmind', 'name': 'DeepMind', 'location': 'London, United Kingdom'},
-    ],
-    'amount_uk_companies': 1,
-    'amount_us_companies': 3,
-}
-
-assert (
-    companies.json
-    == """{
-    "companies": [
-        {
-            "id": "apple",
-            "name": "Apple",
-            "location": "Cupertino, California"
-        },
-        {
-            "id": "google",
-            "name": "Google",
-            "location": "Mountain View, California"
-        },
-        {
-            "id": "tesla",
-            "name": "Tesla",
-            "location": "Austin, Texas"
-        },
-        {
-            "id": "deepmind",
-            "name": "DeepMind",
-            "location": "London, United Kingdom"
-        }
-    ],
-    "amount_uk_companies": 1,
-    "amount_us_companies": 3
-}"""
-)
-```
-
-<br>
-<br>
-
+<hr>
