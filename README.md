@@ -461,6 +461,10 @@ class Companies(Jsonify):
     companies: list[Company]
     amount_uk_companies: int
     amount_us_companies: int
+    
+    @property
+    def total_amount_companies(self) -> int:
+        return self.amount_us_companies + self.amount_uk_companies
 
 
 Node(
@@ -491,16 +495,23 @@ Node(
 ```
 
 The solution in the code snippet introduces two new things:
-- the **target** parameter of the **Node** class
-- the **Jsonify** class
+- The **Node.target** parameter allows us to specify what class or dataclass to use in order 
+to store the data scraped in the **Node.nodes** list. If a Node instance sets a **target**, then all instances in
+Node.nodes must set their **key** parameter and every key must map to one of the init parameters of **Node.target**.
+- The **Jsonify** class exposes the two properties **dict** and **json**. It therefor makes it easy transform the 
+scraped data stored in dataclass instances into a Python dict or json string.
 
+<br>
 
-Before we dive into explaining both of these concepts, you may ask yourself why you may want to store 
-scrape results as dataclass instances in the first place?
+`Pro Tip: The Jsonify class will exclude any parameters starting with an underscore "_" from appearing in the return of
+the .dict and .json properties. This enables us to hide certain parameters from appearing in those returns.`
+
+<br>
+
+#### Why store the scrape result in a dataclass?
 - **type safety** - Dataclass instances as used in this example enforce typed parameters.
 - **properties** - Sometimes we want our data transformations to take place inside the dataclass, e.g. through properties. Properties provide a simple way to derive data from the instance parameters of a class instance. By moving the data transformation step from the **Node.transform** parameter to a **dataclass property**, we make the transformation explicitly available to the dataclass.
 - **post_init** - The __post_init__ method that is available in Python dataclasses is yet another nice step to manipulate the instance parameters and therefore move the data transformation step partially or as a whole from the **Node.transform** parameter to the __post_init__ method of the dataclass.
-- **data exposure** - 
 
 
 <br>
