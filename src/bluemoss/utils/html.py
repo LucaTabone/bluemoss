@@ -2,11 +2,6 @@ from __future__ import annotations
 from lxml import etree
 from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
-from src.bluemoss.utils.text import clean_text
-
-
-def lxml_etree_text_content(tag: HtmlElement) -> str:
-    return clean_text(tag.xpath('string(.)'))
 
 
 def lxml_etree_to_bs4(tag: HtmlElement) -> BeautifulSoup:
@@ -24,7 +19,7 @@ def lxml_etree_to_string(tag: HtmlElement) -> str:
     :rtype: str | None
     :return: String representation of the given @param tag if isinstance(tag, HTMLElement), None otherwise.
     """
-    return etree.tostring(tag).decode('utf-8').strip()  # type: ignore
+    return etree.tostring(tag).decode('utf-8').strip()
 
 
 def remove_tags_from_soup(soup: BeautifulSoup, tag_names: list[str]) -> None:

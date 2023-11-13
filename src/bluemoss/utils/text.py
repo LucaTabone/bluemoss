@@ -1,4 +1,4 @@
-from __future__ import annotations
+from lxml.html import HtmlElement
 
 
 def get_infix(text: str, prefix: str, suffix: str) -> str | None:
@@ -57,4 +57,8 @@ def clean_text(text: str) -> str:
     return text
 
 
-__all__ = ['get_infix', 'clean_text']
+def lxml_etree_text_content(tag: HtmlElement) -> str:
+    return clean_text(tag.xpath('string(.)'))
+
+
+__all__ = ['get_infix', 'clean_text', 'lxml_etree_text_content']
