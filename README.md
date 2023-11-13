@@ -1,3 +1,12 @@
+<style>
+    ul {
+        padding-left: 25px;
+    }
+    li {
+        margin-bottom: 10px;
+    }
+</style>
+
 <p align="center">
   <img src="https://github.com/LucaTabone/bluemoss/blob/main/logo.png?raw=True" width="420px" align="center" alt="bluemoss logo" />
   <h1 align="center">bluemoss</h1>
@@ -487,9 +496,10 @@ The solution in the code snippet introduces two new things:
 
 
 Before we dive into explaining both of these concepts, you may ask yourself why you may want to store 
-scrape results in class instances in the first place?
-- **type safety** - dataclass instances as used in this example come with typed parameters
-- **properties** -
+scrape results as dataclass instances in the first place?
+- **type safety** - Dataclass instances as used in this example enforce typed parameters.
+- **properties** - Sometimes we want our data transformations to take place inside the dataclass, e.g. through properties. Properties provide a simple way to derive data from the instance parameters of a class instance. By moving the data transformation step from the **Node.transform** parameter to a **dataclass property**, we make the transformation explicitly available to the dataclass.
+- **post_init** - The __post_init__ method that is available in Python dataclasses is yet another nice step to manipulate the instance parameters and therefore move the data transformation step partially or as a whole from the **Node.transform** parameter to the __post_init__ method of the dataclass.
 - **data exposure** - 
 
 
