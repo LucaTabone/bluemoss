@@ -13,6 +13,7 @@ node = Node(
     ],
 )
 
+
 def test():
     assert scrape(node, HTML) == {
         'companies': [

@@ -70,8 +70,9 @@ def test_dict_value():
 
 
 def test_json_value():
-    assert companies.json == \
-        """{
+    assert (
+        companies.json
+        == """{
     "companies": [
         {
             "id": "apple",
@@ -97,3 +98,4 @@ def test_json_value():
     "amount_uk_companies": 1,
     "amount_us_companies": 3
 }"""
+    )

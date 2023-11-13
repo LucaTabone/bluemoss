@@ -1,5 +1,4 @@
 from __future__ import annotations
-import io
 from lxml import etree
 from bs4 import BeautifulSoup
 from lxml.html import HtmlElement
