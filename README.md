@@ -386,6 +386,14 @@ Node(
 
 ### Example 13 - Building class instances
 
+**Goal** - In this last example, we want to scrape the name and location of every company, 
+as well as the total amount of companies located in the US and UK. We also want to store the scraped data 
+not in a dict or list as we did in the previous examples, but instead want to store the data in dataclass instances.
+
+**Info** - The code snippet below shows that we assume a dataclass called **Companies** in which we will store the 
+entire scrape-result. The expected result also assumes, that the **Companies** instance exposed two properties 
+**dict** and **json**
+
 ```python
 # expected result
 
@@ -452,12 +460,12 @@ Node(
         Node(
             "count(//div[@class='location_uk'])",
             key='amount_uk_companies',
-            transform=lambda count: int(count) if count else None,
+            transform=lambda count: int(count) if count else None
         ),
         Node(
             "count(//div[@class='location_us'])",
             key='amount_us_companies',
-            transform=lambda count: int(count) if count else None,
+            transform=lambda count: int(count) if count else None
         ),
         Node(
             'li',
@@ -466,12 +474,23 @@ Node(
             target=Company,
             nodes=[
                 Node('a', key='name'),
-                Node('p', key='location'),
+                Node('p', key='location')
             ]
-        ),
-    ],
+        )
+    ]
 )
 ```
+
+The solution in the code snippet introduces two new things:
+- the **target** parameter of the **Node** class
+- the **Jsonify** class
+
+
+Before we dive into explaining both of these concepts, you may ask yourself why you may want to store 
+scrape results in class instances in the first place?
+- **type safety** - dataclass instances as used in this example come with typed parameters
+- **properties** -
+- **data exposure** - 
 
 
 <br>
