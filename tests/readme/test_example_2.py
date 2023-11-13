@@ -11,5 +11,7 @@ nodes: list[Node] = [
     Node('body//div[contains(@class, "location_")]'),
 ]
 
-for node in nodes:
-    assert scrape(node, HTML) == 'Cupertino, California'
+
+def test():
+    for node in nodes:
+        assert scrape(node, HTML) == 'Cupertino'

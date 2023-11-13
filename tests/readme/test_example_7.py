@@ -51,45 +51,49 @@ node = Node(
 
 companies: Companies = scrape(node, HTML)
 
-assert isinstance(companies, Companies)
 
-assert companies.dict == {
-    'companies': [
-        {'id': 'apple', 'name': 'Apple', 'location': 'Cupertino, California'},
-        {'id': 'google', 'name': 'Google', 'location': 'Mountain View, California'},
-        {'id': 'tesla', 'name': 'Tesla', 'location': 'Austin, Texas'},
-        {'id': 'deepmind', 'name': 'DeepMind', 'location': 'London, United Kingdom'},
-    ],
-    'amount_uk_companies': 1,
-    'amount_us_companies': 3,
-}
+def test_instance_type():
+    assert isinstance(companies, Companies)
 
-assert (
-    companies.json
-    == """{
+
+def test_dict_value():
+    assert companies.dict == {
+        'companies': [
+            {'id': 'apple', 'name': 'Apple', 'location': 'Cupertino'},
+            {'id': 'google', 'name': 'Google', 'location': 'Mountain View'},
+            {'id': 'tesla', 'name': 'Tesla', 'location': 'Austin'},
+            {'id': 'deepmind', 'name': 'DeepMind', 'location': 'London'},
+        ],
+        'amount_uk_companies': 1,
+        'amount_us_companies': 3,
+    }
+
+
+def test_json_value():
+    assert companies.json == \
+        """{
     "companies": [
         {
             "id": "apple",
             "name": "Apple",
-            "location": "Cupertino, California"
+            "location": "Cupertino"
         },
         {
             "id": "google",
             "name": "Google",
-            "location": "Mountain View, California"
+            "location": "Mountain View"
         },
         {
             "id": "tesla",
             "name": "Tesla",
-            "location": "Austin, Texas"
+            "location": "Austin"
         },
         {
             "id": "deepmind",
             "name": "DeepMind",
-            "location": "London, United Kingdom"
+            "location": "London"
         }
     ],
     "amount_uk_companies": 1,
     "amount_us_companies": 3
 }"""
-)

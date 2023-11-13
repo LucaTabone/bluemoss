@@ -11,5 +11,7 @@ nodes: list[Node] = [
     Node('a', filter=0),
 ]
 
-for node in nodes:
-    assert scrape(node, HTML) == 'Apple'
+
+def test():
+    for node in nodes:
+        assert scrape(node, HTML) == 'Apple'

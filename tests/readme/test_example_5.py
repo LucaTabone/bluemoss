@@ -13,9 +13,10 @@ node = Node(
 )
 
 
-assert scrape(node, HTML) == [
-    {'id': 'apple', 'name': 'Apple', 'headquarters': 'Cupertino, California'},
-    {'id': 'google', 'name': 'Google', 'headquarters': 'Mountain View, California'},
-    {'id': 'tesla', 'name': 'Tesla', 'headquarters': 'Austin, Texas'},
-    {'id': 'deepmind', 'name': 'DeepMind', 'headquarters': 'London, United Kingdom'},
-]
+def test():
+    assert scrape(node, HTML) == [
+        {'id': 'apple', 'name': 'Apple', 'headquarters': 'Cupertino'},
+        {'id': 'google', 'name': 'Google', 'headquarters': 'Mountain View'},
+        {'id': 'tesla', 'name': 'Tesla', 'headquarters': 'Austin'},
+        {'id': 'deepmind', 'name': 'DeepMind', 'headquarters': 'London'},
+    ]

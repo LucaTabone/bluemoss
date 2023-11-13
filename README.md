@@ -66,7 +66,7 @@ For all examples that follow, let's consider the following html as the document 
                     Apple
                 </a>
                 <div class="location_us">
-                    <p>Cupertino, California</p>
+                    <p>Cupertino</p>
                 </div>
             </div>
         </li>
@@ -77,7 +77,7 @@ For all examples that follow, let's consider the following html as the document 
                     Google
                 </a>
                 <div class="location_us">
-                    <p>Mountain View, California</p>
+                    <p>Mountain View</p>
                 </div>
             </div>
         </li>
@@ -88,7 +88,7 @@ For all examples that follow, let's consider the following html as the document 
                     Tesla
                 </a>
                 <div class="location_us">
-                    <p>Austin, Texas</p>
+                    <p>Austin</p>
                 </div>
             </div>
         </li>
@@ -99,7 +99,7 @@ For all examples that follow, let's consider the following html as the document 
                     DeepMind
                 </a>
                 <div class="location_uk">
-                    <p>London, United Kingdom</p>
+                    <p>London</p>
                 </div>
             </div>
         </li>
@@ -131,12 +131,12 @@ scrape(node, HTML) == 'Apple'
 
 ### Example 2
 
-**Goal** - Scrape the very first company headquarters: "Cupertino, California"
+**Goal** - Scrape the very first company headquarters: "Cupertino"
 
 ```python
 node = Node('p')
 
-scrape(node, HTML) == 'Cupertino, California'
+scrape(node, HTML) == 'Cupertino'
 ```
 
 `Pro Tip: Good Node objects have a short xpath argument.`
@@ -151,7 +151,7 @@ scrape(node, HTML) == 'Cupertino, California'
 ```python
 node = Node('div[contains(@class, "location_")]', filter=1)
 
-scrape(node, HTML) == 'Mountain View, California'
+scrape(node, HTML) == 'Mountain View'
 ```
 
 `Pro Tip: Learning XPath is easy and fast with ChatGPT. Bluemoss supports XPath 1.0.`
@@ -171,7 +171,7 @@ that matches our xpath, therefor we set **filter = 1**.
 ```python
 node = Node('div[contains(@class, "location_")]', filter=None)
 
-scrape(node, HTML) == ['Cupertiino, California', 'Mountain View, California', 'Austin, Texas']
+scrape(node, HTML) == ['Cupertiino', 'Mountain View', 'Austin']
 ```
 
 Setting **filter=None** will filter for all tags matched against the given xpath.
@@ -327,10 +327,10 @@ Node('a/@href', transform=get_company_id)  # use xpath to extract the href prope
 The expected result:
 ```python
 [
-    ['Apple', 'Cupertino, California'],
-    ['Google', 'Mountain View, California'],
-    ['Tesla', 'Austin, Texas'],
-    ['DeepMind', 'London, United Kingdom']
+    ['Apple', 'Cupertino'],
+    ['Google', 'Mountain View'],
+    ['Tesla', 'Austin'],
+    ['DeepMind', 'London']
 ]
 ```
 
@@ -360,10 +360,10 @@ Node(
 The expected result:
 ```python
 [
-    {'name': 'Apple', 'location': 'Cupertino, California'},
-    {'name': 'Google', 'location':  'Mountain View, California'},
-    {'name': 'Tesla', 'location':  'Austin, Texas'},
-    {'name': 'DeepMind', 'location':  'London, United Kingdom'}
+    {'name': 'Apple', 'location': 'Cupertino'},
+    {'name': 'Google', 'location':  'Mountain View'},
+    {'name': 'Tesla', 'location':  'Austin'},
+    {'name': 'DeepMind', 'location':  'London'}
 ]
 ```
 
@@ -393,10 +393,10 @@ companies: Companies = scrape(node, HTML)
 
 companies.dict == {
     'companies': [
-        {'name': 'Apple', 'location': 'Cupertino, California'},
-        {'name': 'Google', 'location': 'Mountain View, California'},
-        {'name': 'Tesla', 'location': 'Austin, Texas'},
-        {'name': 'DeepMind', 'location': 'London, United Kingdom'},
+        {'name': 'Apple', 'location': 'Cupertino'},
+        {'name': 'Google', 'location': 'Mountain View'},
+        {'name': 'Tesla', 'location': 'Austin'},
+        {'name': 'DeepMind', 'location': 'London'},
     ],
     'amount_uk_companies': 1,
     'amount_us_companies': 3,
@@ -406,19 +406,19 @@ companies.json == """{
     "companies": [
         {
             "name": "Apple",
-            "location": "Cupertino, California"
+            "location": "Cupertino"
         },
         {
             "name": "Google",
-            "location": "Mountain View, California"
+            "location": "Mountain View"
         },
         {
             "name": "Tesla",
-            "location": "Austin, Texas"
+            "location": "Austin"
         },
         {
             "name": "DeepMind",
-            "location": "London, United Kingdom"
+            "location": "London"
         }
     ],
     "amount_uk_companies": 1,
