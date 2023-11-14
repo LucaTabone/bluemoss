@@ -1,12 +1,3 @@
-<style>
-    ul {
-        padding-left: 25px;
-    }
-    li {
-        margin-bottom: 10px;
-    }
-</style>
-
 <p align="center">
   <img src="https://github.com/LucaTabone/bluemoss/blob/main/logo.png?raw=True" width="420px" align="center" alt="bluemoss logo" />
   <h1 align="center">bluemoss</h1>

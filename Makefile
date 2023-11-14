@@ -16,6 +16,16 @@ mypy:
 install:
 	pip install -r requirements/dev.txt
 
+.PHONY: docs
+docs:
+	python scripts/docs.py
+	mkdocs build
+
+.PHONY: docs-serve
+docs-serve:
+	python scripts/docs.py
+	mkdocs serve
+
 .PHONY: clean
 clean:
 	rm -rf .nox
