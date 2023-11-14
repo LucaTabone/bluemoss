@@ -217,7 +217,7 @@ The expected scrape result is
 
 Let's show 5 different ways of achieving this goal:
 
-#### Example 5.1
+#### 5.1
 ```python
 from bluemoss import Node, Range
 
@@ -227,24 +227,24 @@ Node('a', filter=Range(1))
 # Range(1) filters the matched tags from index 1 onwards
 ```
 
-#### Example 5.2
+#### 5.2
 ```python
 Node('li//a', filter=Range(1))
 
 # the xpaths 'a' and 'li//a' match the same tags in our html doc
 ```
 
-#### Example 5.3
+#### 5.3
 ```python
 Node('li/div/a', filter=Range(1))
 ```
 
-#### Example 5.4
+#### 5.4
 ```python
 Node('a', filter=[1, 2, 3])
 ```
 
-#### Example 5.5
+#### 5.5
 ```python
 Node('a', filter=Range(1, 4)) 
 
@@ -330,7 +330,7 @@ def get_company_id(href: str) -> str:
     return href.split('=')[-1]
 ```
 
-#### Example 9.1
+#### 9.1
 ```python
 from src.bluemoss import Node, Ex
 
@@ -341,14 +341,14 @@ from src.bluemoss import Node, Ex
 Node('a', extract=Ex.HREF, transform=get_company_id)
 ```
 
-#### Example 9.2
+#### 9.2
 ```python
 # The 'extract' arg also accept string values.
 
 Node('a', extract='href', transform=get_company_id)
 ```
 
-#### Example 9.3
+#### 9.3
 ```python
 Node('a/@href', transform=get_company_id)  # use xpath to extract the href property value
 ```
@@ -357,7 +357,7 @@ Node('a/@href', transform=get_company_id)  # use xpath to extract the href prope
 
 ### 10 - Advanced Scraping
 
-####  10.1 - Complex objects
+####  10.1 - Lists
 
 **Goal** - Scrape the name and headquarters of every company.
 
@@ -389,7 +389,7 @@ Node(
 <br>
 
 
-#### 10.2 - Complex objects
+#### 10.2 - Dicts
 
 **Goal** - Scrape the name and headquarters of every company, where each item in the result list is a dict.
 
@@ -421,7 +421,7 @@ Node(
 
 <br>
 
-#### 10.3 - Class instances
+#### 10.3 - Classes
 
 **Goal** - In this last example, we want to scrape the name and location of every company, 
 as well as the total amount of companies located in the US and UK. We also want to store the scraped data 
