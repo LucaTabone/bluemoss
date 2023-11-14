@@ -25,34 +25,55 @@
 pip install bluemoss
 ```
 
-<br>
 <hr>
 
 
 ## What is bluemoss?
 
-Step into the world of web scraping with **bluemoss**, where you get the precision of XPath 1.0 without the steep learning
-curve. Our `Node` class acts as the blueprint for scraping any website, turning complex HTML into neatly 
-organized data-structures like JSON, class instances, and more.
+Webscraping is officially easy!
+<br>
+Built on top of <a href="https://pypi.org/project/lxml/">lxml</a>, 
+**bluemoss** lets you scrape any website by defining a single `Node` object. 
+Below is an example of the most basic Node object one could define.
+<br>
+```python
+from bluemoss import Node, scrape
+
+
+node = Node('a')  # scrapes the text contained in the first a-tag
+
+scrape(node, YOUR_HTML)  # happy scraping
+```
+
+<br>
+Bluemoss lets you craft a single `Node` object that does it all:
+<br>
+**1) scraping**, **2) transforming** and **3) structuring** website data seamlessly, into the format you need.
 <br>
 <br>
-Forget about piecing together an array of functions for each HTML tag you want to scrape
-— Bluemoss lets you craft a single `Node` object that does it all: 
-scraping, transforming, and structuring website data seamlessly, into the data format you need.
-<br>
-<br>
-And if you are new to XPath, no problem — ChatGPT has got your back to help kick off those initial queries.
+Since **bluemoss** builds on top of <a href="https://pypi.org/project/lxml/">lxml</a>, 
+it uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
+has got your back to help kick off those initial queries.
 <br>
 <br>
 
 <hr>
 
 
-## How does it work?
+## What is XPath?
 
-This section will show you how you can use bluemoss to scrape websites.
-For all examples that follow, let's consider the following html as the document we want to scrape.
+*ChatGPT says:* "XPath, which stands for XML Path Language, is a query language 
+that is used for selecting nodes from an XML document. It can also be used with HTML as it is an application of XML."
+<br>
+<br>
+`Pro Tip: bluemoss uses XPath to locate tags in HTML documents.`
+<hr>
 
+## Let's get started - Examples
+
+This section will show you how  **bluemoss** helps you scrape any website.
+<br>
+For all examples that follow, we are going to scrape the html document below.
 
 ```html
 <html>
@@ -110,14 +131,13 @@ For all examples that follow, let's consider the following html as the document 
 <br>
 <br>
 
-### Example 1
+### 1 - Introduction
 
 **Goal** - Scrape the text within the first a-tag: "Apple"
 
 The Node object defined below tells the scrape function to find the first a-tag and extract the text it contains.
 
 ```python
-from .constants import HTML
 from bluemoss import Node, scrape
 
 
@@ -126,25 +146,12 @@ node = Node('a')
 scrape(node, HTML) == 'Apple'
 ```
 
-<br>
-<br>
-
-### Example 2
-
-**Goal** - Scrape the very first company headquarters: "Cupertino"
-
-```python
-node = Node('p')
-
-scrape(node, HTML) == 'Cupertino'
-```
-
 `Pro Tip: Good Node objects have a short xpath argument.`
 
 <br>
 <br>
 
-### Example 3
+### 2 - Single tag
 
 **Goal** - Scrape the second company headquarters which are located in the US
 
@@ -164,14 +171,14 @@ that matches our xpath, therefor we set **filter = 1**.
 <br>
 <br>
 
-### Example 4
+### 3 - All tags
 
 **Goal** - Scrape **ALL** company headquarters which are located in the US
 
 ```python
 node = Node('div[contains(@class, "location_")]', filter=None)
 
-scrape(node, HTML) == ['Cupertiino', 'Mountain View', 'Austin']
+scrape(node, HTML) == ['Cupertino', 'Mountain View', 'Austin']
 ```
 
 Setting **filter=None** will filter for all tags matched against the given xpath.
@@ -179,7 +186,7 @@ Setting **filter=None** will filter for all tags matched against the given xpath
 <br>
 <br>
 
-### Example 5
+### 4 - Multiple tags, part 1
 
 **Goal** - Scrape the first and third company names.
 
@@ -194,37 +201,62 @@ In this example we set the **filter** arg a list of ints. Those int values refer
 <br>
 <br>
 
-### Example 6
+### 5 - Multiple tags, part 2
 
-**Goal** - Scrape all company names from index 1 onwards in multiple different ways
+**Goal** - Scrape all company names, but exclude the first one.
 
 The expected scrape result is
 
 ```python
 ['Google', 'Tesla', 'DeepMind']
+
+# 'Apple' not included, since it is located in the first a-tag (index 0)
 ```
 
 <br>
 
+Let's show 5 different ways of achieving this goal:
+
+#### Example 5.1
 ```python
 from bluemoss import Node, Range
 
 
-Node('a', filter=Range(1))  # match all a-tags from index 1 onwards
+Node('a', filter=Range(1)) 
 
-Node('li//a', filter=Range(1)) # The xpaths 'a' and 'li//a' match the same tags in our html doc
+# Range(1) filters the matched tags from index 1 onwards
+```
 
-Node('li/div/a', filter=Range(1))  # 'li/div/a' is just another xpath matching the same tags in our html doc
+#### Example 5.2
+```python
+Node('li//a', filter=Range(1))
 
-Node('a', filter=[1, 2, 3])  # the index list [1, 2, 3] will achieve the same result as Range(1)
+# the xpaths 'a' and 'li//a' match the same tags in our html doc
+```
 
-Node('a', filter=Range(1, 4))  # the Range class accepts a second int argument (the stop index)
+#### Example 5.3
+```python
+Node('li/div/a', filter=Range(1))
+```
+
+#### Example 5.4
+```python
+Node('a', filter=[1, 2, 3])
+```
+
+#### Example 5.5
+```python
+Node('a', filter=Range(1, 4)) 
+
+# The Range class accepts a second int argument (the stop index).
+# Range(x, y) filters for the matched tags at indices x, ..., y-1
+#   e.g. Range(2, 6) filters for indices 2, 3, 4, 5.
 ```
 
 <br>
 <br>
 
-### Example 7
+### 6 - Multiple tags, part 3
 
 **Goal** - Scrape all company names from index 1 onwards in reverse order, and do it in 3 different ways.
 
@@ -241,22 +273,22 @@ Node('a', filter=Range(1, reverse=True))  # set reverse to True
 
 Node('a', filter=Range(1, 4, reverse=True)) # set reverse to True
 
-Node('a', filter=Range(1), transform=lambda res: res[::-1])  # use the transform arg
+Node('a', filter=Range(1), transform=lambda res: res[::-1])  # use transform arg
 ```
 
 The first two examples simply set the **reverse** arg of the Range object to True.
-The last example uses a different approach. It introduces the **transform** arg of the Node class.
+The last example uses a different approach. It introduces the **transform** arg of the **Node** class.
 
 The transform function is the function being executed once
 -  the tags were matched with the given xpath
--  the matched tags were further filtered
+-  the matched tags were further filtered using the Node.filter arg
 
 `Pro Tip: The transform function defines the last step in scraping.`
 
 <br>
 <br>
 
-### Example 8
+### 7 - Dictionaries, part 1
 
 **Goal** - Scrape the last two company names and store the result in a dict under the key 'companies'
 
@@ -266,9 +298,12 @@ Node('a', filter=[-2, -1], key='companies')
 scrape(node, HTML) == {'companies': ['Tesla', 'DeepMind']}
 ```
 
+In the example above we provide the indexes -2 and -1 to the filter-list as those indices represent the last 
+two elements in a Python list.
+
 <br>
 
-### Example 9
+### 8 - Dictionaries, part 2
 
 **Goal** - Scrape the first company name and store the result in a dict under the key 'companies'
 
@@ -280,7 +315,7 @@ scrape(node, HTML) == {'companies': 'Tesla'}
 
 <br>
 
-### Example 10
+### 9 - Extract & Transform
 
 **Goal** - Scrape the first company id in 3 different ways. 
 <br>
@@ -295,7 +330,7 @@ def get_company_id(href: str) -> str:
     return href.split('=')[-1]
 ```
 
-#### Solution 10.1
+#### Example 9.1
 ```python
 from src.bluemoss import Node, Ex
 
@@ -306,21 +341,23 @@ from src.bluemoss import Node, Ex
 Node('a', extract=Ex.HREF, transform=get_company_id)
 ```
 
-#### Solution 10.2
+#### Example 9.2
 ```python
 # The 'extract' arg also accept string values.
 
 Node('a', extract='href', transform=get_company_id)
 ```
 
-#### Solution 10.3
+#### Example 9.3
 ```python
 Node('a/@href', transform=get_company_id)  # use xpath to extract the href property value
 ```
 
 <br>
 
-### Example 11 - Scraping multiple tags
+### 10 - Advanced Scraping
+
+####  10.1 - Complex objects
 
 **Goal** - Scrape the name and headquarters of every company.
 
@@ -347,12 +384,12 @@ Node(
 )
 ```
 
-`Pro Tip: The **nodes** arg let's you scrape multiple tags within a tag.`
+`Pro Tip: The **nodes** arg let's you scrape multiple different tags within the same parent tag.`
 
 <br>
 
 
-### Example 12
+#### 10.2 - Complex objects
 
 **Goal** - Scrape the name and headquarters of every company, where each item in the result list is a dict.
 
@@ -384,7 +421,7 @@ Node(
 
 <br>
 
-### Example 13 - Building class instances
+#### 10.3 - Class instances
 
 **Goal** - In this last example, we want to scrape the name and location of every company, 
 as well as the total amount of companies located in the US and UK. We also want to store the scraped data 
@@ -499,7 +536,7 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 
 <br>
 
-#### Why store the scrape result in a dataclass?
+##### Why use dataclasses?
 - **type safety** - Dataclass instances as used in this example enforce typed parameters.
 - **properties** - Sometimes we want our data transformations to take place inside the dataclass, e.g. through properties. Properties provide a simple way to derive data from the instance parameters of a class instance. By moving the data transformation step from the **Node.transform** parameter to a **dataclass property**, we make the transformation explicitly available to the dataclass.
 - **post_init** - The __post_init__ method that is available in Python dataclasses is yet another nice step to manipulate the instance parameters and therefore move the data transformation step partially or as a whole from the **Node.transform** parameter to the __post_init__ method of the dataclass.

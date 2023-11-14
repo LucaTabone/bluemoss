@@ -5,8 +5,8 @@ DOCS_DIR = ROOT_DIR / 'docs'
 
 
 def main() -> None:
-    content = ROOT_DIR.joinpath('README.md').read_text()
-    DOCS_DIR.joinpath('index.md').write_text(content)
+    content = DOCS_DIR.joinpath('index.md').read_text()
+    ROOT_DIR.joinpath('README.md').write_text(content)
 
 
 if __name__ == '__main__':
