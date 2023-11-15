@@ -24,6 +24,8 @@
 ```bash
 pip install bluemoss
 ```
+<br>
+<a href="https://bluemoss.readthedocs.io/en/latest/">**Read the docs**</a>
 
 <hr>
 
