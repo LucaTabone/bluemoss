@@ -48,3 +48,8 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Real World Examples:
+      - Blog Site: real_world_examples/blog.md
+      - LinkedIn Profile: real_world_examples/linkedin.md
+      - News Site: real_world_examples/reuters.md
+      - E-Commerce Site: real_world_examples/zalando.md
