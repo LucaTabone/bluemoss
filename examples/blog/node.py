@@ -2,7 +2,7 @@ from bluemoss import Node, scrape
 from examples.blog.classes import BlogPost
 
 
-node: Node = Node(
+BLOG_PAGE_NODE: Node = Node(
     filter=None,
     target=BlogPost,
     xpath="div[@class='post']",
@@ -17,5 +17,5 @@ node: Node = Node(
 
 if __name__ == '__main__':
     with open('./static/blog.html', 'r') as f:
-        for article in scrape(node, f.read()):
+        for article in scrape(BLOG_PAGE_NODE, f.read()):
             print(article)

@@ -1,11 +1,11 @@
-from examples.reuters.classes import Article
+from examples.reuters.classes import ArticlePreview
 from bluemoss import Ex, Node, scrape
 
 
-node: Node = Node(
+NEWS_PAGE_NODE: Node = Node(
     filter=None,
     xpath="li[contains(@class, 'story-collection')]/div[contains(@class, 'media-story-card')]",
-    target=Article,
+    target=ArticlePreview,
     nodes=[
         Node(
             xpath='a',
@@ -22,6 +22,6 @@ node: Node = Node(
 
 
 if __name__ == '__main__':
-    with open('./static/news.html', 'r') as f:
-        for article in scrape(node, f.read()):
+    with open('static/reuters.html', 'r') as f:
+        for article in scrape(NEWS_PAGE_NODE, f.read()):
             print(article)

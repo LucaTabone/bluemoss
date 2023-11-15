@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Article(Jsonify):
+class ArticlePreview(Jsonify):
     url: str
     date: str
     title: str

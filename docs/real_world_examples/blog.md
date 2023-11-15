@@ -102,7 +102,7 @@ we find the following HTML. It also seems to encapsulate all 4 datapoints we are
 ### Step 3 - Create a dataclass to represent a blogpost
 
 ```python
-# classes.py
+# examples/blog/classes.py
 
 from bluemoss import Jsonify
 from dataclasses import dataclass, field
