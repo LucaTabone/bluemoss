@@ -24,8 +24,13 @@
 ```bash
 pip install bluemoss
 ```
-<br>
-<a href="https://bluemoss.readthedocs.io/en/latest/">**Read the docs**</a>
+
+<hr>
+
+## Full Documentation
+<h4>
+    <a href="https://bluemoss.readthedocs.io/en/latest/">Read the docs</a>
+</h4>
 
 <hr>
 
