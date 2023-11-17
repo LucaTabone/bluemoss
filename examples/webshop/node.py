@@ -1,8 +1,8 @@
-from examples.zalando.classes import Article
 from bluemoss import scrape, Ex, Node
+from examples.webshop.classes import Article
 
 
-node: Node = Node(
+ARTICLES_NODE: Node = Node(
     filter=None,
     target=Article,
     xpath="article[contains(@class, 'z5x6ht')]",
@@ -30,6 +30,6 @@ node: Node = Node(
 
 
 if __name__ == '__main__':
-    with open('./static/shoes.html', 'r') as f:
-        for article in scrape(node, f.read()):
+    with open('static/webshop.html', 'r') as f:
+        for article in scrape(ARTICLES_NODE, f.read()):
             print(article)

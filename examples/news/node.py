@@ -22,6 +22,6 @@ NEWS_PAGE_NODE: Node = Node(
 
 
 if __name__ == '__main__':
-    with open('static/reuters.html', 'r') as f:
+    with open('static/news.html', 'r') as f:
         for article in scrape(NEWS_PAGE_NODE, f.read()):
             print(article)

@@ -11,7 +11,7 @@
 
 ### Step 1 - Identify data points to scrape
 
-Looking at the page, we can easily identify 4 datapoints per article preview:
+Looking at the page, we can easily identify the following datapoints per article preview:
 
 - url
 - date
@@ -78,7 +78,7 @@ we can see that the article preview is wrapped in a *li* tag, as are all other a
 ### Step 3 - Create a dataclass to represent an article-preview
 
 ```python
-# examples/reuters/classes.py
+# examples/news/classes.py
 
 from bluemoss import Jsonify
 from dataclasses import dataclass
@@ -130,7 +130,7 @@ from examples.reuters.node import NEWS_PAGE_NODE
 from examples.reuters.classes import ArticlePreview
 
 
-with open('./static/reuters.html', 'r') as f:
+with open('./static/news.html', 'r') as f:
     previews: list[ArticlePreview] = scrape(NEWS_PAGE_NODE, f.read())
     print(previews)
 ```
