@@ -9,6 +9,7 @@ def date_duration_description_nodes() -> list[Node]:
         Node(
             key='_date_and_duration_text',
             xpath="span[contains(@class, 'date-range')]",
+            transform=lambda text: text.replace('\n', '') if text else None
         ),
         Node(
             key='_description_more_text',
@@ -21,7 +22,7 @@ def date_duration_description_nodes() -> list[Node]:
     ]
 
 
-node: Node = Node(
+PERSON_PROFILE_NODE: Node = Node(
     target=PersonProfile,
     nodes=[
         Node(
@@ -97,8 +98,15 @@ node: Node = Node(
             target=EducationItem,
             filter=None,
             nodes=[
-                Node(key='institution', xpath='h3'),
-                Node(key='degree_info', xpath='h4'),
+                Node(
+                    key='institution',
+                    xpath='h3'
+                ),
+                Node(
+                    key='degree_info',
+                    xpath='h4',
+                    transform=lambda text: text.replace('\n', '') if text else None
+                ),
                 Node(
                     key='_description_text',
                     xpath="div[contains(@class, 'education__item--details')]/p",
@@ -233,6 +241,6 @@ node: Node = Node(
 
 
 if __name__ == '__main__':
-    with open('./static/alex.html', 'r') as f:
-        profile = scrape(node, f.read())
+    with open('./static/adam.html', 'r') as f:
+        profile = scrape(PERSON_PROFILE_NODE, f.read())
         print(profile)

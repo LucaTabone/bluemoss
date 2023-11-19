@@ -24,7 +24,7 @@ Looking at the page, we can easily identify the following datapoints per article
 Before we can start writing code, we need to understand the structure of the HTML, specifically
 the nature of the html tags that contain the data we want to scrape.
 
-#### Step 2.1 - Search HTML for the title of an article-preview
+#### Search HTML for the title of an article-preview
 
 After searching for the string *"San Francisco Police"* which is part of the title of an article on the reuters home page,
 we can see that the article preview is wrapped in a *li* tag, as are all other article previews:

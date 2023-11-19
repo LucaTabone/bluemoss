@@ -22,7 +22,7 @@ Looking at the page, we can easily identify 4 datapoints per blogpost:
 Before we can start writing code, we need to understand the structure of the HTML, specifically
 the nature of the html tags that contain the data we want to scrape.
 
-#### Step 2.1 - Open the HTML in your editor and search for a blog post title
+#### Open the HTML in your editor and search for a blog post title
 
 After searching for the string *"Input choice is easily"* which is a part of the first blog posts title,
 we find the following HTML. It also seems to encapsulate all 4 datapoints we are interested in.

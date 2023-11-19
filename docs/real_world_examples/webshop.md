@@ -22,9 +22,8 @@ Looking at the page, we can identify the following per item:
 ### Step 2 - Analyze the HTML
 Before we can start writing code, we need to understand the structure of the HTML, specifically
 the nature of the html tags that contain the data we want to scrape.
-
-#### Step 2.1 - Open the HTML in your editor and identify the html tags which encapsulate products
-
+<br>
+<br>
 After searching the page html for keywords that we see on the page, e.g. a product-name, we have identified an 
 *article* tag which encapsulates all datapoints of one of the products. And by scrolling further down we see
 that all the rendered products are encapsulated by an *article* tag
