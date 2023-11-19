@@ -9,7 +9,7 @@ def date_duration_description_nodes() -> list[Node]:
         Node(
             key='_date_and_duration_text',
             xpath="span[contains(@class, 'date-range')]",
-            transform=lambda text: text.replace('\n', '') if text else None
+            transform=lambda text: text.replace('\n', '') if text else None,
         ),
         Node(
             key='_description_more_text',
@@ -98,14 +98,11 @@ PERSON_PROFILE_NODE: Node = Node(
             target=EducationItem,
             filter=None,
             nodes=[
-                Node(
-                    key='institution',
-                    xpath='h3'
-                ),
+                Node(key='institution', xpath='h3'),
                 Node(
                     key='degree_info',
                     xpath='h4',
-                    transform=lambda text: text.replace('\n', '') if text else None
+                    transform=lambda text: text.replace('\n', '') if text else None,
                 ),
                 Node(
                     key='_description_text',
