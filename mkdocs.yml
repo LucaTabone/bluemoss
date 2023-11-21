@@ -12,14 +12,14 @@ theme:
   name: material
   palette:
     - scheme: slate
-      primary: lime
-      accent: lime
+      primary: #20aef5
+      accent: #20aef5
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
     - scheme: sunny
-      primary: lime
-      accent: lime
+      primary: #20aef5
+      accent: #20aef5
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
