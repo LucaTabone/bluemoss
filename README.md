@@ -1,7 +1,6 @@
 <p align="center">
-  <img src="https://github.com/LucaTabone/bluemoss/blob/main/logo.png?raw=True" width="420px" align="center" alt="bluemoss logo" />
   <h1 align="center">bluemoss</h1>
-  <h3 align="center">a simple way to scrape the web</h3>
+  <h3 align="center">scrape the web</h3>
   <br>
   <p align="center">
     <a href="https://github.com/grantjenks/blue">
@@ -35,45 +34,26 @@ pip install bluemoss
 <hr>
 
 
-## What is bluemoss?
+## Introduction
 
-Webscraping is officially easy!
-<br>
-Built on top of <a href="https://pypi.org/project/lxml/">lxml</a>, 
-**bluemoss** lets you scrape any website by defining a single `Node` object. 
-Below is an example of the most basic Node object one could define.
-<br>
 ```python
 from bluemoss import Node, scrape
 
 
-node = Node('a')  # scrapes the text contained in the first a-tag
+node = Node('a')  # extract the text contained in the first a-tag
 
-scrape(node, YOUR_HTML)  # happy scraping
+scrape(node, YOUR_HTML)
 ```
-
 <br>
-Bluemoss lets you craft a single `Node` object that does it all:
+Craft a single `Node` object to scrape any amount of data from any website:
 <br>
-**1) scraping**, **2) transforming** and **3) structuring** website data seamlessly, into the format you need.
+**scraping**, **transforming** and **structuring** website data seamlessly, into the format you need.
 <br>
 <br>
-Since **bluemoss** builds on top of <a href="https://pypi.org/project/lxml/">lxml</a>, 
-it uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
-has got your back to help kick off those initial queries.
-<br>
+It uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
+has got your back.
 <br>
 
-<hr>
-
-
-## What is XPath?
-
-*ChatGPT says:* "XPath, which stands for XML Path Language, is a query language 
-that is used for selecting nodes from an XML document. It can also be used with HTML as it is an application of XML."
-<br>
-<br>
-`Pro Tip: bluemoss uses XPath to locate tags in HTML documents.`
 <hr>
 
 # Let's get started - Examples
@@ -84,58 +64,37 @@ For all examples that follow, we are going to scrape the html document below.
 
 ```html
 <html>
-    <head>
-        <title>Portfolio</title>
-    </head>
     <body>
         <li>
-            <div>
-                <a href="/portfolio?company=apple">
-                    Apple
-                </a>
-                <div class="location_us">
-                    <p>Cupertino</p>
-                </div>
+            <a href="/portfolio?company=apple">
+                Apple
+            </a>
+            <div class="location_us">
+                <p>Cupertino</p>
             </div>
         </li>
 
         <li>
-            <div>
-                <a href="/portfolio?company=google">
-                    Google
-                </a>
-                <div class="location_us">
-                    <p>Mountain View</p>
-                </div>
+            <a href="/portfolio?company=google">
+                Google
+            </a>
+            <div class="location_us">
+                <p>Mountain View</p>
             </div>
         </li>
 
         <li>
-            <div>
-                 <a href="/portfolio?company=tesla">
-                    Tesla
-                </a>
-                <div class="location_us">
-                    <p>Austin</p>
-                </div>
-            </div>
-        </li>
-
-        <li>
-            <div>
-                <a href="/portfolio?company=deepmind">
-                    DeepMind
-                </a>
-                <div class="location_uk">
-                    <p>London</p>
-                </div>
+            <a href="/portfolio?company=deepmind">
+                DeepMind
+            </a>
+            <div class="location_uk">
+                <p>London</p>
             </div>
         </li>
     </body>
 </html>
 ```
 
-<br>
 <br>
 
 ## Introduction
@@ -153,14 +112,7 @@ node = Node('a')
 scrape(node, HTML) == 'Apple'
 ```
 
-`Pro Tip: Good Node objects have a short xpath argument.`
-
-<br>
-<br>
-
-## Filter
-
-### Filter a single tag
+<hr>
 
 **Goal** - Scrape the second company headquarters which are located in the US
 
@@ -177,17 +129,14 @@ will be scraped. The default value for the **filter** arg is 0 (index 0), which 
 tag that matches the given xpath. Our goal for this example was to extract the text of the second tag (index 1) 
 that matches our xpath, therefor we set **filter = 1**.
 
-<br>
-<br>
-
-### Filter all tags
+<hr>
 
 **Goal** - Scrape **ALL** company headquarters which are located in the US
 
 ```python
 node = Node('div[contains(@class, "location_us")]', filter=None)
 
-scrape(node, HTML) == ['Cupertino', 'Mountain View', 'Austin']
+scrape(node, HTML) == ['Cupertino', 'Mountain View']
 ```
 
 Setting **filter=None** will filter for all tags matched against the given xpath.
@@ -202,7 +151,7 @@ Setting **filter=None** will filter for all tags matched against the given xpath
 ```python
 Node('a', filter=[0, 2])
 
-scrape(node, HTML) == ['Apple', 'Google']
+scrape(node, HTML) == ['Apple', 'DeepMind']
 ```
 
 In this example we set the **filter** arg a list of ints. Those int values refer to the first and third index (0 and 2).
@@ -217,14 +166,14 @@ In this example we set the **filter** arg a list of ints. Those int values refer
 The expected scrape result is
 
 ```python
-['Google', 'Tesla', 'DeepMind']
+['Google', 'DeepMind']
 
 # 'Apple' not included, since it is located in the first a-tag (index 0)
 ```
 
 <br>
 
-Let's show 5 different ways of achieving this goal:
+Let's show 4 different ways of achieving this goal:
 
 #### example 1
 ```python
@@ -245,17 +194,12 @@ Node('li//a', filter=Range(1))
 
 #### example 3
 ```python
-Node('li/div/a', filter=Range(1))
+Node('a', filter=[1, 2])
 ```
 
 #### example 4
 ```python
-Node('a', filter=[1, 2, 3])
-```
-
-#### example 5
-```python
-Node('a', filter=Range(1, 4)) 
+Node('a', filter=Range(1, 3)) 
 
 # The Range class accepts a second int argument (the stop index).
 # Range(x, y) filters for the matched tags at indices x, ..., y-1
@@ -267,21 +211,21 @@ Node('a', filter=Range(1, 4))
 
 ### Filter multiple tags, part 3
 
-**Goal** - Scrape all company names from index 1 onwards in reverse order, and do it in 3 different ways.
+**Goal** - Scrape all company names from index 1 onwards in reverse order.
 
 The expected scrape result is
 
 ```python
-['DeepMind', 'Tesla', 'Google']
+['DeepMind', 'Google']
 ```
 
 <br>
 
 ```python
+# example 1
 Node('a', filter=Range(1, reverse=True))  # set reverse to True
 
-Node('a', filter=Range(1, 4, reverse=True)) # set reverse to True
-
+# example 2
 Node('a', filter=Range(1), transform=lambda res: res[::-1])  # use transform arg
 ```
 
@@ -306,7 +250,7 @@ The transform function is the function being executed once
 ```python
 Node('a', filter=[-2, -1], key='companies')
 
-scrape(node, HTML) == {'companies': ['Tesla', 'DeepMind']}
+scrape(node, HTML) == {'companies': ['Google', 'DeepMind']}
 ```
 
 In the example above we provide the indexes -2 and -1 to the filter-list as those indices represent the last 
@@ -321,19 +265,15 @@ two elements in a Python list.
 ```python
 Node('a', key='companies')
 
-scrape(node, HTML) == {'companies': 'Tesla'}
+scrape(node, HTML) == {'companies': 'Apple'}
 ```
 
 <br>
 
 ## Extract & Transform
 
-**Goal** - Scrape the first company id in 3 different ways. 
+**Goal** - Scrape the first company-id. 
 <br>
-<br>What is the company id? Every a-tag in our html doc defines an href property.
-The first a-tag declares the href */portfolio?company=apple*, and we regard the company-id to be the value of the **company** 
-key extracted from the href-query-string. Therefor, in our html doc, the first company-id is **apple**, which is the value we expect to extract.
-
 
 Let us first define a helper function that will receive the href-value as an argument and return the company id:
 ```python
@@ -379,7 +319,6 @@ The expected result:
 [
     ['Apple', 'Cupertino'],
     ['Google', 'Mountain View'],
-    ['Tesla', 'Austin'],
     ['DeepMind', 'London']
 ]
 ```
@@ -412,7 +351,6 @@ The expected result:
 [
     {'name': 'Apple', 'location': 'Cupertino'},
     {'name': 'Google', 'location':  'Mountain View'},
-    {'name': 'Tesla', 'location':  'Austin'},
     {'name': 'DeepMind', 'location':  'London'}
 ]
 ```
@@ -453,12 +391,11 @@ companies.dict == {
     'companies': [
         {'name': 'Apple', 'location': 'Cupertino'},
         {'name': 'Google', 'location': 'Mountain View'},
-        {'name': 'Tesla', 'location': 'Austin'},
         {'name': 'DeepMind', 'location': 'London'},
     ],
     'amount_uk_companies': 1,
-    'amount_us_companies': 3,
-    'amount_companies': 4
+    'amount_us_companies': 2,
+    'amount_companies': 3
 }
 
 companies.json == """{
@@ -472,17 +409,13 @@ companies.json == """{
             "location": "Mountain View"
         },
         {
-            "name": "Tesla",
-            "location": "Austin"
-        },
-        {
             "name": "DeepMind",
             "location": "London"
         }
     ],
     "amount_uk_companies": 1,
-    "amount_us_companies": 3,
-    "amount_companies": 4
+    "amount_us_companies": 2,
+    "amount_companies": 3
 }"""
 ```
 
@@ -518,14 +451,16 @@ Node(
     target=Companies,
     nodes=[
         Node(
-            "count(//div[@class='location_uk'])",
+            "div[@class='location_uk']",
+            filter=None,
             key='amount_uk_companies',
-            transform=lambda count: int(count) if count else None
+            transform=lambda companies: len(companies)
         ),
         Node(
-            "count(//div[@class='location_us'])",
+            "div[@class='location_us']",
+            filter=None,
             key='amount_us_companies',
-            transform=lambda count: int(count) if count else None
+            transform=lambda companies: len(companies)
         ),
         Node(
             'li',
