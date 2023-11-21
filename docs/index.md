@@ -41,7 +41,7 @@ Webscraping is officially easy!
 <br>
 Built on top of <a href="https://pypi.org/project/lxml/">lxml</a>, 
 **bluemoss** lets you scrape any website by defining a single `Node` object. 
-Below is an example of the most basic Node object one could define.
+Below is a simple example:
 <br>
 ```python
 from bluemoss import Node, scrape
@@ -52,28 +52,18 @@ node = Node('a')  # scrapes the text contained in the first a-tag
 scrape(node, YOUR_HTML)  # happy scraping
 ```
 
+## Introduction
+
 <br>
 Bluemoss lets you craft a single `Node` object that does it all:
 <br>
-**1) scraping**, **2) transforming** and **3) structuring** website data seamlessly, into the format you need.
+**scraping**, **transforming** and **structuring** website data seamlessly, into the format you need.
 <br>
 <br>
-Since **bluemoss** builds on top of <a href="https://pypi.org/project/lxml/">lxml</a>, 
-it uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
+**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
 has got your back to help kick off those initial queries.
 <br>
-<br>
 
-<hr>
-
-
-## What is XPath?
-
-*ChatGPT says:* "XPath, which stands for XML Path Language, is a query language 
-that is used for selecting nodes from an XML document. It can also be used with HTML as it is an application of XML."
-<br>
-<br>
-`Pro Tip: bluemoss uses XPath to locate tags in HTML documents.`
 <hr>
 
 # Let's get started - Examples
@@ -84,51 +74,40 @@ For all examples that follow, we are going to scrape the html document below.
 
 ```html
 <html>
-    <head>
-        <title>Portfolio</title>
-    </head>
     <body>
         <li>
-            <div>
-                <a href="/portfolio?company=apple">
-                    Apple
-                </a>
-                <div class="location_us">
-                    <p>Cupertino</p>
-                </div>
+            <a href="/portfolio?company=apple">
+                Apple
+            </a>
+            <div class="location_us">
+                <p>Cupertino</p>
             </div>
         </li>
 
         <li>
-            <div>
-                <a href="/portfolio?company=google">
-                    Google
-                </a>
-                <div class="location_us">
-                    <p>Mountain View</p>
-                </div>
+            <a href="/portfolio?company=google">
+                Google
+            </a>
+            <div class="location_us">
+                <p>Mountain View</p>
             </div>
         </li>
 
         <li>
-            <div>
-                 <a href="/portfolio?company=tesla">
-                    Tesla
-                </a>
-                <div class="location_us">
-                    <p>Austin</p>
-                </div>
+            <a href="/portfolio?company=tesla">
+                Tesla
+            </a>
+            <div class="location_us">
+                <p>Austin</p>
             </div>
         </li>
 
         <li>
-            <div>
-                <a href="/portfolio?company=deepmind">
-                    DeepMind
-                </a>
-                <div class="location_uk">
-                    <p>London</p>
-                </div>
+            <a href="/portfolio?company=deepmind">
+                DeepMind
+            </a>
+            <div class="location_uk">
+                <p>London</p>
             </div>
         </li>
     </body>
@@ -153,9 +132,6 @@ node = Node('a')
 scrape(node, HTML) == 'Apple'
 ```
 
-`Pro Tip: Good Node objects have a short xpath argument.`
-
-<br>
 <br>
 
 ## Filter
@@ -224,7 +200,7 @@ The expected scrape result is
 
 <br>
 
-Let's show 5 different ways of achieving this goal:
+Let's show 4 different ways of achieving this goal:
 
 #### example 1
 ```python
@@ -245,15 +221,10 @@ Node('li//a', filter=Range(1))
 
 #### example 3
 ```python
-Node('li/div/a', filter=Range(1))
-```
-
-#### example 4
-```python
 Node('a', filter=[1, 2, 3])
 ```
 
-#### example 5
+#### example 4
 ```python
 Node('a', filter=Range(1, 4)) 
 

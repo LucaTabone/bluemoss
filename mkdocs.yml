@@ -12,8 +12,8 @@ theme:
   name: material
   palette:
     - scheme: slate
-      primary: pink
-      accent: pink
+      primary: lime
+      accent: lime
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
