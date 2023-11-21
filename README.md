@@ -45,20 +45,20 @@ node = Node('a')  # extract the text contained in the first a-tag
 scrape(node, YOUR_HTML)
 ```
 <br>
-Craft a single `Node` object to scrape any amount of data from any website:
+With **bluemoss**, you create a `Node` object to scrape data from any website. 
+Imagine that `Node` object to be like a recipe 👩‍🍳 which describes what to scrape from which tags, 
+and how to transform and structure the scraped data it into the format you need.
 <br>
-**scraping**, **transforming** and **structuring** website data seamlessly, into the format you need.
 <br>
-<br>
-It uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
+**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
 has got your back.
 <br>
 
 <hr>
 
-# Let's get started - Examples
+## Examples
 
-This section will show you how  **bluemoss** helps you scrape any website.
+This section will show you how can to scrape the web with **bluemoss**.
 <br>
 For all examples that follow, we are going to scrape the html document below.
 
@@ -96,10 +96,9 @@ For all examples that follow, we are going to scrape the html document below.
 ```
 
 <br>
+<hr>
 
-## Introduction
-
-**Goal** - Scrape the text within the first a-tag: "Apple"
+**Example 1** - Scrape the text in the first **a** tag.
 
 The Node object defined below tells the scrape function to find the first a-tag and extract the text it contains.
 
@@ -114,7 +113,7 @@ scrape(node, HTML) == 'Apple'
 
 <hr>
 
-**Goal** - Scrape the second company headquarters which are located in the US
+**Example 2** - Scrape the **second** company headquarters which are located in the US
 
 ```python
 node = Node('div[contains(@class, "location_us")]', filter=1)
@@ -125,13 +124,13 @@ scrape(node, HTML) == 'Mountain View'
 `Pro Tip: Learning XPath is easy and fast with ChatGPT. Bluemoss supports XPath 1.0.`
 
 This example introduces the **filter** argument which determines which of those tag(s) that match the xpath locator
-will be scraped. The default value for the **filter** arg is 0 (index 0), which will scrape the very first (index 0)
+will be scraped. The default value for the **filter** arg is 0 (index 0), which will scrape the very first
 tag that matches the given xpath. Our goal for this example was to extract the text of the second tag (index 1) 
 that matches our xpath, therefor we set **filter = 1**.
 
 <hr>
 
-**Goal** - Scrape **ALL** company headquarters which are located in the US
+**Example 3** - Scrape **ALL** company headquarters which are located in the US
 
 ```python
 node = Node('div[contains(@class, "location_us")]', filter=None)
@@ -141,12 +140,9 @@ scrape(node, HTML) == ['Cupertino', 'Mountain View']
 
 Setting **filter=None** will filter for all tags matched against the given xpath.
 
-<br>
-<br>
+<hr>
 
-### Filter multiple tags, part 1
-
-**Goal** - Scrape the first and third company names.
+**Example 4** - Scrape the first and third company names.
 
 ```python
 Node('a', filter=[0, 2])
@@ -154,14 +150,12 @@ Node('a', filter=[0, 2])
 scrape(node, HTML) == ['Apple', 'DeepMind']
 ```
 
-In this example we set the **filter** arg a list of ints. Those int values refer to the first and third index (0 and 2).
+In this example we set the **filter** arg to a list of ints. 
+Those int values refer to the first and third index (0 and 2).
 
-<br>
-<br>
+<hr>
 
-### Filter multiple tags, part 2
-
-**Goal** - Scrape all company names, but exclude the first one.
+**Example 5** - Scrape all company names, but exclude the first one.
 
 The expected scrape result is
 
@@ -211,7 +205,7 @@ Node('a', filter=Range(1, 3))
 
 ### Filter multiple tags, part 3
 
-**Goal** - Scrape all company names from index 1 onwards in reverse order.
+**Example 6** - Scrape all company names from index 1 onwards in reverse order.
 
 The expected scrape result is
 
