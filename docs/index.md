@@ -100,7 +100,7 @@ For all examples that follow, we are going to scrape the html document below.
 
 **Example 1** - Scrape the text in the first **a** tag.
 
-The Node object defined below tells the scrape function to find the first a-tag and extract the text it contains.
+The **Node** object below instructs the **scrape** function to find the first *a*-tag and extract the text it contains.
 
 ```python
 from bluemoss import Node, scrape
@@ -112,6 +112,7 @@ scrape(node, HTML) == 'Apple'
 ```
 
 <hr>
+<br>
 
 **Example 2** - Scrape the **second** company headquarters which are located in the US
 
@@ -121,7 +122,7 @@ node = Node('div[contains(@class, "location_us")]', filter=1)
 scrape(node, HTML) == 'Mountain View'
 ```
 
-`Pro Tip: Learning XPath is easy and fast with ChatGPT. Bluemoss supports XPath 1.0.`
+`Pro Tip: Learning XPath is easy and fast with ChatGPT.`
 
 This example introduces the **filter** argument which determines which of those tag(s) that match the xpath locator
 will be scraped. The default value for the **filter** arg is 0 (index 0), which will scrape the very first
@@ -129,6 +130,7 @@ tag that matches the given xpath. Our goal for this example was to extract the t
 that matches our xpath, therefor we set **filter = 1**.
 
 <hr>
+<br>
 
 **Example 3** - Scrape **ALL** company headquarters which are located in the US
 
@@ -141,6 +143,7 @@ scrape(node, HTML) == ['Cupertino', 'Mountain View']
 Setting **filter=None** will filter for all tags matched against the given xpath.
 
 <hr>
+<br>
 
 **Example 4** - Scrape the first and third company names.
 
@@ -154,6 +157,7 @@ In this example we set the **filter** arg to a list of ints.
 Those int values refer to the first and third index (0 and 2).
 
 <hr>
+<br>
 
 **Example 5** - Scrape all company names, but exclude the first one.
 
@@ -166,11 +170,12 @@ The expected scrape result is
 ```
 
 <br>
+Below are a couple of valid solutions, and the first one is the most recommended one, 
+since it keeps the arguments provided to the Node object as simple as possible:
 
-Let's show 4 different ways of achieving this goal:
-
-#### example 1
 ```python
+# solution 1, the recommended solution
+
 from bluemoss import Node, Range
 
 
@@ -179,20 +184,24 @@ Node('a', filter=Range(1))
 # Range(1) filters the matched tags from index 1 onwards
 ```
 
-#### example 2
 ```python
+# solution 2
+
+
 Node('li//a', filter=Range(1))
 
 # the xpaths 'a' and 'li//a' match the same tags in our html doc
 ```
 
-#### example 3
 ```python
+# solution 3
+
 Node('a', filter=[1, 2])
 ```
 
-#### example 4
 ```python
+# solution 4
+
 Node('a', filter=Range(1, 3)) 
 
 # The Range class accepts a second int argument (the stop index).
@@ -200,10 +209,8 @@ Node('a', filter=Range(1, 3))
 #   e.g. Range(2, 6) filters for indices 2, 3, 4, 5.
 ```
 
+<hr>
 <br>
-<br>
-
-### Filter multiple tags, part 3
 
 **Example 6** - Scrape all company names from index 1 onwards in reverse order.
 
@@ -216,30 +223,31 @@ The expected scrape result is
 <br>
 
 ```python
-# example 1
-Node('a', filter=Range(1, reverse=True))  # set reverse to True
+# solution 1
 
-# example 2
+Node('a', filter=Range(1, reverse=True))  # set reverse to True
+```
+
+```python
+# solution 2
+
 Node('a', filter=Range(1), transform=lambda res: res[::-1])  # use transform arg
 ```
 
 The first two examples simply set the **reverse** arg of the Range object to True.
 The last example uses a different approach. It introduces the **transform** arg of the **Node** class.
 
-The transform function is the function being executed once
+The transform function is the function being executed after
+
 -  the tags were matched with the given xpath
--  the matched tags were further filtered using the Node.filter arg
+-  the matched tags were further filtered using the **Node.filter** arg
 
-`Pro Tip: The transform function defines the last step in scraping.`
+`Pro Tip: The transform-function defines the last step in computing the scrape-result of a Node object.`
 
+<hr>
 <br>
-<br>
 
-## Building Dictionaries
-
-### example 1
-
-**Goal** - Scrape the last two company names and store the result in a dict under the key 'companies'
+**Example 7** - Scrape the last two company names and store the result **in a dict** under the key 'companies'
 
 ```python
 Node('a', filter=[-2, -1], key='companies')
@@ -250,11 +258,10 @@ scrape(node, HTML) == {'companies': ['Google', 'DeepMind']}
 In the example above we provide the indexes -2 and -1 to the filter-list as those indices represent the last 
 two elements in a Python list.
 
+<hr>
 <br>
 
-### example 2
-
-**Goal** - Scrape the first company name and store the result in a dict under the key 'companies'
+**Example 8** - Scrape the first company name and store the result **in a dict** under the key 'companies'
 
 ```python
 Node('a', key='companies')
@@ -262,21 +269,24 @@ Node('a', key='companies')
 scrape(node, HTML) == {'companies': 'Apple'}
 ```
 
+<hr>
 <br>
 
-## Extract & Transform
-
-**Goal** - Scrape the first company-id. 
-<br>
+**Example 9** - Scrape the first company-id.
 
 Let us first define a helper function that will receive the href-value as an argument and return the company id:
+
 ```python
+# helper function to the solutions
+
 def get_company_id(href: str) -> str:
     return href.split('=')[-1]
 ```
+<br>
 
-### example 1
 ```python
+# solution 1
+
 from src.bluemoss import Node, Ex
 
 
@@ -286,27 +296,26 @@ Node('a', extract=Ex.HREF, transform=get_company_id)
 # Introducing the 'Ex' Enum which provides handy types of extraction.
 ```
 
-### example 2
 ```python
+# solution 2
+
 Node('a', extract='href', transform=get_company_id)
 
 # The 'extract' arg also accept string values.
 ```
 
-### example 3
 ```python
+# solution 3
+
 Node('a/@href', transform=get_company_id)
 
 # We can also just use xpath to extract the href property.
 ```
 
+<hr>
 <br>
 
-## Advanced Scraping
-
-###  Lists
-
-**Goal** - Scrape the name and headquarters of every company.
+**Example 10 - Advanced Scraping** - Scrape the name and headquarters of every company.
 
 The expected result:
 ```python
@@ -317,9 +326,10 @@ The expected result:
 ]
 ```
 
+<br>
 
-Solution
 ```python
+# solution 
 Node(
     'li',  # match 'li' tags
     filter=None,  # scrape all the matched 'li' tags
@@ -332,12 +342,10 @@ Node(
 
 `Pro Tip: The **nodes** arg let's you scrape multiple different tags within the same parent tag.`
 
+<hr>
 <br>
 
-
-### Dicts
-
-**Goal** - Scrape the name and headquarters of every company, where each item in the result list is a dict.
+**Example 11 - Advanced Scraping** - Scrape the name and headquarters of every company, where each item in the result list is a dict.
 
 
 The expected result:
@@ -349,9 +357,11 @@ The expected result:
 ]
 ```
 
+<br>
 
-Solution
 ```python
+# solution
+
 Node(
     'li', 
     filter=None,
@@ -364,11 +374,10 @@ Node(
 
 `Pro Tip: All Nodes in a nodes list either define the 'key' arg or none of them do.`
 
+<hr>
 <br>
 
-### Dataclasses
-
-**Goal** - In this last example, we want to scrape the name and location of every company, 
+**Example 12 - Advanced Scraping** - In this last example, we want to scrape the name and location of every company, 
 as well as the total amount of companies located in the US and UK. We also want to store the scraped data 
 not in a dict or list as we did in the previous examples, but instead want to store the data in dataclass instances.
 
@@ -484,7 +493,6 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 
 <br>
 
-##### Why use Dataclasses?
 - **type safety** - Dataclass instances as used in this example enforce typed parameters.
 - **properties** - Sometimes we want our data transformations to take place inside the dataclass, e.g. through properties. Properties provide a simple way to derive data from the instance parameters of a class instance. By moving the data transformation step from the **Node.transform** parameter to a **dataclass property**, we make the transformation explicitly available to the dataclass.
 - **post_init** - The __post_init__ method that is available in Python dataclasses is yet another nice step to manipulate the instance parameters and therefore move the data transformation step partially or as a whole from the **Node.transform** parameter to the __post_init__ method of the dataclass.
@@ -494,7 +502,7 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 <hr>
 
 
-### Supported Platforms
+## Supported Platforms
 
 - Linux
 - MacOS
@@ -504,7 +512,7 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 <hr>
 
 
-### Supported Python Versions
+## Supported Python Versions
 
 - 3.9
 - 3.10
@@ -515,7 +523,7 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 <hr>
 
 
-### License
+## License
 
 - Apache 2.0
 
