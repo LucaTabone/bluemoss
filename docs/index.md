@@ -26,6 +26,13 @@ pip install bluemoss
 
 <hr>
 
+## Github
+<h4>
+    <a href="https://bluemoss.readthedocs.io/en/latest/">bluemoss repo</a>
+</h4>
+
+<hr>
+
 ## Full Documentation
 <h4>
     <a href="https://bluemoss.readthedocs.io/en/latest/">Read the docs</a>
