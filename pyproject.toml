@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bluemoss"
-version = "0.1.35"
+version = "1.0.0"
 description = "An easy way to scrape the web."
 authors = ["lunchquader <luca@tabone.io>"]
 license = "MIT"
