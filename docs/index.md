@@ -345,7 +345,8 @@ Node(
 <hr>
 <br>
 
-**Example 11 - Advanced Scraping** - Scrape the name and headquarters of every company, where each item in the result list is a dict.
+**Example 11 - Advanced Scraping** - 
+Scrape the name and headquarters of every company. The result shall be a list of dicts.
 
 
 The expected result:
@@ -382,7 +383,7 @@ as well as the total amount of companies located in the US and UK. We also want 
 not in a dict or list as we did in the previous examples, but instead want to store the data in dataclass instances.
 
 **Info** - The code snippet below shows that we assume a dataclass called **Companies** in which we will store the 
-entire scrape-result. The expected result also assumes, that the **Companies** instance exposed two properties 
+entire scrape-result. The expected result also assumes, that the **Companies** instance exposes two properties 
 **dict** and **json**
 
 ```python
@@ -454,26 +455,28 @@ Node(
     target=Companies,
     nodes=[
         Node(
-            "div[@class='location_uk']",
-            filter=None,
-            key='amount_uk_companies',
-            transform=lambda companies: len(companies)
+            'li',
+            filter=None,     # makes sure to filter all matched 'li' tags
+            key='companies', # will store the scrape-result as a dict under the key 'companies'
+            target=Company,  # the data scraped from every 'li' tag will be transformed into a 'Company' instance
+            nodes=[          # every 'Company' instance will be initialized with the parameters 'name' and 'location'
+                Node('a', key='name'), # extracts the text from the 'li/a' tag and stores it in the Company.name parameter
+                Node('p', key='location')  # extracts the text from the 'li/p' tag and stores it in the Company.location parameter
+            ]
+        ),
+        Node(
+            "div[@class='location_uk']",  # finds all 'div' tags whose class property contains the text 'location_uk'
+            filter=None,                  # filter all matched tags
+            key='amount_uk_companies',    # stores the result in the Companies.amount_uk_companies parameter
+            transform=lambda companies: len(companies) # The initial result is a list (due to filter=None) and it 
+                                                       # will then be mapped to its length.
+                                                       # Therefor the final scrape-result is an int.
         ),
         Node(
             "div[@class='location_us']",
             filter=None,
             key='amount_us_companies',
             transform=lambda companies: len(companies)
-        ),
-        Node(
-            'li',
-            filter=None,
-            key='companies',
-            target=Company,
-            nodes=[
-                Node('a', key='name'),
-                Node('p', key='location')
-            ]
         )
     ]
 )
