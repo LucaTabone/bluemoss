@@ -57,7 +57,7 @@ Imagine that `Node` object to be like a recipe 👩‍🍳 which describes what 
 and how to transform and structure the scraped data it into the format you need.
 <br>
 <br>
-**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
+**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="https://chat.openai.com">ChatGPT</a>
 has got your back.
 <br>
 
