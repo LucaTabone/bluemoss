@@ -26,9 +26,16 @@ pip install bluemoss
 
 <hr>
 
+## Github
+<h4>
+    <a href="https://bluemoss.readthedocs.io/en/latest/">bluemoss repo</a>
+</h4>
+
+<hr>
+
 ## Full Documentation
 <h4>
-    <a href="https://bluemoss.readthedocs.io/en/latest/">Read the docs</a>
+    <a href="https://github.com/LucaTabone/bluemoss">read the docs</a>
 </h4>
 
 <hr>
@@ -50,7 +57,7 @@ Imagine that `Node` object to be like a recipe 👩‍🍳 which describes what 
 and how to transform and structure the scraped data it into the format you need.
 <br>
 <br>
-**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="chat.openai.com">ChatGPT</a>
+**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="https://chat.openai.com">ChatGPT</a>
 has got your back.
 <br>
 
