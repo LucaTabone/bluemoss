@@ -336,7 +336,8 @@ The expected result:
 <br>
 
 ```python
-# solution 
+# solution
+
 Node(
     'li',  # match 'li' tags
     filter=None,  # scrape all the matched 'li' tags
