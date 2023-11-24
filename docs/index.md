@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">bluemoss</h1>
-  <h3 align="center">scrape the web</h3>
+  <h3 align="center">scrape the web with ease</h3>
   <br>
   <p align="center">
     <a href="https://github.com/grantjenks/blue">
@@ -28,14 +28,14 @@ pip install bluemoss
 
 ## Github
 <h4>
-    <a href="https://bluemoss.readthedocs.io/en/latest/">bluemoss repo</a>
+    <a href="https://github.com/LucaTabone/bluemoss" target="_blank">bluemoss repo</a>
 </h4>
 
 <hr>
 
 ## Full Documentation
 <h4>
-    <a href="https://github.com/LucaTabone/bluemoss">read the docs</a>
+    <a href="https://bluemoss.readthedocs.io" target="_blank">read the docs</a>
 </h4>
 
 <hr>
@@ -57,7 +57,7 @@ Imagine that `Node` object to be like a recipe 👩‍🍳 which describes what 
 and how to transform and structure the scraped data it into the format you need.
 <br>
 <br>
-**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="https://chat.openai.com">ChatGPT</a>
+**bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
 has got your back.
 <br>
 
@@ -102,8 +102,8 @@ For all examples that follow, we are going to scrape the html document below.
 </html>
 ```
 
-<br>
 <hr>
+<br>
 
 **Example 1** - Scrape the text in the first **a** tag.
 
@@ -508,9 +508,7 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 - **post_init** - The __post_init__ method that is available in Python dataclasses is yet another nice step to manipulate the instance parameters and therefore move the data transformation step partially or as a whole from the **Node.transform** parameter to the __post_init__ method of the dataclass.
 
 
-<br>
 <hr>
-
 
 ## Supported Platforms
 
@@ -518,9 +516,7 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 - MacOS
 - Windows
 
-<br>
 <hr>
-
 
 ## Supported Python Versions
 
@@ -529,13 +525,18 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 - 3.11
 - 3.12
 
-<br>
 <hr>
-
 
 ## License
 
-- Apache 2.0
+Apache 2.0
 
-<br>
+
+<hr>
+
+## About
+<h4>
+    <a href="https://tabone.io" target="_blank">author website</a>
+</h4>
+
 <hr>
