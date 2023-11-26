@@ -513,8 +513,8 @@ the .dict and .json properties. This enables us to hide certain parameters from 
 
 ## Supported Platforms
 
-- Linux
 - MacOS
+- Linux
 - Windows
 
 <hr>
