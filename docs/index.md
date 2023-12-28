@@ -52,11 +52,13 @@ node = Node('a')  # extract the text contained in the first a-tag
 scrape(node, YOUR_HTML)
 ```
 <br>
-With **bluemoss**, you create a `Node` object to scrape data from any website. 
+
+With **bluemoss** you create a `Node` object to scrape data from any website. 
 Imagine that `Node` object to be like a recipe 👩‍🍳 which describes what to scrape from which tags, 
 and how to transform and structure the scraped data it into the format you need.
 <br>
 <br>
+
 **bluemoss** uses XPath 1.0 to locate html tags. If you are new to XPath, no problem — <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
 has got your back.
 <br>
