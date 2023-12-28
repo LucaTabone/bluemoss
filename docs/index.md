@@ -53,9 +53,13 @@ scrape(node, YOUR_HTML)
 ```
 <br>
 
-With **bluemoss** you create a `Node` object to scrape data from any website. 
-Imagine that `Node` object to be like a recipe 👩‍🍳 which describes what to scrape from which tags, 
-and how to transform and structure the scraped data it into the format you need.
+With **bluemoss** you create a `Node` object to scrape data from any website.
+
+<br>
+
+That `Node` object is like a recipe 👩‍🍳 which describes what to scrape from which tags, 
+and how to transform and structure the scraped data into the format you need.
+
 <br>
 <br>
 
