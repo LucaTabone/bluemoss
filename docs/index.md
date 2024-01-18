@@ -78,6 +78,7 @@ For all examples that follow, we are going to scrape the html document below.
 ```html
 <html>
     <body>
+    
         <li>
             <a href="/portfolio?company=apple">
                 Apple
@@ -104,6 +105,7 @@ For all examples that follow, we are going to scrape the html document below.
                 <p>London</p>
             </div>
         </li>
+    
     </body>
 </html>
 ```
