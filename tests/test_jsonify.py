@@ -141,7 +141,7 @@ def test_person_dict():
                     ),
                 ],
             ),
-            ('languages', ['English', 'French'])
+            ('languages', ['English', 'French']),
         ]
     )
 
