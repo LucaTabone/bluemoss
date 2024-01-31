@@ -53,15 +53,6 @@ class Person(Jsonify):
     languages: set[str]
     _last_updated: datetime
 
-    @property
-    def estimated_age(self) -> int:
-        today: date = date.today()
-        return today.year - self.birthday.year
-
-    @property
-    def dict(self) -> dict:
-        return super().dict | {'age': self.estimated_age}
-
 
 def test_person_dict():
     address = Address(
@@ -150,8 +141,7 @@ def test_person_dict():
                     ),
                 ],
             ),
-            ('languages', ['English', 'French']),
-            ('age', 35),
+            ('languages', ['English', 'French'])
         ]
     )
 
